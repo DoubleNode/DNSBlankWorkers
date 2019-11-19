@@ -23,10 +23,10 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     
     public var nextWorker: PTCLAppReview_Protocol?
     
-    public required init() {
+    open required init() {
     }
 
-    public required init(nextWorker: PTCLAppReview_Protocol) {
+    open required init(nextWorker: PTCLAppReview_Protocol) {
         self.nextWorker = nextWorker
     }
 
@@ -42,7 +42,7 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     }
     
     // MARK: - Business Logic / Single Item CRUD
-    public func doReview() throws -> Bool {
+    open func doReview() throws -> Bool {
         guard nextWorker != nil else {
             throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
                 file: "\(#file)",

@@ -13,10 +13,10 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
 {
     public var nextWorker: PTCLCache_Protocol?
     
-    public required init() {
+    open required init() {
     }
 
-    public required init(nextWorker: PTCLCache_Protocol) {
+    open required init(nextWorker: PTCLCache_Protocol) {
         self.nextWorker = nextWorker
     }
 
@@ -32,9 +32,9 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
     }
 
     // MARK: - Business Logic / Single Item CRUD
-    public func doDeleteObject(for id: String,
-                               with progress: PTCLProgressBlock?,
-                               and block: PTCLCacheBlockVoidAnyError?) throws {
+    open func doDeleteObject(for id: String,
+                             with progress: PTCLProgressBlock?,
+                             and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
                 file: "\(#file)",
@@ -45,9 +45,9 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
         try nextWorker!.doDeleteObject(for: id, with: progress, and:block)
     }
     
-    public func doReadObject(for id: String,
-                             with progress: PTCLProgressBlock?,
-                             and block: PTCLCacheBlockVoidAnyError?) throws {
+    open func doReadObject(for id: String,
+                           with progress: PTCLProgressBlock?,
+                           and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
                 file: "\(#file)",
@@ -58,9 +58,9 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
         try nextWorker!.doReadObject(for: id, with: progress, and:block)
     }
     
-    public func doLoadImage(for url: NSURL,
-                            with progress: PTCLProgressBlock?,
-                            and block: PTCLCacheBlockVoidAnyError?) throws {
+    open func doLoadImage(for url: NSURL,
+                          with progress: PTCLProgressBlock?,
+                          and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
                 file: "\(#file)",
@@ -71,9 +71,9 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
         try nextWorker!.doLoadImage(for: url, with: progress, and:block)
     }
     
-    public func doUpdateObject(for id: String,
-                               with progress: PTCLProgressBlock?,
-                               and block: PTCLCacheBlockVoidAnyError?) throws {
+    open func doUpdateObject(for id: String,
+                             with progress: PTCLProgressBlock?,
+                             and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
                 file: "\(#file)",
