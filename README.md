@@ -3,9 +3,9 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f473642e4404426b55fda500602e662)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DoubleNode/DNSCore&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/DoubleNode/DNSCore/branch/master/graph/badge.svg?token=NcFMBk0g9t)](https://codecov.io/gh/DoubleNode/DNSCore)
 
-# DNSCore
+# DNSBlankWorkers
 
-DNSCore is a collection of core classes used for the DNSFramework
+DNSBlankWorkers is a collection of blank worker classes used for the DNSFramework
 
 -   [Features](#features)
 -   [Requirements](#requirements)
@@ -34,20 +34,18 @@ Once you have your Swift package set up, adding Alamofire as a dependency is as 
 
 ```swift
 dependencies: [
-.package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.0.0")
+.package(url: "https://github.com/DoubleNode/DNSBlankWorkers.git", from: "1.0.0")
 ]
 ```
 
 ## Dependencies
 
--   AtomicSwift v1.2.1+
--   DNSCoreThreading v1.0.2+
 -   DNSProtocols v1.0.0+
 
 ## Credits
 
-DNSCore and the DNSFramework are owned and maintained by Darren Ehlers and [DoubleNode.com](http://doublenode.com). You can follow them on Twitter at [@DoubleNodeOpen](https://twitter.com/DoubleNodeOpen) for project updates and releases.
+DNSBlankWorkers and the DNSFramework are owned and maintained by Darren Ehlers and [DoubleNode.com](http://doublenode.com). You can follow them on Twitter at [@DoubleNodeOpen](https://twitter.com/DoubleNodeOpen) for project updates and releases.
 
 ## License
 
-DNSCore and the DNSFramework are Copyright © 2019 - 2016 Darren Ehlers and DoubleNode, LLC. All rights reserved.
+DNSBlankWorkers and the DNSFramework are Copyright © 2019 - 2016 Darren Ehlers and DoubleNode, LLC. All rights reserved.
