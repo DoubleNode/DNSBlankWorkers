@@ -13,10 +13,10 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
 {
     public var nextWorker: PTCLCache_Protocol?
     
-    open required init() {
+    public required init() {
     }
 
-    open required init(nextWorker: PTCLCache_Protocol) {
+    public required init(nextWorker: PTCLCache_Protocol) {
         self.nextWorker = nextWorker
     }
 

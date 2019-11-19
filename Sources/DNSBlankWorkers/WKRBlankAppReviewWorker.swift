@@ -23,10 +23,10 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     
     public var nextWorker: PTCLAppReview_Protocol?
     
-    open required init() {
+    public required init() {
     }
 
-    open required init(nextWorker: PTCLAppReview_Protocol) {
+    public required init(nextWorker: PTCLAppReview_Protocol) {
         self.nextWorker = nextWorker
     }
 
