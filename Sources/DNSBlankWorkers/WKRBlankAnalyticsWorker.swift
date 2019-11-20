@@ -11,7 +11,7 @@ import DNSProtocols
 open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
 {
     public var nextWorker: PTCLAnalytics_Protocol?
-    
+
     public required init() {
 
     }

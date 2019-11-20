@@ -12,7 +12,7 @@ import Foundation
 open class WKRBlankCacheWorker: PTCLCache_Protocol
 {
     public var nextWorker: PTCLCache_Protocol?
-    
+
     public required init() {
     }
 
@@ -70,7 +70,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
 
         try nextWorker!.doLoadImage(for: url, with: progress, and:block)
     }
-    
+
     open func doUpdateObject(for id: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLCacheBlockVoidAnyError?) throws {

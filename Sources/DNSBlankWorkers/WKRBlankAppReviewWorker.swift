@@ -15,14 +15,14 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     public var launchedFirstTime: Date = Date()
     public var launchedLastTime: Date?
     public var reviewRequestLastTime: Date?
-    
+
     public var appDidCrashLastRun: Bool = false
     public var daysUntilPrompt: Int = 0
     public var usesUntilPrompt: Int = 0
     public var daysBeforeReminding: Int = 0
-    
+
     public var nextWorker: PTCLAppReview_Protocol?
-    
+
     public required init() {
     }
 
@@ -40,7 +40,7 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     open func disableOption(option: String) {
         nextWorker?.disableOption(option: option)
     }
-    
+
     // MARK: - Business Logic / Single Item CRUD
     open func doReview() throws -> Bool {
         guard nextWorker != nil else {
