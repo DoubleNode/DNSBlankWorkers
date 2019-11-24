@@ -44,7 +44,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
 
         try nextWorker!.doDeleteObject(for: id, with: progress, and:block)
     }
-    
+
     open func doReadObject(for id: String,
                            with progress: PTCLProgressBlock?,
                            and block: PTCLCacheBlockVoidAnyError?) throws {
@@ -57,7 +57,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
 
         try nextWorker!.doReadObject(for: id, with: progress, and:block)
     }
-    
+
     open func doLoadImage(for url: NSURL,
                           with progress: PTCLProgressBlock?,
                           and block: PTCLCacheBlockVoidAnyError?) throws {
