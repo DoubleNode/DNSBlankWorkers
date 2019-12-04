@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "DNSProtocols",
-        "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
+        "repositoryURL": "git@github.com:DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "dc4e4a3b21c102628bb27773a4ec910857201970",
-          "version": "1.0.4"
+          "revision": "960055d6d34b8d7663e2bf76e2360eab8f27abbb",
+          "version": "1.0.5"
         }
       }
     ]
