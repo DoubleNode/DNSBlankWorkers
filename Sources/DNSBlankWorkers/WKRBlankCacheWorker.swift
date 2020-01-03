@@ -55,7 +55,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
     }
 
     // MARK: - Business Logic / Single Item CRUD
-    
+
     open func doDeleteObject(for id: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLCacheBlockVoidAnyError?) throws {
