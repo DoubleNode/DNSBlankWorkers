@@ -55,14 +55,12 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
     }
 
     // MARK: - Business Logic / Single Item CRUD
+    
     open func doDeleteObject(for id: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doDeleteObject(for: id, with: progress, and:block)
@@ -72,10 +70,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
                            with progress: PTCLProgressBlock?,
                            and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doReadObject(for: id, with: progress, and:block)
@@ -85,10 +80,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
                           with progress: PTCLProgressBlock?,
                           and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doLoadImage(for: url, with: progress, and:block)
@@ -98,10 +90,7 @@ open class WKRBlankCacheWorker: PTCLCache_Protocol
                              with progress: PTCLProgressBlock?,
                              and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doUpdateObject(for: id, with: progress, and:block)

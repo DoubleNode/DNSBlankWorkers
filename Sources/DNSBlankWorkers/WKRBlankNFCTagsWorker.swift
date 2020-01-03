@@ -56,14 +56,11 @@ open class WKRBlankNFCTagsWorker: PTCLNFCTags_Protocol
 
     // MARK: - Business Logic / Single Item CRUD
 
-    public func doScanTags(for key: String,
-                           with progress: PTCLProgressBlock?,
-                           and block: PTCLNFCTagsBlockVoidArrayNFCNDEFMessageError?) throws {
+    open func doScanTags(for key: String,
+                         with progress: PTCLProgressBlock?,
+                         and block: PTCLNFCTagsBlockVoidArrayNFCNDEFMessageError?) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doScanTags(for: key, with: progress, and:block)

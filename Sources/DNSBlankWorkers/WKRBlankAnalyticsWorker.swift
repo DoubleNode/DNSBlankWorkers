@@ -66,10 +66,7 @@ open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
                          traits: [String: Any]? = nil,
                          options: [String: Any]? = nil) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doIdentify(userId: userId, traits: traits, options: options)
@@ -84,10 +81,7 @@ open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
     }
     open func doTrack(event: String, properties: [String: Any]? = nil, options: [String: Any]? = nil) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doTrack(event: event, properties: properties, options: options)
@@ -104,10 +98,7 @@ open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
                        properties: [String: Any]? = nil,
                        options: [String: Any]? = nil) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doScreen(screenTitle: screenTitle, properties: properties, options: options)
@@ -124,10 +115,7 @@ open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
                       traits: [String: Any]? = nil,
                       options: [String: Any]? = nil) throws {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return
         }
 
         try nextWorker!.doGroup(groupId: groupId, traits: traits, options: options)

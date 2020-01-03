@@ -67,10 +67,7 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
     // MARK: - Business Logic / Single Item CRUD
     open func doReview() throws -> Bool {
         guard nextWorker != nil else {
-            throw DNSBlankWorkersError.notImplemented(domain: "com.doublenode.\(type(of: self))",
-                file: "\(#file)",
-                line: "\(#line)",
-                method: "\(#function)")
+            return false
         }
 
         return try nextWorker!.doReview()
