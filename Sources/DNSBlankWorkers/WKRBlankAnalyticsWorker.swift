@@ -7,16 +7,18 @@
 //
 
 import DNSProtocols
+import Foundation
 
-open class WKRBlankAnalyticsWorker: PTCLAnalytics_Protocol
+open class WKRBlankAnalyticsWorker: NSObject, PTCLAnalytics_Protocol
 {
     public var nextWorker: PTCLAnalytics_Protocol?
 
-    public required init() {
-
+    override public required init() {
+        super.init()
     }
 
     public required init(nextWorker: PTCLAnalytics_Protocol) {
+        super.init()
         self.nextWorker = nextWorker
     }
 

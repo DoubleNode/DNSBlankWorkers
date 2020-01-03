@@ -9,7 +9,7 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
+open class WKRBlankAppReviewWorker: NSObject, PTCLAppReview_Protocol
 {
     public var launchedCount: UInt = 0
     public var launchedFirstTime: Date = Date()
@@ -23,10 +23,12 @@ open class WKRBlankAppReviewWorker: PTCLAppReview_Protocol
 
     public var nextWorker: PTCLAppReview_Protocol?
 
-    public required init() {
+    override public required init() {
+        super.init()
     }
 
     public required init(nextWorker: PTCLAppReview_Protocol) {
+        super.init()
         self.nextWorker = nextWorker
     }
 

@@ -9,14 +9,16 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankNFCTagsWorker: PTCLNFCTags_Protocol
+open class WKRBlankNFCTagsWorker: NSObject, PTCLNFCTags_Protocol
 {
     public var nextWorker: PTCLNFCTags_Protocol?
 
-    public required init() {
+    override public required init() {
+        super.init()
     }
 
     public required init(nextWorker: PTCLNFCTags_Protocol) {
+        super.init()
         self.nextWorker = nextWorker
     }
 

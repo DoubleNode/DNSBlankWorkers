@@ -9,14 +9,16 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankCacheWorker: PTCLCache_Protocol
+open class WKRBlankCacheWorker: NSObject, PTCLCache_Protocol
 {
     public var nextWorker: PTCLCache_Protocol?
 
-    public required init() {
+    override public required init() {
+        super.init()
     }
 
     public required init(nextWorker: PTCLCache_Protocol) {
+        super.init()
         self.nextWorker = nextWorker
     }
 
