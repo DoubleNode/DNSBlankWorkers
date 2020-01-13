@@ -58,21 +58,22 @@ open class WKRBlankBeaconsWorker: NSObject, PTCLBeacons_Protocol
 
     // MARK: - Business Logic / Single Item CRUD
 
-    open func doRangeBeacons(for keys: [UUID],
-                             with progress: PTCLProgressBlock?,
-                             and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+    open func doRangeBeacons(named uuids: [UUID],
+                        for processKey: String,
+                        with progress: PTCLProgressBlock?,
+                        and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
         guard nextWorker != nil else {
             return
         }
 
-        try nextWorker!.doRangeBeacons(for: keys, with: progress, and: block)
+        try nextWorker!.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
     }
-
-    open func doStopRangeBeacons() throws {
+    
+    open func doStopRangeBeacons(for processKey: String) throws {
         guard nextWorker != nil else {
             return
         }
 
-        try nextWorker!.doStopRangeBeacons()
+        try nextWorker!.doStopRangeBeacons(for: processKey)
     }
 }
