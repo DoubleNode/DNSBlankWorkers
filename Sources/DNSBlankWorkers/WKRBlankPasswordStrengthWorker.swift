@@ -13,6 +13,8 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
 {
     public var nextWorker: PTCLPasswordStrength_Protocol?
 
+    public var minimumLength: Int32 = 6
+
     public required init() {
         super.init()
     }
