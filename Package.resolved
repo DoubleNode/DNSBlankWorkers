@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "5f58ceaf24d9f2197555b2d8683e3f7bb232ec38",
-          "version": "1.0.2"
+          "revision": "01e900904349b1ed9c47ddebf90cb164e93ef9b0",
+          "version": "1.0.3"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "d0d07fbabb5633f62667388aa48acb5e80ad11e4",
-          "version": "1.0.12"
+          "revision": "b53c8164053432bfe0cf6c8e12d342f46e0b7128",
+          "version": "1.0.14"
         }
       }
     ]
