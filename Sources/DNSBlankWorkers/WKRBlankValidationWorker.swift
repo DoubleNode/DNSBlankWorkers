@@ -34,6 +34,8 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, PTCLValidation_Protocol
     public var minimumUnsignedNumberValue: Int64 = -1
     public var maximumUnsignedNumberValue: Int64 = -1
 
+    public var requiredPasswordStrength: PTCLPasswordStrengthType = .strong
+
     public required init() {
         super.init()
     }
