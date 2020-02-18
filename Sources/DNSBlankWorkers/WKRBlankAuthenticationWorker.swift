@@ -34,7 +34,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
 
     open func doCheckAuthentication(using parameters: [String: Any],
                                     with progress: PTCLProgressBlock?,
-                                    and block: PTCLAuthenticationBlockVoidBoolAccessDataError) throws {
+                                    and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError) throws {
         guard nextWorker != nil else {
             return
         }
@@ -48,7 +48,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                        and password: String?,
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
-                       and block: @escaping PTCLAuthenticationBlockVoidBoolAccessDataError) throws {
+                       and block: @escaping PTCLAuthenticationBlockVoidBoolAccessDataDNSError) throws {
         guard nextWorker != nil else {
             return
         }
@@ -62,7 +62,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
 
     open func doSignOut(using parameters: [String: Any],
                         with progress: PTCLProgressBlock?,
-                        and block: @escaping PTCLAuthenticationBlockVoidBoolError) throws {
+                        and block: @escaping PTCLAuthenticationBlockVoidBoolDNSError) throws {
         guard nextWorker != nil else {
             return
         }
