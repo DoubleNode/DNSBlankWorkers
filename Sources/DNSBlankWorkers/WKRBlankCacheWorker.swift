@@ -34,7 +34,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
 
     open func doDeleteObject(for id: String,
                              with progress: PTCLProgressBlock?,
-                             and block: PTCLCacheBlockVoidAnyError?) throws {
+                             and block: PTCLCacheBlockVoidError?) throws {
         guard nextWorker != nil else {
             return
         }
@@ -52,23 +52,25 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
         try nextWorker!.doReadObject(for: id, with: progress, and:block)
     }
 
-    open func doLoadImage(for url: NSURL,
+    open func doLoadImage(from url: NSURL,
+                          for id: String,
                           with progress: PTCLProgressBlock?,
                           and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             return
         }
 
-        try nextWorker!.doLoadImage(for: url, with: progress, and:block)
+        try nextWorker!.doLoadImage(from: url, for: id, with: progress, and:block)
     }
 
-    open func doUpdateObject(for id: String,
-                             with progress: PTCLProgressBlock?,
-                             and block: PTCLCacheBlockVoidAnyError?) throws {
+    open func doUpdate(object: Any,
+                       for id: String,
+                       with progress: PTCLProgressBlock?,
+                       and block: PTCLCacheBlockVoidAnyError?) throws {
         guard nextWorker != nil else {
             return
         }
 
-        try nextWorker!.doUpdateObject(for: id, with: progress, and:block)
+        try nextWorker!.doUpdate(object: object, for: id, with: progress, and:block)
     }
 }
