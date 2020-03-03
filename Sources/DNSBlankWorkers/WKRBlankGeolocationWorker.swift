@@ -33,7 +33,7 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
     // MARK: - Business Logic / Single Item CRUD
 
     open func doLocate(with progress: PTCLProgressBlock?,
-                       and block: PTCLGeolocationBlockVoidStringError?) throws {
+                       and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
         guard nextWorker != nil else {
             return
         }
@@ -43,7 +43,7 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
 
     open func doTrackLocation(for processKey: String,
                               with progress: PTCLProgressBlock?,
-                              and block: PTCLGeolocationBlockVoidStringError?) throws {
+                              and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
         guard nextWorker != nil else {
             return
         }

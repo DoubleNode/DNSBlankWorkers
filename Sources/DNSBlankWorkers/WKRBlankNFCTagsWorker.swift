@@ -34,7 +34,7 @@ open class WKRBlankNFCTagsWorker: WKRBlankBaseWorker, PTCLNFCTags_Protocol
 
     open func doScanTags(for key: String,
                          with progress: PTCLProgressBlock?,
-                         and block: PTCLNFCTagsBlockVoidArrayNFCNDEFMessageError?) throws {
+                         and block: PTCLNFCTagsBlockVoidArrayNFCNDEFMessageDNSError?) throws {
         guard nextWorker != nil else {
             return
         }
