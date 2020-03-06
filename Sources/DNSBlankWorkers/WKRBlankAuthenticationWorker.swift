@@ -6,6 +6,7 @@
 //  Copyright © 2019 - 2016 Darren Ehlers and DoubleNode, LLC. All rights reserved.
 //
 
+import DNSDataObjects
 import DNSProtocols
 import Foundation
 
@@ -43,7 +44,6 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                                               with: progress,
                                               and: block)
     }
-
     open func doSignIn(from username: String?,
                        and password: String?,
                        using parameters: [String: Any],
@@ -59,7 +59,6 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                                  with: progress,
                                  and: block)
     }
-
     open func doSignOut(using parameters: [String: Any],
                         with progress: PTCLProgressBlock?,
                         and block: @escaping PTCLAuthenticationBlockVoidBoolDNSError) throws {
@@ -70,5 +69,20 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
         try nextWorker!.doSignOut(using: parameters,
                                   with: progress,
                                   and: block)
+    }
+    open func doSignUp(from user: DAOUser?,
+                       and password: String?,
+                       using parameters: [String: Any],
+                       with progress: PTCLProgressBlock?,
+                       and block: @escaping PTCLAuthenticationBlockVoidBoolAccessDataDNSError) throws {
+        guard nextWorker != nil else {
+            return
+        }
+        
+        try nextWorker!.doSignUp(from: user,
+                                 and: password,
+                                 using: parameters,
+                                 with: progress,
+                                 and: block)
     }
 }
