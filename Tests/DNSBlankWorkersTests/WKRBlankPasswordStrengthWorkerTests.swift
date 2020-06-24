@@ -1,5 +1,5 @@
 //
-//  DNSBlankWorkers.swift
+//  WKRBlankPasswordStrengthWorkerTests.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkersTests
 //
 //  Created by Darren Ehlers.
