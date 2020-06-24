@@ -48,4 +48,4 @@ DNSBlankWorkers and the DNSFramework are owned and maintained by Darren Ehlers a
 
 ## License
 
-DNSBlankWorkers and the DNSFramework are Copyright © 2019 - 2016 Darren Ehlers and DoubleNode, LLC. All rights reserved.
+DNSBlankWorkers and the DNSFramework are Copyright © 2020 - 2016 Darren Ehlers and DoubleNode, LLC. All rights reserved.
