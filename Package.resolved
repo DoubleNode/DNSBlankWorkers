@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "AtomicSwift",
-        "repositoryURL": "https://github.com/MarioIannotta/AtomicSwift.git",
+        "repositoryURL": "https://github.com/DoubleNodeOpen/AtomicSwift.git",
         "state": {
           "branch": null,
-          "revision": "e2913c6e873bc60237dd138ba0db9b109016dd80",
-          "version": "1.2.1"
+          "revision": "33cc39dfb1b48898b32922b67d11a95e2bfa2e57",
+          "version": "1.2.2"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "9d22a97f98089b760e581a888ecba59e8e5e3a82",
-          "version": "1.1.1"
+          "revision": "6bddbe5b8b9da74ed72edb58836bc70f4d5d8935",
+          "version": "1.2.1"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCoreThreading.git",
         "state": {
           "branch": null,
-          "revision": "5bf391d08597400c8603e73a4e5bdfa87ff8e1df",
-          "version": "1.1.0"
+          "revision": "c781049b43854080188112d1a05f70d4de2e0fc9",
+          "version": "1.2.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "add289a6073149e2d6c84308d7abd916431ba447",
-          "version": "1.1.0"
+          "revision": "1c0db562741f015e8d56791fc6beb890456f6108",
+          "version": "1.2.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "9b82354e125f2b464de320ff537a16dd7a4de51f",
-          "version": "1.1.0"
+          "revision": "f178caa3a09cd14ba6c9fa774264b7aa29430f57",
+          "version": "1.2.1"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/Nirma/SFSymbol",
         "state": {
           "branch": null,
-          "revision": "5eba1ce4fc19b2f5aca2208b5927c544e0e89963",
-          "version": "0.2.0"
+          "revision": "7cc6b8f82736b7177dca899f9eb08c10e9fa25a6",
+          "version": "0.5.0"
         }
       },
       {
