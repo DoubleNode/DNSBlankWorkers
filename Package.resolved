@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "6bddbe5b8b9da74ed72edb58836bc70f4d5d8935",
-          "version": "1.2.1"
+          "revision": "9060dda596932dd154025ef73a5a975f804ad28c",
+          "version": "1.2.34"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "f178caa3a09cd14ba6c9fa774264b7aa29430f57",
-          "version": "1.2.1"
+          "revision": "3b09bf289c600c4cfd6902117399866e4ce4d4a0",
+          "version": "1.2.2"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/Nirma/SFSymbol",
         "state": {
           "branch": null,
-          "revision": "7cc6b8f82736b7177dca899f9eb08c10e9fa25a6",
-          "version": "0.5.0"
+          "revision": "01bda7aadcedd27fdd599e1370c7989e8d746b85",
+          "version": "0.5.1"
         }
       },
       {

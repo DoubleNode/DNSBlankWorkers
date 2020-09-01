@@ -35,7 +35,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
 
     open func doCheckAuthentication(using parameters: [String: Any],
                                     with progress: PTCLProgressBlock?,
-                                    and block: PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError) throws {
+                                    and block: @escaping PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError) throws {
         guard nextWorker != nil else {
             return
         }
