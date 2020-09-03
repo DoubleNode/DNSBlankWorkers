@@ -52,6 +52,16 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
         try nextWorker!.doReadObject(for: id, with: progress, and:block)
     }
 
+    open func doReadObject(for id: String,
+                           with progress: PTCLProgressBlock?,
+                           and block: PTCLCacheBlockVoidStringDNSError?) throws {
+        guard nextWorker != nil else {
+            return
+        }
+
+        try nextWorker!.doReadObject(for: id, with: progress, and:block)
+    }
+
     open func doLoadImage(from url: NSURL,
                           for id: String,
                           with progress: PTCLProgressBlock?,
