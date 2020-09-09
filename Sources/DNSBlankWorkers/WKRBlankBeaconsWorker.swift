@@ -6,6 +6,7 @@
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSDataObjects
 import DNSProtocols
 import Foundation
 
@@ -32,6 +33,25 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
 
     // MARK: - Business Logic / Single Item CRUD
 
+    open func doLoadBeacons(in center: DAOCenter,
+                            with progress: PTCLProgressBlock?,
+                            and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+        guard nextWorker != nil else {
+            return
+        }
+
+        try nextWorker!.doLoadBeacons(in: center, with: progress, and: block)
+    }
+    open func doLoadBeacons(in center: DAOCenter,
+                            for activity: DAOActivity,
+                            with progress: PTCLProgressBlock?,
+                            and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+        guard nextWorker != nil else {
+            return
+        }
+
+        try nextWorker!.doLoadBeacons(in: center, for: activity, with: progress, and: block)
+    }
     open func doRangeBeacons(named uuids: [UUID],
                              for processKey: String,
                              with progress: PTCLProgressBlock?,
@@ -42,7 +62,6 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
 
         try nextWorker!.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
     }
-
     open func doStopRangeBeacons(for processKey: String) throws {
         guard nextWorker != nil else {
             return
