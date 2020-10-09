@@ -11,6 +11,17 @@ import Foundation
 
 open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
 {
+    public var networkConfigurator: PTCLBase_NetworkConfigurator?
+    
+    static public var languageCode: String = {
+        let currentLocale = NSLocale.current
+        var languageCode = currentLocale.languageCode ?? "en"
+        if languageCode == "es" {
+            languageCode = "es-419"
+        }
+        return languageCode
+    }()
+    
     override public required init() {
         super.init()
     }
@@ -25,6 +36,15 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
     open func disableOption(option: String) {
     }
 
+    open func defaultHeaders() -> [String: String] {
+        
+        return [
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Accept-Language": "\(WKRBlankBaseWorker.languageCode), en;q=0.5, *;q=0.1"
+        ]
+    }
+    
     // MARK: - UIWindowSceneDelegate methods
 
     // Called when the scene has moved from an inactive state to an active state.

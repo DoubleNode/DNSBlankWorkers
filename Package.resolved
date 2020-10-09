@@ -2,11 +2,20 @@
   "object": {
     "pins": [
       {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
+        "state": {
+          "branch": null,
+          "revision": "becd9a729a37bdbef5bc39dc3c702b99f9e3d046",
+          "version": "5.2.2"
+        }
+      },
+      {
         "package": "AtomicSwift",
         "repositoryURL": "https://github.com/DoubleNodeOpen/AtomicSwift.git",
         "state": {
           "branch": null,
-          "revision": "33cc39dfb1b48898b32922b67d11a95e2bfa2e57",
+          "revision": "58fbeed795715d9c8dd7bb7ae1c36f37f2827089",
           "version": "1.2.2"
         }
       },
@@ -15,8 +24,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "88667f69eddbb0c6e27ac025486b848f0c1d2f16",
-          "version": "1.2.37"
+          "revision": "15d36c6fbf7c6bd851c00d9a35bac8a1d94fe5f2",
+          "version": "1.2.38"
         }
       },
       {
@@ -42,8 +51,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "1cfebd43cf09646d49efc7397a978806cdee5d89",
-          "version": "1.2.4"
+          "revision": "4efba04cc409edf5b9be3843c604739583097a65",
+          "version": "1.2.5"
         }
       },
       {
@@ -60,8 +69,8 @@
         "repositoryURL": "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
         "state": {
           "branch": null,
-          "revision": "e0fb3a74cb993d7dcf1e56734cdc98ad6e6d8176",
-          "version": "1.9.1"
+          "revision": "c7b2fceb3fd0095acba4792c728f3f062baf8fb9",
+          "version": "1.9.2"
         }
       }
     ]
