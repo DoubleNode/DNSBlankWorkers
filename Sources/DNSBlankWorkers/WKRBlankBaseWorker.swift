@@ -9,6 +9,48 @@
 import DNSProtocols
 import Foundation
 
+public enum WKRBlankBaseWorkerError: Error
+{
+    case dataError(domain: String, file: String, line: String, method: String)
+    case invalidUrl(domain: String, file: String, line: String, method: String)
+    case networkError(domain: String, file: String, line: String, method: String)
+    case noAccounts(domain: String, file: String, line: String, method: String)
+}
+extension WKRBlankBaseWorkerError: DNSError {
+    public var nsError: NSError! {
+        switch self {
+        case .dataError(let domain, let file, let line, let method):
+            let userInfo: [String : Any] = ["DNSDomain": domain, "DNSFile": file, "DNSLine": line, "DNSMethod": method,
+                                            NSLocalizedDescriptionKey: self.errorDescription ?? "Unknown Error"]
+            return NSError.init(domain: domain, code: -9999, userInfo: userInfo)
+        case .invalidUrl(let domain, let file, let line, let method):
+            let userInfo: [String : Any] = ["DNSDomain": domain, "DNSFile": file, "DNSLine": line, "DNSMethod": method,
+                                            NSLocalizedDescriptionKey: self.errorDescription ?? "Unknown Error"]
+            return NSError.init(domain: domain, code: -9999, userInfo: userInfo)
+        case .networkError(let domain, let file, let line, let method):
+            let userInfo: [String : Any] = ["DNSDomain": domain, "DNSFile": file, "DNSLine": line, "DNSMethod": method,
+                                            NSLocalizedDescriptionKey: self.errorDescription ?? "Unknown Error"]
+            return NSError.init(domain: domain, code: -9999, userInfo: userInfo)
+        case .noAccounts(let domain, let file, let line, let method):
+            let userInfo: [String : Any] = ["DNSDomain": domain, "DNSFile": file, "DNSLine": line, "DNSMethod": method,
+                                            NSLocalizedDescriptionKey: self.errorDescription ?? "Unknown Error"]
+            return NSError.init(domain: domain, code: -9999, userInfo: userInfo)
+        }
+    }
+    public var errorDescription: String? {
+        switch self {
+        case .dataError(let domain, let file, let line, let method):
+            return NSLocalizedString("Data error (\(domain):\(file):\(line):\(method))", comment: "")
+        case .invalidUrl(let domain, let file, let line, let method):
+            return NSLocalizedString("Invalid URL (\(domain):\(file):\(line):\(method))", comment: "")
+        case .networkError(let domain, let file, let line, let method):
+            return NSLocalizedString("Network error (\(domain):\(file):\(line):\(method))", comment: "")
+        case .noAccounts(let domain, let file, let line, let method):
+            return NSLocalizedString("No matching accounts found (\(domain):\(file):\(line):\(method))", comment: "")
+        }
+    }
+}
+
 open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
 {
     public var networkConfigurator: PTCLBase_NetworkConfigurator?
