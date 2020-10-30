@@ -22,12 +22,13 @@ open class WKRBlankNFCTagsWorker: WKRBlankBaseWorker, PTCLNFCTags_Protocol
         self.nextWorker = nextWorker
     }
 
-    override open func enableOption(option: String) {
-        nextWorker?.enableOption(option: option)
+    override open func disableOption(_ option: String) {
+        super.disableOption(option)
+        nextWorker?.disableOption(option)
     }
-
-    override open func disableOption(option: String) {
-        nextWorker?.disableOption(option: option)
+    override open func enableOption(_ option: String) {
+        super.enableOption(option)
+        nextWorker?.enableOption(option)
     }
 
     // MARK: - Business Logic / Single Item CRUD
