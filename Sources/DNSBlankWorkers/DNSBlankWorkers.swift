@@ -7,8 +7,3 @@
 //
 
 import DNSProtocols
-
-public enum DNSBlankWorkersError: Error
-{
-    case notImplemented(domain: String, file: String, line: String, method: String)
-}
