@@ -17,9 +17,12 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     public var reviewRequestLastTime: Date?
 
     public var appDidCrashLastRun: Bool = false
-    public var daysUntilPrompt: UInt = 0
-    public var usesUntilPrompt: UInt = 0
     public var daysBeforeReminding: UInt = 0
+    public var daysUntilPrompt: UInt = 0
+    public var hoursSinceLastLaunch: UInt = 0
+    public var usesFrequency: UInt = 0
+    public var usesSinceFirstLaunch: UInt = 0
+    public var usesUntilPrompt: UInt = 0
 
     public var nextWorker: PTCLAppReview_Protocol?
 
