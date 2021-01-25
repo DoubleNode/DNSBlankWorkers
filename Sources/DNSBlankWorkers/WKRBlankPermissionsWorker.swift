@@ -6,7 +6,6 @@
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
 //
 
-import DNSBlankWorkers
 import DNSCore
 import DNSProtocols
 
