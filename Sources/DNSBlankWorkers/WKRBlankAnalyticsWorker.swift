@@ -31,70 +31,63 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         nextWorker?.enableOption(option)
     }
 
-    // MARK: - Identify
+    // MARK: - Auto-Track -
+    open func doAutoTrack(class: String, method: String) throws {
+        try self.doAutoTrack(class: `class`, method: method, properties: [:], options: [:])
+    }
+    open func doAutoTrack(class: String, method: String, properties: [String: Any]) throws {
+        try self.doAutoTrack(class: `class`, method: method, properties: properties, options: [:])
+    }
+    open func doAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any]) throws {
+        guard nextWorker != nil else { return }
+        try nextWorker!.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+    }
 
+    // MARK: - Identify -
     open func doIdentify(userId: String) throws {
-        try self.doIdentify(userId: userId, traits: nil, options: nil)
+        try self.doIdentify(userId: userId, traits: [:], options: [:])
     }
-    open func doIdentify(userId: String, traits: [String: Any]?) throws {
-        try self.doIdentify(userId: userId, traits: traits, options: nil)
+    open func doIdentify(userId: String, traits: [String: Any]) throws {
+        try self.doIdentify(userId: userId, traits: traits, options: [:])
     }
-    open func doIdentify(userId: String,
-                         traits: [String: Any]? = nil,
-                         options: [String: Any]? = nil) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+    open func doIdentify(userId: String, traits: [String: Any], options: [String: Any]) throws {
+        guard nextWorker != nil else { return }
         try nextWorker!.doIdentify(userId: userId, traits: traits, options: options)
     }
 
-    // MARK: - Track
+    // MARK: - Track -
     open func doTrack(event: String) throws {
-        try self.doTrack(event: event, properties: nil, options: nil)
+        try self.doTrack(event: event, properties: [:], options: [:])
     }
-    open func doTrack(event: String, properties: [String: Any]?) throws {
-        try self.doTrack(event: event, properties: properties, options: nil)
+    open func doTrack(event: String, properties: [String: Any]) throws {
+        try self.doTrack(event: event, properties: properties, options: [:])
     }
-    open func doTrack(event: String, properties: [String: Any]? = nil, options: [String: Any]? = nil) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+    open func doTrack(event: String, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
+        guard nextWorker != nil else { return }
         try nextWorker!.doTrack(event: event, properties: properties, options: options)
     }
 
-    // MARK: - Screen
+    // MARK: - Screen -
     open func doScreen(screenTitle: String) throws {
-        try self.doScreen(screenTitle: screenTitle, properties: nil, options: nil)
+        try self.doScreen(screenTitle: screenTitle, properties: [:], options: [:])
     }
-    open func doScreen(screenTitle: String, properties: [String: Any]?) throws {
-        try self.doScreen(screenTitle: screenTitle, properties: properties, options: nil)
+    open func doScreen(screenTitle: String, properties: [String: Any]) throws {
+        try self.doScreen(screenTitle: screenTitle, properties: properties, options: [:])
     }
-    open func doScreen(screenTitle: String,
-                       properties: [String: Any]? = nil,
-                       options: [String: Any]? = nil) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+    open func doScreen(screenTitle: String, properties: [String: Any], options: [String: Any]) throws {
+        guard nextWorker != nil else { return }
         try nextWorker!.doScreen(screenTitle: screenTitle, properties: properties, options: options)
     }
 
-    // MARK: - Group
+    // MARK: - Group -
     open func doGroup(groupId: String) throws {
-        try self.doGroup(groupId: groupId, traits: nil, options: nil)
+        try self.doGroup(groupId: groupId, traits: [:], options: [:])
     }
-    open func doGroup(groupId: String, traits: [String: Any]?) throws {
-        try self.doGroup(groupId: groupId, traits: traits, options: nil)
+    open func doGroup(groupId: String, traits: [String: Any]) throws {
+        try self.doGroup(groupId: groupId, traits: traits, options: [:])
     }
-    open func doGroup(groupId: String,
-                      traits: [String: Any]? = nil,
-                      options: [String: Any]? = nil) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+    open func doGroup(groupId: String, traits: [String: Any], options: [String: Any]) throws {
+        guard nextWorker != nil else { return }
         try nextWorker!.doGroup(groupId: groupId, traits: traits, options: options)
     }
 }
