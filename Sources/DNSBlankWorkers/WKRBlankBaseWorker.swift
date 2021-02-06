@@ -30,6 +30,7 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
     override public required init() {
         super.init()
     }
+    @objc
     open func configure() {
     }
 
