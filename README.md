@@ -1,7 +1,7 @@
-![DoubleNode Swift Framework](https://github.com/DoubleNode/DNSCore/raw/master/DNSFrameworkLogo.png)
+![DoubleNode Swift Framework](https://github.com/DoubleNode/DNSBlankWorkers/raw/master/DNSFrameworkLogo.png)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f473642e4404426b55fda500602e662)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DoubleNode/DNSCore&amp;utm_campaign=Badge_Grade)
-[![codecov](https://codecov.io/gh/DoubleNode/DNSCore/branch/master/graph/badge.svg?token=NcFMBk0g9t)](https://codecov.io/gh/DoubleNode/DNSCore)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f473642e4404426b55fda500602e662)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DoubleNode/DNSBlankWorkers&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/DoubleNode/DNSBlankWorkers/branch/master/graph/badge.svg?token=NcFMBk0g9t)](https://codecov.io/gh/DoubleNode/DNSBlankWorkers)
 
 # DNSBlankWorkers
 
@@ -41,7 +41,6 @@ dependencies: [
 ## Dependencies
 
 -   DNSProtocols v1.3.0+
--   DNSProtocolsAdvanced v1.3.0+
 
 ## Credits
 

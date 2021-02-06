@@ -56,15 +56,6 @@
         }
       },
       {
-        "package": "DNSProtocolsAdvanced",
-        "repositoryURL": "https://github.com/DoubleNode/DNSProtocolsAdvanced.git",
-        "state": {
-          "branch": null,
-          "revision": "713e8b6c62abdbc627dab03914f34e5bf3251691",
-          "version": "1.3.0"
-        }
-      },
-      {
         "package": "SFSymbol",
         "repositoryURL": "https://github.com/Nirma/SFSymbol",
         "state": {
