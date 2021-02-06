@@ -7,6 +7,7 @@
 //
 
 import DNSProtocols
+import DNSProtocolsAdvanced
 import Foundation
 
 open class WKRBlankNFCTagsWorker: WKRBlankBaseWorker, PTCLNFCTags_Protocol

@@ -40,7 +40,8 @@ dependencies: [
 
 ## Dependencies
 
--   DNSProtocols v1.2.0+
+-   DNSProtocols v1.3.0+
+-   DNSProtocolsAdvanced v1.3.0+
 
 ## Credits
 

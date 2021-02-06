@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "1191d22fcfe57cf055cfbf72f31cc1cf936a0afd",
-          "version": "1.3.18"
+          "revision": "893f4554d07898cb50228b12892515e92990e5ac",
+          "version": "1.3.23"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCoreThreading.git",
         "state": {
           "branch": null,
-          "revision": "46258c60d2d1f418d1ebd2b928c84db3ece5bfa5",
-          "version": "1.3.4"
+          "revision": "7b8134557fb9a6e2c5a97627d5fdcb11e13c646b",
+          "version": "1.3.8"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "d797ef1d1f9117908a4b98d13aa88b8de1a18079",
-          "version": "1.3.8"
+          "revision": "ed4310ffb760b77b60a92e2a00b82734266d09d1",
+          "version": "1.3.11"
         }
       },
       {
@@ -51,8 +51,17 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "c8f0ca4004a1aaf89ec4035fd80871e0a5795ba2",
-          "version": "1.3.9"
+          "revision": "ffacd8035d6c835e504d7fac273631b3abb8a6b1",
+          "version": "1.3.11"
+        }
+      },
+      {
+        "package": "DNSProtocolsAdvanced",
+        "repositoryURL": "https://github.com/DoubleNode/DNSProtocolsAdvanced.git",
+        "state": {
+          "branch": null,
+          "revision": "713e8b6c62abdbc627dab03914f34e5bf3251691",
+          "version": "1.3.0"
         }
       },
       {
@@ -60,8 +69,8 @@
         "repositoryURL": "https://github.com/Nirma/SFSymbol",
         "state": {
           "branch": null,
-          "revision": "01bda7aadcedd27fdd599e1370c7989e8d746b85",
-          "version": "0.5.1"
+          "revision": "08dda98b2ba4a36653becaab6f4234f5fc2592d2",
+          "version": "1.0.0"
         }
       },
       {
