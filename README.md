@@ -40,7 +40,10 @@ dependencies: [
 
 ## Dependencies
 
--   DNSProtocols v1.3.0+
+-   DNSCore v1.4.0+
+-   DNSDataObjects v1.4.0+
+-   DNSError v1.4.0+
+-   DNSProtocols v1.4.0+
 
 ## Credits
 
