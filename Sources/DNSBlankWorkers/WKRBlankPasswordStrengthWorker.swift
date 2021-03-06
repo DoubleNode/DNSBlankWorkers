@@ -36,10 +36,7 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
     // MARK: - Business Logic / Single Item CRUD
 
     open func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrengthType {
-        guard nextWorker != nil else {
-            return .weak
-        }
-
+        guard nextWorker != nil else { return .weak }
         return try nextWorker!.doCheckPasswordStrength(for: password)
     }
 }

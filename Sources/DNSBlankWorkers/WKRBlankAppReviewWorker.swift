@@ -47,10 +47,7 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     // MARK: - Business Logic / Single Item CRUD
 
     open func doReview() throws -> Bool {
-        guard nextWorker != nil else {
-            return false
-        }
-
+        guard nextWorker != nil else { return false }
         return try nextWorker!.doReview()
     }
 }

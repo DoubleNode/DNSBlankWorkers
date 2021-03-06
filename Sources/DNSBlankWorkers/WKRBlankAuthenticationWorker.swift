@@ -37,10 +37,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     open func doCheckAuthentication(using parameters: [String: Any],
                                     with progress: PTCLProgressBlock?,
                                     and block: @escaping PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doCheckAuthentication(using: parameters,
                                               with: progress,
                                               and: block)
@@ -50,10 +47,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: @escaping PTCLAuthenticationBlockVoidBoolAccessDataDNSError) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doSignIn(from: username,
                                  and: password,
                                  using: parameters,
@@ -63,10 +57,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     open func doSignOut(using parameters: [String: Any],
                         with progress: PTCLProgressBlock?,
                         and block: @escaping PTCLAuthenticationBlockVoidBoolDNSError) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doSignOut(using: parameters,
                                   with: progress,
                                   and: block)
@@ -76,10 +67,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: @escaping PTCLAuthenticationBlockVoidBoolAccessDataDNSError) throws {
-        guard nextWorker != nil else {
-            return
-        }
-        
+        guard nextWorker != nil else { return }
         try nextWorker!.doSignUp(from: user,
                                  and: password,
                                  using: parameters,

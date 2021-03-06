@@ -35,30 +35,21 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
 
     open func doLocate(with progress: PTCLProgressBlock?,
                        and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doLocate(with: progress, and: block)
     }
 
     open func doTrackLocation(for processKey: String,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doTrackLocation(for: processKey,
                                         with: progress,
                                         and: block)
     }
 
     open func doStopTrackLocation(for processKey: String) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doStopTrackLocation(for: processKey)
     }
 }

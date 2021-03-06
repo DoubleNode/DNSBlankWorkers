@@ -59,110 +59,77 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, PTCLValidation_Protocol
     open func doValidateBirthdate(for birthdate: Date,
                                   with progress: PTCLProgressBlock?,
                                   and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateBirthdate(for: birthdate, with: progress, and: block)
     }
 
     open func doValidateEmail(for email: String,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateEmail(for: email, with: progress, and: block)
     }
 
     open func doValidateHandle(for handle: String,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateHandle(for: handle, with: progress, and: block)
     }
 
     open func doValidateName(for name: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateName(for: name, with: progress, and: block)
     }
     
     open func doValidateNumber(for number: String,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateNumber(for: number, with: progress, and: block)
     }
                                       
     open func doValidatePassword(for password: String,
                                  with progress: PTCLProgressBlock?,
                                  and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidatePassword(for: password, with: progress, and: block)
     }
 
     open func doValidatePercentage(for percentage: String,
                                    with progress: PTCLProgressBlock?,
                                    and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidatePercentage(for: percentage, with: progress, and: block)
     }
 
     open func doValidatePhone(for phone: String,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidatePhone(for: phone, with: progress, and: block)
     }
 
     open func doValidateSearch(for search: String,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateSearch(for: search, with: progress, and: block)
     }
 
     open func doValidateState(for state: String,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateState(for: state, with: progress, and: block)
     }
 
     open func doValidateUnsignedNumber(for number: String,
                                        with progress: PTCLProgressBlock?,
                                        and block: PTCLValidationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doValidateUnsignedNumber(for: number, with: progress, and: block)
     }
 }

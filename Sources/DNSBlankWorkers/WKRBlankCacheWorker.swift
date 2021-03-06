@@ -36,52 +36,33 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
     open func doDeleteObject(for id: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLCacheBlockVoidDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doDeleteObject(for: id, with: progress, and:block)
     }
-
-    open func doReadObject(for id: String,
-                           with progress: PTCLProgressBlock?,
-                           and block: PTCLCacheBlockVoidAnyDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
-        try nextWorker!.doReadObject(for: id, with: progress, and:block)
-    }
-
-    open func doReadObject(for id: String,
-                           with progress: PTCLProgressBlock?,
-                           and block: PTCLCacheBlockVoidStringDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
-        try nextWorker!.doReadObject(for: id, with: progress, and:block)
-    }
-
     open func doLoadImage(from url: NSURL,
                           for id: String,
                           with progress: PTCLProgressBlock?,
                           and block: PTCLCacheBlockVoidAnyDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doLoadImage(from: url, for: id, with: progress, and:block)
     }
-
+    open func doReadObject(for id: String,
+                           with progress: PTCLProgressBlock?,
+                           and block: PTCLCacheBlockVoidAnyDNSError?) throws {
+        guard nextWorker != nil else { return }
+        try nextWorker!.doReadObject(for: id, with: progress, and:block)
+    }
+    open func doReadObject(for id: String,
+                           with progress: PTCLProgressBlock?,
+                           and block: PTCLCacheBlockVoidStringDNSError?) throws {
+        guard nextWorker != nil else { return }
+        try nextWorker!.doReadObject(for: id, with: progress, and:block)
+    }
     open func doUpdate(object: Any,
                        for id: String,
                        with progress: PTCLProgressBlock?,
                        and block: PTCLCacheBlockVoidAnyDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-
+        guard nextWorker != nil else { return }
         try nextWorker!.doUpdate(object: object, for: id, with: progress, and:block)
     }
 }
