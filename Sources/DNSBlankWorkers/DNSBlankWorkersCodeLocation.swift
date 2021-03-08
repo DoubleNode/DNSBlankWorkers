@@ -1,5 +1,5 @@
 //
-//  DNSCoreBlankWorkersLocation.swift
+//  DNSCoreBlankWorkersCodeLocation.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSCore
 //
 //  Created by Darren Ehlers.
@@ -8,6 +8,6 @@
 
 import DNSError
 
-open class DNSCoreBlankWorkersLocation: DNSCodeLocation {
+open class DNSCoreBlankWorkersCodeLocation: DNSCodeLocation {
     override open class var domainPreface: String { "com.doublenode.blankWorkers." }
 }
