@@ -29,7 +29,7 @@ let package = Package(
         .package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.4.10"),
         .package(url: "https://github.com/DoubleNode/DNSDataObjects.git", from: "1.4.4"),
         .package(url: "https://github.com/DoubleNode/DNSError.git", from: "1.4.2"),
-        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.4.11"),
+        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.4.15"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

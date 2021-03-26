@@ -80,13 +80,13 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
     }
 
     // MARK: - Track -
-    open func doTrack(event: String) throws {
+    open func doTrack(event: PTCLAnalyticsEvents) throws {
         try self.doTrack(event: event, properties: [:], options: [:])
     }
-    open func doTrack(event: String, properties: [String: Any]) throws {
+    open func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any]) throws {
         try self.doTrack(event: event, properties: properties, options: [:])
     }
-    open func doTrack(event: String, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
+    open func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
         guard nextWorker != nil else { return }
         try nextWorker!.doTrack(event: event, properties: properties, options: options)
     }
