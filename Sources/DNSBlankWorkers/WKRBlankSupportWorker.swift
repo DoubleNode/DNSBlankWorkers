@@ -9,6 +9,7 @@
 import Combine
 import DNSCore
 import DNSProtocols
+import UIKit
 
 open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
 {
@@ -38,5 +39,29 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
             return Future<Int, Error> { $0(.success(0)) }.eraseToAnyPublisher()
         }
         return nextWorker.doGetUpdatedCount(with: progress)
+    }
+    open func doPrepare(attachment image: UIImage,
+                        with progress: PTCLProgressBlock?) -> AnyPublisher<PTCLSupportAttachment, Error> {
+        guard let nextWorker = self.nextWorker else {
+            return Future<PTCLSupportAttachment, Error> {
+                $0(.success(PTCLSupportAttachment(image: image)))
+            }.eraseToAnyPublisher()
+        }
+        return nextWorker.doPrepare(attachment: image, with: progress)
+    }
+    open func doSendRequest(subject: String,
+                            body: String,
+                            tags: [String],
+                            attachments: [PTCLSupportAttachment],
+                            properties: [String: String],
+                            with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        guard let nextWorker = self.nextWorker else {
+            return Future<Bool, Error> {
+                $0(.success(true))
+            }.eraseToAnyPublisher()
+        }
+        return nextWorker.doSendRequest(subject: subject, body: body, tags: tags,
+                                        attachments: attachments, properties: properties,
+                                        with: progress)
     }
 }
