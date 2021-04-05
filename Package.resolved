@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
           "branch": null,
-          "revision": "eaf6e622dd41b07b251d8f01752eab31bc811493",
-          "version": "5.4.1"
+          "revision": "4d19ad82f80cc71ff829b941ded114c56f4f604c",
+          "version": "5.4.2"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "4aa93ad29a4e990cd2d8626ca2e6c1ae1a770e3d",
-          "version": "1.4.19"
+          "revision": "8d9b7cdfa8e5cd253b1ab341564e7c74e5ade384",
+          "version": "1.5.0"
         }
       },
       {

@@ -34,7 +34,7 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
 
     open func doLoad(for group: String,
                      with progress: PTCLProgressBlock?,
-                     and block: @escaping PTCLCMSBlockVoidArrayDNSError) throws {
+                     and block: PTCLCMSBlockVoidArrayDNSError?) throws {
         guard nextWorker != nil else {
             return
         }

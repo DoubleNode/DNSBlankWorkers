@@ -35,26 +35,26 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
     open func doRequest(_ desire: PTCLPermissions.Desire,
                         _ permission: PTCLPermissions.Permission,
                         with progress: PTCLProgressBlock?,
-                        and block: @escaping PTCLPermissionsBlockVoidPTCLPermissionActionError) throws {
+                        and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
         guard nextWorker != nil else { return }
         try nextWorker!.doRequest(desire, permission, with: progress, and: block)
     }
     open func doRequest(_ desire: PTCLPermissions.Desire,
                         _ permissions: [PTCLPermissions.Permission],
                         with progress: PTCLProgressBlock?,
-                        and block: @escaping PTCLPermissionsBlockVoidArrayPTCLPermissionActionError) throws {
+                        and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
         guard nextWorker != nil else { return }
         try nextWorker!.doRequest(desire, permissions, with: progress, and: block)
     }
     open func doStatus(of permissions: [PTCLPermissions.Permission],
                        with progress: PTCLProgressBlock?,
-                       and block: @escaping PTCLPermissionsBlockVoidArrayPTCLPermissionActionError) throws {
+                       and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
         guard nextWorker != nil else { return }
         try nextWorker!.doStatus(of: permissions, with: progress, and: block)
     }
     open func doWait(for permission: PTCLPermissions.Permission,
                      with progress: PTCLProgressBlock?,
-                     and block: @escaping PTCLPermissionsBlockVoidPTCLPermissionActionError) throws {
+                     and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
         guard nextWorker != nil else { return }
         try nextWorker!.doWait(for: permission, with: progress, and: block)
     }
