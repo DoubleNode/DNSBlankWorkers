@@ -43,7 +43,7 @@ dependencies: [
 -   DNSCore v1.5.3+
 -   DNSDataObjects v1.5.0+
 -   DNSError v1.5.0+
--   DNSProtocols v1.5.2+
+-   DNSProtocols v1.5.3+
 
 ## Credits
 
