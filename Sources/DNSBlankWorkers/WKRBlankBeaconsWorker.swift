@@ -12,14 +12,17 @@ import Foundation
 
 open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLBeacons_Protocol?
 
     public required init() {
         super.init()
     }
 
-    public required init(nextWorker: PTCLBeacons_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLBeacons_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -37,25 +40,37 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
     open func doLoadBeacons(in center: DAOCenter,
                             with progress: PTCLProgressBlock?,
                             and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doLoadBeacons(in: center, with: progress, and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doLoadBeacons(in: center, with: progress, and: block)
     }
     open func doLoadBeacons(in center: DAOCenter,
                             for activity: DAOActivity,
                             with progress: PTCLProgressBlock?,
                             and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doLoadBeacons(in: center, for: activity, with: progress, and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doLoadBeacons(in: center, for: activity, with: progress, and: block)
     }
     open func doRangeBeacons(named uuids: [UUID],
                              for processKey: String,
                              with progress: PTCLProgressBlock?,
                              and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
     }
     open func doStopRangeBeacons(for processKey: String) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doStopRangeBeacons(for: processKey)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doStopRangeBeacons(for: processKey)
     }
 }

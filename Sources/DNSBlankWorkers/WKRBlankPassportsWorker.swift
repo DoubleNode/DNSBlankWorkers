@@ -14,13 +14,16 @@ import Foundation
 
 open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLPassports_Protocol?
 
     public required init() {
         super.init()
     }
-    public required init(nextWorker: PTCLPassports_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLPassports_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -38,7 +41,10 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
     open func doLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
                              for account: DAOAccount,
                              with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
         }
         return nextWorker.doLoadPassport(of: passportType, for: account, with: progress)

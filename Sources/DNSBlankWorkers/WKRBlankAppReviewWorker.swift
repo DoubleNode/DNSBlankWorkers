@@ -24,14 +24,17 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     public var usesSinceFirstLaunch: UInt = 0
     public var usesUntilPrompt: UInt = 0
 
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLAppReview_Protocol?
 
     public required init() {
         super.init()
     }
 
-    public required init(nextWorker: PTCLAppReview_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLAppReview_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -47,7 +50,10 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     // MARK: - Business Logic / Single Item CRUD
 
     open func doReview() throws -> Bool {
-        guard nextWorker != nil else { return false }
-        return try nextWorker!.doReview()
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return false }
+        return try nextWorker.doReview()
     }
 }

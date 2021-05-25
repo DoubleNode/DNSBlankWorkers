@@ -11,6 +11,7 @@ import Foundation
 
 open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStrength_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLPasswordStrength_Protocol?
 
     public var minimumLength: Int32 = 6
@@ -19,8 +20,10 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
         super.init()
     }
 
-    public required init(nextWorker: PTCLPasswordStrength_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLPasswordStrength_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -36,7 +39,10 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
     // MARK: - Business Logic / Single Item CRUD
 
     open func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrengthType {
-        guard nextWorker != nil else { return .weak }
-        return try nextWorker!.doCheckPasswordStrength(for: password)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return .weak }
+        return try nextWorker.doCheckPasswordStrength(for: password)
     }
 }

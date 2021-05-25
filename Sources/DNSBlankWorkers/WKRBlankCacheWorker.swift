@@ -12,14 +12,17 @@ import UIKit
 
 open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLCache_Protocol?
 
     public required init() {
         super.init()
     }
 
-    public required init(nextWorker: PTCLCache_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLCache_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -36,7 +39,10 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
 
     open func doDeleteObject(for id: String,
                              with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
         }
         return nextWorker.doDeleteObject(for: id, with: progress)
@@ -44,21 +50,30 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
     open func doLoadImage(from url: NSURL,
                           for id: String,
                           with progress: PTCLProgressBlock?) -> AnyPublisher<UIImage, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<UIImage, Error> { $0(.success(UIImage())) }.eraseToAnyPublisher()
         }
         return nextWorker.doLoadImage(from: url, for: id, with: progress)
     }
     open func doReadObject(for id: String,
                            with progress: PTCLProgressBlock?) -> AnyPublisher<Any, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Any, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
         }
         return nextWorker.doReadObject(for: id, with: progress)
     }
     open func doReadObject(for id: String,
                            with progress: PTCLProgressBlock?) -> AnyPublisher<String, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<String, Error> { $0(.success("")) }.eraseToAnyPublisher()
         }
         return nextWorker.doReadObject(for: id, with: progress)
@@ -66,7 +81,10 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
     open func doUpdate(object: Any,
                        for id: String,
                        with progress: PTCLProgressBlock?) -> AnyPublisher<Any, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Any, Error> { $0(.success(object)) }.eraseToAnyPublisher()
         }
         return nextWorker.doUpdate(object: object, for: id, with: progress)

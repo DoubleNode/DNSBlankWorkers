@@ -11,13 +11,16 @@ import DNSProtocols
 
 open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLCMS_Protocol?
 
     public required init() {
         super.init()
     }
-    public required init(nextWorker: PTCLCMS_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLCMS_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -35,9 +38,10 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
     open func doLoad(for group: String,
                      with progress: PTCLProgressBlock?,
                      and block: PTCLCMSBlockVoidArrayDNSError?) throws {
-        guard nextWorker != nil else {
-            return
-        }
-        try nextWorker!.doLoad(for: group, with: progress, and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doLoad(for: group, with: progress, and: block)
     }
 }

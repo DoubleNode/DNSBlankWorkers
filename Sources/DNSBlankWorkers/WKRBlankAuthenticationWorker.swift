@@ -12,14 +12,17 @@ import Foundation
 
 open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLAuthentication_Protocol?
 
     public required init() {
         super.init()
     }
 
-    public required init(nextWorker: PTCLAuthentication_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLAuthentication_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -37,41 +40,53 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     open func doCheckAuthentication(using parameters: [String: Any],
                                     with progress: PTCLProgressBlock?,
                                     and block: PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doCheckAuthentication(using: parameters,
-                                              with: progress,
-                                              and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doCheckAuthentication(using: parameters,
+                                             with: progress,
+                                             and: block)
     }
     open func doSignIn(from username: String?,
                        and password: String?,
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doSignIn(from: username,
-                                 and: password,
-                                 using: parameters,
-                                 with: progress,
-                                 and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doSignIn(from: username,
+                                and: password,
+                                using: parameters,
+                                with: progress,
+                                and: block)
     }
     open func doSignOut(using parameters: [String: Any],
                         with progress: PTCLProgressBlock?,
                         and block: PTCLAuthenticationBlockVoidBoolDNSError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doSignOut(using: parameters,
-                                  with: progress,
-                                  and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doSignOut(using: parameters,
+                                 with: progress,
+                                 and: block)
     }
     open func doSignUp(from user: DAOUser?,
                        and password: String?,
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
-        guard nextWorker != nil else { return }
-        try nextWorker!.doSignUp(from: user,
-                                 and: password,
-                                 using: parameters,
-                                 with: progress,
-                                 and: block)
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else { return }
+        try nextWorker.doSignUp(from: user,
+                                and: password,
+                                using: parameters,
+                                with: progress,
+                                and: block)
     }
 }

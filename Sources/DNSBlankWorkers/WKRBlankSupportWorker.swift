@@ -13,13 +13,16 @@ import UIKit
 
 open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
 {
+    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
     public var nextWorker: PTCLSupport_Protocol?
 
     public required init() {
         super.init()
     }
-    public required init(nextWorker: PTCLSupport_Protocol) {
+    public required init(call callNextWhen: PTCLCallNextWhen,
+                         nextWorker: PTCLSupport_Protocol) {
         super.init()
+        self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
 
@@ -35,14 +38,20 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
     // MARK: - Business Logic / Single Item CRUD
 
     open func doGetUpdatedCount(with progress: PTCLProgressBlock?) -> AnyPublisher<Int, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Int, Error> { $0(.success(0)) }.eraseToAnyPublisher()
         }
         return nextWorker.doGetUpdatedCount(with: progress)
     }
     open func doPrepare(attachment image: UIImage,
                         with progress: PTCLProgressBlock?) -> AnyPublisher<PTCLSupportAttachment, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<PTCLSupportAttachment, Error> {
                 $0(.success(PTCLSupportAttachment(image: image)))
             }.eraseToAnyPublisher()
@@ -55,7 +64,10 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
                             attachments: [PTCLSupportAttachment],
                             properties: [String: String],
                             with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard let nextWorker = self.nextWorker else {
+        guard
+            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
+            let nextWorker = self.nextWorker
+        else {
             return Future<Bool, Error> {
                 $0(.success(true))
             }.eraseToAnyPublisher()
