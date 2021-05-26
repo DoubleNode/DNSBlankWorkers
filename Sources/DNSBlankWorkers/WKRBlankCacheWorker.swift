@@ -18,9 +18,8 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLCache_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLCache_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

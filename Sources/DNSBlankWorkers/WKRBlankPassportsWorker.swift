@@ -20,9 +20,8 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLPassports_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLPassports_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

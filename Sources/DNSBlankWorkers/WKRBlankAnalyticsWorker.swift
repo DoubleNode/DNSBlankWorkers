@@ -17,9 +17,8 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLAnalytics_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLAnalytics_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

@@ -30,9 +30,8 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLAppReview_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLAppReview_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

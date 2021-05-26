@@ -18,9 +18,8 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity_Prot
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLUserIdentity_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLUserIdentity_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

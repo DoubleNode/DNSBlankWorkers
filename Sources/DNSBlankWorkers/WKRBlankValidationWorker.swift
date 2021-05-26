@@ -18,9 +18,8 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, PTCLValidation_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLValidation_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLValidation_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

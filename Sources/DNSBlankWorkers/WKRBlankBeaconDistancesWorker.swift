@@ -17,9 +17,8 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistance
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLBeaconDistances_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLBeaconDistances_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

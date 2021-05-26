@@ -17,9 +17,8 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLPermissions_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLPermissions_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

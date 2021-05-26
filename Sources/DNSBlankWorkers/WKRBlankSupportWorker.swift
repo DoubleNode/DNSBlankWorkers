@@ -19,9 +19,8 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLSupport_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLSupport_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

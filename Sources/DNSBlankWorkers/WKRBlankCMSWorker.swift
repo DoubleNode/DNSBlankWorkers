@@ -17,9 +17,8 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
     public required init() {
         super.init()
     }
-    public required init(call callNextWhen: PTCLCallNextWhen,
-                         nextWorker: PTCLCMS_Protocol) {
-        super.init()
+    public func register(nextWorker: PTCLCMS_Protocol,
+                         for callNextWhen: PTCLCallNextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
