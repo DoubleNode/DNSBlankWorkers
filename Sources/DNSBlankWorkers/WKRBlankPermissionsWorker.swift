@@ -32,6 +32,11 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
@@ -39,38 +44,34 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
                         _ permission: PTCLPermissions.Permission,
                         with progress: PTCLProgressBlock?,
                         and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doRequest(desire, permission, with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doRequest(desire, permission, with: progress, and: block)
+        }
     }
     open func doRequest(_ desire: PTCLPermissions.Desire,
                         _ permissions: [PTCLPermissions.Permission],
                         with progress: PTCLProgressBlock?,
                         and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doRequest(desire, permissions, with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doRequest(desire, permissions, with: progress, and: block)
+        }
     }
     open func doStatus(of permissions: [PTCLPermissions.Permission],
                        with progress: PTCLProgressBlock?,
                        and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doStatus(of: permissions, with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doStatus(of: permissions, with: progress, and: block)
+        }
     }
     open func doWait(for permission: PTCLPermissions.Permission,
                      with progress: PTCLProgressBlock?,
                      and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doWait(for: permission, with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doWait(for: permission, with: progress, and: block)
+        }
     }
 }

@@ -32,16 +32,20 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doLoad(for group: String,
                      with progress: PTCLProgressBlock?,
                      and block: PTCLCMSBlockVoidArrayDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doLoad(for: group, with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLoad(for: group, with: progress, and: block)
+        }
     }
 }

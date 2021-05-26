@@ -17,7 +17,6 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
     public required init() {
         super.init()
     }
-
     public required init(call callNextWhen: PTCLCallNextWhen,
                          nextWorker: PTCLGeolocation_Protocol) {
         super.init()
@@ -33,35 +32,35 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doLocate(with progress: PTCLProgressBlock?,
                        and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doLocate(with: progress, and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLocate(with: progress, and: block)
+        }
     }
 
     open func doTrackLocation(for processKey: String,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doTrackLocation(for: processKey,
-                                       with: progress,
-                                       and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doTrackLocation(for: processKey, with: progress, and: block)
+        }
     }
 
     open func doStopTrackLocation(for processKey: String) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doStopTrackLocation(for: processKey)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doStopTrackLocation(for: processKey)
+        }
     }
 }

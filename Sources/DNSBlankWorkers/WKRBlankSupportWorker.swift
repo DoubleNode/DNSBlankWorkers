@@ -34,29 +34,32 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doGetUpdatedCount(with progress: PTCLProgressBlock?) -> AnyPublisher<Int, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Int, Error> { $0(.success(0)) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doGetUpdatedCount(with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Int, Error> { $0(.success(0)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doGetUpdatedCount(with: progress)
+        } as! AnyPublisher<Int, Error>
     }
     open func doPrepare(attachment image: UIImage,
                         with progress: PTCLProgressBlock?) -> AnyPublisher<PTCLSupportAttachment, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<PTCLSupportAttachment, Error> {
-                $0(.success(PTCLSupportAttachment(image: image)))
-            }.eraseToAnyPublisher()
-        }
-        return nextWorker.doPrepare(attachment: image, with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<PTCLSupportAttachment, Error> {
+                    $0(.success(PTCLSupportAttachment(image: image)))
+                }.eraseToAnyPublisher()
+            }
+            return nextWorker.doPrepare(attachment: image, with: progress)
+        } as! AnyPublisher<PTCLSupportAttachment, Error>
     }
     open func doSendRequest(subject: String,
                             body: String,
@@ -64,16 +67,13 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
                             attachments: [PTCLSupportAttachment],
                             properties: [String: String],
                             with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Bool, Error> {
-                $0(.success(true))
-            }.eraseToAnyPublisher()
-        }
-        return nextWorker.doSendRequest(subject: subject, body: body, tags: tags,
-                                        attachments: attachments, properties: properties,
-                                        with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doSendRequest(subject: subject, body: body, tags: tags,
+                                            attachments: attachments, properties: properties,
+                                            with: progress)
+        } as! AnyPublisher<Bool, Error>
     }
 }

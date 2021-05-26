@@ -30,7 +30,6 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     public required init() {
         super.init()
     }
-
     public required init(call callNextWhen: PTCLCallNextWhen,
                          nextWorker: PTCLAppReview_Protocol) {
         super.init()
@@ -46,14 +45,18 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doReview() throws -> Bool {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return false }
-        return try nextWorker.doReview()
+        return try self.runDo {
+            guard let nextWorker = self.nextWorker else { return false }
+            return try nextWorker.doReview()
+        } as! Bool
     }
 }

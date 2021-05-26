@@ -17,7 +17,6 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
     public required init() {
         super.init()
     }
-
     public required init(call callNextWhen: PTCLCallNextWhen,
                          nextWorker: PTCLAnalytics_Protocol) {
         super.init()
@@ -33,6 +32,11 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Auto-Track -
     open func doAutoTrack(class: String, method: String) throws {
@@ -42,11 +46,10 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         try self.doAutoTrack(class: `class`, method: method, properties: properties, options: [:])
     }
     open func doAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any]) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+        }
     }
 
     // MARK: - Group -
@@ -57,11 +60,10 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         try self.doGroup(groupId: groupId, traits: traits, options: [:])
     }
     open func doGroup(groupId: String, traits: [String: Any], options: [String: Any]) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doGroup(groupId: groupId, traits: traits, options: options)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doGroup(groupId: groupId, traits: traits, options: options)
+        }
     }
 
     // MARK: - Identify -
@@ -72,11 +74,10 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         try self.doIdentify(userId: userId, traits: traits, options: [:])
     }
     open func doIdentify(userId: String, traits: [String: Any], options: [String: Any]) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doIdentify(userId: userId, traits: traits, options: options)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doIdentify(userId: userId, traits: traits, options: options)
+        }
     }
 
     // MARK: - Screen -
@@ -87,25 +88,23 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
         try self.doScreen(screenTitle: screenTitle, properties: properties, options: [:])
     }
     open func doScreen(screenTitle: String, properties: [String: Any], options: [String: Any]) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doScreen(screenTitle: screenTitle, properties: properties, options: options)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doScreen(screenTitle: screenTitle, properties: properties, options: options)
+        }
     }
 
     // MARK: - Track -
     open func doTrack(event: PTCLAnalyticsEvents) throws {
-        try self.doTrack(event: event, properties: [:], options: [:])
+        return try self.doTrack(event: event, properties: [:], options: [:])
     }
     open func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any]) throws {
-        try self.doTrack(event: event, properties: properties, options: [:])
+        return try self.doTrack(event: event, properties: properties, options: [:])
     }
     open func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doTrack(event: event, properties: properties, options: options)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doTrack(event: event, properties: properties, options: options)
+        }
     }
 }

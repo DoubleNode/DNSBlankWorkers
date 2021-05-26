@@ -35,18 +35,22 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
                              for account: DAOAccount,
                              with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doLoadPassport(of: passportType, for: account, with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doLoadPassport(of: passportType, for: account, with: progress)
+        } as! AnyPublisher<Data, Error>
     }
 }

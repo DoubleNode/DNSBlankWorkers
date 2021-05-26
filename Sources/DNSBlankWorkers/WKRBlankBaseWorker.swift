@@ -76,4 +76,32 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
     // to restore the scene back to its current state.
     open func didEnterBackground() {
     }
+
+    public func runDo(callNextWhen: PTCLCallNextWhen,
+                      runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows) throws -> Any? {
+        let resultBlock: PTCLResultBlock = { callResult in
+            switch callResult {
+            case .completed:
+                break
+            case .error:
+                guard [.always, .whenError].contains(where: { $0 == callNextWhen }) else { return nil }
+                do {
+                    return try runNext?()
+                } catch { }
+            case .notFound:
+                guard [.always, .whenNotFound].contains(where: { $0 == callNextWhen }) else { return nil }
+                do {
+                    return try runNext?()
+                } catch { }
+            case .unhandled:
+                guard [.always, .whenUnhandled].contains(where: { $0 == callNextWhen }) else { return nil }
+                do {
+                    return try runNext?()
+                } catch { }
+            }
+            return nil
+        }
+        return try doWork(resultBlock)
+    }
 }

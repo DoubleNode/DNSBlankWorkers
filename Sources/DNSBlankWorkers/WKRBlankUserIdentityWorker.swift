@@ -33,46 +33,47 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity_Prot
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doClearIdentity(with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doClearIdentity(with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doClearIdentity(with: progress)
+        } as! AnyPublisher<Bool, Error>
     }
     open func doJoin(group: String,
                      with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doJoin(group: group, with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doJoin(group: group, with: progress)
+        } as! AnyPublisher<Bool, Error>
     }
     open func doLeave(group: String,
                       with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doLeave(group: group, with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doLeave(group: group, with: progress)
+        } as! AnyPublisher<Bool, Error>
     }
     open func doSetIdentity(using data: [String: Any?],
                             with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else {
-            return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
-        }
-        return nextWorker.doSetIdentity(using: data, with: progress)
+        return try! self.runDo {
+            guard let nextWorker = self.nextWorker else {
+                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doSetIdentity(using: data, with: progress)
+        } as! AnyPublisher<Bool, Error>
    }
 }

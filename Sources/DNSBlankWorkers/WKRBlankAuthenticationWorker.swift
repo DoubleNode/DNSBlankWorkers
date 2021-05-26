@@ -18,7 +18,6 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     public required init() {
         super.init()
     }
-
     public required init(call callNextWhen: PTCLCallNextWhen,
                          nextWorker: PTCLAuthentication_Protocol) {
         super.init()
@@ -34,59 +33,60 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
         super.enableOption(option)
         nextWorker?.enableOption(option)
     }
+    @discardableResult
+    public func runDo(runNext: PTCLCallBlock?,
+                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
 
     // MARK: - Business Logic / Single Item CRUD
 
     open func doCheckAuthentication(using parameters: [String: Any],
                                     with progress: PTCLProgressBlock?,
                                     and block: PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doCheckAuthentication(using: parameters,
-                                             with: progress,
-                                             and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doCheckAuthentication(using: parameters,
+                                                        with: progress,
+                                                        and: block)
+        }
     }
     open func doSignIn(from username: String?,
                        and password: String?,
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doSignIn(from: username,
-                                and: password,
-                                using: parameters,
-                                with: progress,
-                                and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doSignIn(from: username,
+                                           and: password,
+                                           using: parameters,
+                                           with: progress,
+                                           and: block)
+        }
     }
     open func doSignOut(using parameters: [String: Any],
                         with progress: PTCLProgressBlock?,
                         and block: PTCLAuthenticationBlockVoidBoolDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doSignOut(using: parameters,
-                                 with: progress,
-                                 and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doSignOut(using: parameters,
+                                            with: progress,
+                                            and: block)
+        }
     }
     open func doSignUp(from user: DAOUser?,
                        and password: String?,
                        using parameters: [String: Any],
                        with progress: PTCLProgressBlock?,
                        and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
-        guard
-            [.always, .whenUnhandled].contains(where: { $0 == self.callNextWhen }),
-            let nextWorker = self.nextWorker
-        else { return }
-        try nextWorker.doSignUp(from: user,
-                                and: password,
-                                using: parameters,
-                                with: progress,
-                                and: block)
+        try self.runDo {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doSignUp(from: user,
+                                           and: password,
+                                           using: parameters,
+                                           with: progress,
+                                           and: block)
+        }
     }
 }
