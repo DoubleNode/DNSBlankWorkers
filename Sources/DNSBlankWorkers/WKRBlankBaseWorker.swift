@@ -95,7 +95,7 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
                     return try runNext?()
                 } catch { }
             case .unhandled:
-                guard [.always, .whenUnhandled].contains(where: { $0 == callNextWhen }) else { return nil }
+//                guard [.always, .whenUnhandled].contains(where: { $0 == callNextWhen }) else { return nil }
                 do {
                     return try runNext?()
                 } catch { }
