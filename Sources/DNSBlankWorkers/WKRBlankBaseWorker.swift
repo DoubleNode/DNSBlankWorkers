@@ -83,7 +83,10 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
         let resultBlock: PTCLResultBlock = { callResult in
             switch callResult {
             case .completed:
-                break
+                guard [.always].contains(where: { $0 == callNextWhen }) else { return nil }
+                do {
+                    return try runNext?()
+                } catch { }
             case .error:
                 guard [.always, .whenError].contains(where: { $0 == callNextWhen }) else { return nil }
                 do {
