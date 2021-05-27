@@ -40,16 +40,26 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
-                             for account: DAOAccount,
-                             with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
-        return try! self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
+                               for account: DAOAccount,
+                               with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
+        return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadPassport(of: passportType, for: account, with: progress)
-        } as! AnyPublisher<Data, Error>
+        },
+        doWork: {
+            return self.intDoLoadPassport(of: passportType, for: account, with: progress, then: $0)
+        }) as! AnyPublisher<Data, Error>
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
+                                for account: DAOAccount,
+                                with progress: PTCLProgressBlock?,
+                                then resultBlock: PTCLResultBlock?) -> AnyPublisher<Data, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<Data, Error>
     }
 }

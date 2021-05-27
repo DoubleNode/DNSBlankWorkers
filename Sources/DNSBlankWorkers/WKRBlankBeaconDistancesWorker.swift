@@ -37,13 +37,22 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistance
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doLoadBeaconDistances(with progress: PTCLProgressBlock?,
-                                    and block: PTCLBeaconDistancesBlockVoidArrayDAOBeaconDistanceError?) throws {
-        try self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doLoadBeaconDistances(with progress: PTCLProgressBlock?,
+                                      and block: PTCLBeaconDistancesBlockVoidArrayDAOBeaconDistanceError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeaconDistances(with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
+        })
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoLoadBeaconDistances(with progress: PTCLProgressBlock?,
+                                       and block: PTCLBeaconDistancesBlockVoidArrayDAOBeaconDistanceError?,
+                                       then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
     }
 }

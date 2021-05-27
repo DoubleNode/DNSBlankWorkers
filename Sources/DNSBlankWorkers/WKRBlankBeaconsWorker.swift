@@ -38,38 +38,75 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doLoadBeacons(in center: DAOCenter,
-                            with progress: PTCLProgressBlock?,
-                            and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        try self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doLoadBeacons(in center: DAOCenter,
+                              with progress: PTCLProgressBlock?,
+                              and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeacons(in: center, with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoLoadBeacons(in: center, with: progress, and: block, then: $0)
+        })
     }
-    open func doLoadBeacons(in center: DAOCenter,
-                            for activity: DAOActivity,
-                            with progress: PTCLProgressBlock?,
-                            and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        try self.runDo {
+    public func doLoadBeacons(in center: DAOCenter,
+                              for activity: DAOActivity,
+                              with progress: PTCLProgressBlock?,
+                              and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeacons(in: center, for: activity, with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoLoadBeacons(in: center, for: activity, with: progress, and: block, then: $0)
+        })
     }
-    open func doRangeBeacons(named uuids: [UUID],
-                             for processKey: String,
-                             with progress: PTCLProgressBlock?,
-                             and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
-        try self.runDo {
+    public func doRangeBeacons(named uuids: [UUID],
+                               for processKey: String,
+                               with progress: PTCLProgressBlock?,
+                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoRangeBeacons(named: uuids, for: processKey, with: progress, and: block, then: $0)
+        })
     }
-    open func doStopRangeBeacons(for processKey: String) throws {
-        try self.runDo {
+    public func doStopRangeBeacons(for processKey: String) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doStopRangeBeacons(for: processKey)
-        }
+        },
+        doWork: {
+            return try self.intDoStopRangeBeacons(for: processKey, then: $0)
+        })
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoLoadBeacons(in center: DAOCenter,
+                               with progress: PTCLProgressBlock?,
+                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                               then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadBeacons(in center: DAOCenter,
+                               for activity: DAOActivity,
+                               with progress: PTCLProgressBlock?,
+                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                               then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoRangeBeacons(named uuids: [UUID],
+                                for processKey: String,
+                                with progress: PTCLProgressBlock?,
+                                and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                                then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoStopRangeBeacons(for processKey: String,
+                                    then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
     }
 }

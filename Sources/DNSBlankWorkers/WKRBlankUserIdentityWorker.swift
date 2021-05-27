@@ -38,41 +38,73 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity_Prot
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doClearIdentity(with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doClearIdentity(with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doClearIdentity(with: progress)
-        } as! AnyPublisher<Bool, Error>
+        },
+        doWork: {
+            return self.intDoClearIdentity(with: progress, then: $0)
+        }) as! AnyPublisher<Bool, Error>
     }
-    open func doJoin(group: String,
-                     with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo {
+    public func doJoin(group: String,
+                       with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doJoin(group: group, with: progress)
-        } as! AnyPublisher<Bool, Error>
+        },
+        doWork: {
+            return self.intDoJoin(group: group, with: progress, then: $0)
+        }) as! AnyPublisher<Bool, Error>
     }
-    open func doLeave(group: String,
-                      with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo {
+    public func doLeave(group: String,
+                        with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doLeave(group: group, with: progress)
-        } as! AnyPublisher<Bool, Error>
+        },
+        doWork: {
+            return self.intDoLeave(group: group, with: progress, then: $0)
+        }) as! AnyPublisher<Bool, Error>
     }
-    open func doSetIdentity(using data: [String: Any?],
-                            with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo {
+    public func doSetIdentity(using data: [String: Any?],
+                              with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doSetIdentity(using: data, with: progress)
-        } as! AnyPublisher<Bool, Error>
+        },
+        doWork: {
+            return self.intDoSetIdentity(using: data, with: progress, then: $0)
+        }) as! AnyPublisher<Bool, Error>
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoClearIdentity(with progress: PTCLProgressBlock?,
+                                 then resultBlock: PTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+    }
+    open func intDoJoin(group: String,
+                        with progress: PTCLProgressBlock?,
+                        then resultBlock: PTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+    }
+    open func intDoLeave(group: String,
+                         with progress: PTCLProgressBlock?,
+                         then resultBlock: PTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+    }
+    open func intDoSetIdentity(using data: [String: Any?],
+                               with progress: PTCLProgressBlock?,
+                               then resultBlock: PTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
    }
 }

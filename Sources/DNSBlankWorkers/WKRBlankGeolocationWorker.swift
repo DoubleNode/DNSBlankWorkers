@@ -37,29 +37,52 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation_Protoc
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doLocate(with progress: PTCLProgressBlock?,
-                       and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        try self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doLocate(with progress: PTCLProgressBlock?,
+                         and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLocate(with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoLocate(with: progress, and: block, then: $0)
+        })
     }
-
-    open func doTrackLocation(for processKey: String,
-                              with progress: PTCLProgressBlock?,
-                              and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
-        try self.runDo {
+    public func doTrackLocation(for processKey: String,
+                                with progress: PTCLProgressBlock?,
+                                and block: PTCLGeolocationBlockVoidStringDNSError?) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doTrackLocation(for: processKey, with: progress, and: block)
-        }
+        },
+        doWork: {
+            return try self.intDoTrackLocation(for: processKey, with: progress, and: block, then: $0)
+        })
     }
-
-    open func doStopTrackLocation(for processKey: String) throws {
-        try self.runDo {
+    public func doStopTrackLocation(for processKey: String) throws {
+        try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doStopTrackLocation(for: processKey)
-        }
+        },
+        doWork: {
+            return try self.intDoStopTrackLocation(for: processKey, then: $0)
+        })
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoLocate(with progress: PTCLProgressBlock?,
+                          and block: PTCLGeolocationBlockVoidStringDNSError?,
+                          then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoTrackLocation(for processKey: String,
+                                 with progress: PTCLProgressBlock?,
+                                 and block: PTCLGeolocationBlockVoidStringDNSError?,
+                                 then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoStopTrackLocation(for processKey: String,
+                                     then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
     }
 }

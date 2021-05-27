@@ -39,12 +39,20 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrengthType {
-        return try self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrengthType {
+        return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doCheckPasswordStrength(for: password)
-        } as! PTCLPasswordStrengthType
+        },
+        doWork: {
+            return try self.intDoCheckPasswordStrength(for: password, then: $0)
+        }) as! PTCLPasswordStrengthType
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoCheckPasswordStrength(for password: String,
+                                         then resultBlock: PTCLResultBlock?) throws -> PTCLPasswordStrengthType {
+        return resultBlock?(.unhandled) as! PTCLPasswordStrengthType
     }
 }

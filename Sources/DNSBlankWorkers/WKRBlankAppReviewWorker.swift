@@ -50,12 +50,19 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Business Logic / Single Item CRUD
-
-    open func doReview() throws -> Bool {
-        return try self.runDo {
+    // MARK: - Protocol Interface Methods
+    public func doReview() throws -> Bool {
+        return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return false }
             return try nextWorker.doReview()
-        } as! Bool
+        },
+        doWork: {
+            return try self.intDoReview(then: $0)
+        }) as! Bool
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoReview(then resultBlock: PTCLResultBlock?) throws -> Bool {
+        return resultBlock?(.unhandled) as! Bool
     }
 }
