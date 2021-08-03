@@ -41,7 +41,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
     }
 
     // MARK: - Protocol Interface Methods
-    public func doLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
+    public func doLoadPassport(of passportType: String,
                                for account: DAOAccount,
                                with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
         return try! self.runDo(runNext: {
@@ -56,7 +56,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadPassport(of passportType: PTCLPassportsProtocolPassportTypes,
+    open func intDoLoadPassport(of passportType: String,
                                 for account: DAOAccount,
                                 with progress: PTCLProgressBlock?,
                                 then resultBlock: PTCLResultBlock?) -> AnyPublisher<Data, Error> {
