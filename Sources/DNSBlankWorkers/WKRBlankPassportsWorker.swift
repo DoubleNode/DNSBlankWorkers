@@ -41,25 +41,27 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
     }
 
     // MARK: - Protocol Interface Methods
-    public func doLoadPassport(of passportType: String,
-                               for account: DAOAccount,
-                               with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
+    public func doBuildPassport(ofType passportType: String,
+                                using data: [String: String],
+                                for account: DAOAccount,
+                                with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return nextWorker.doLoadPassport(of: passportType, for: account, with: progress)
+            return nextWorker.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },
         doWork: {
-            return self.intDoLoadPassport(of: passportType, for: account, with: progress, then: $0)
+            return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)
         }) as! AnyPublisher<Data, Error>
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadPassport(of passportType: String,
-                                for account: DAOAccount,
-                                with progress: PTCLProgressBlock?,
-                                then resultBlock: PTCLResultBlock?) -> AnyPublisher<Data, Error> {
+    open func intDoBuildPassport(ofType passportType: String,
+                                 using data: [String: String],
+                                 for account: DAOAccount,
+                                 with progress: PTCLProgressBlock?,
+                                 then resultBlock: PTCLResultBlock?) -> AnyPublisher<Data, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Data, Error>
     }
 }
