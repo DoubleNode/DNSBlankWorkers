@@ -9,18 +9,18 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStrength_Protocol
+open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStrength
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLPasswordStrength_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLPasswordStrength?
 
     public var minimumLength: Int32 = 6
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLPasswordStrength_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLPasswordStrength,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -40,19 +40,19 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
     }
 
     // MARK: - Protocol Interface Methods
-    public func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrengthType {
+    public func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrength.Level {
         return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doCheckPasswordStrength(for: password)
         },
         doWork: {
             return try self.intDoCheckPasswordStrength(for: password, then: $0)
-        }) as! PTCLPasswordStrengthType
+        }) as! PTCLPasswordStrength.Level
     }
 
     // MARK: - Internal Work Methods
     open func intDoCheckPasswordStrength(for password: String,
-                                         then resultBlock: PTCLResultBlock?) throws -> PTCLPasswordStrengthType {
-        return resultBlock?(.unhandled) as! PTCLPasswordStrengthType
+                                         then resultBlock: PTCLResultBlock?) throws -> PTCLPasswordStrength.Level {
+        return resultBlock?(.unhandled) as! PTCLPasswordStrength.Level
     }
 }

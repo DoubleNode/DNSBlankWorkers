@@ -10,16 +10,16 @@ import Combine
 import DNSProtocols
 import UIKit
 
-open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache_Protocol
+open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLCache_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLCache?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLCache_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLCache,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

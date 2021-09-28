@@ -11,12 +11,12 @@ import DNSCore
 import DNSProtocols
 import Foundation
 
-open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
+open class WKRBlankBaseWorker: NSObject, PTCLProtocolBase
 {
     @Atomic
     private var options: [String] = []
     
-    public var networkConfigurator: PTCLBase_NetworkConfigurator?
+    public var networkConfigurator: PTCLNetworkConfigurator?
     
     static public var languageCode: String = {
         let currentLocale = NSLocale.current
@@ -77,7 +77,7 @@ open class WKRBlankBaseWorker: NSObject, PTCLBase_Protocol
     open func didEnterBackground() {
     }
 
-    public func runDo(callNextWhen: PTCLCallNextWhen,
+    public func runDo(callNextWhen: PTCLProtocol.Call.NextWhen,
                       runNext: PTCLCallBlock?,
                       doWork: PTCLCallResultBlockThrows) throws -> Any? {
         let resultBlock: PTCLResultBlock = { callResult in

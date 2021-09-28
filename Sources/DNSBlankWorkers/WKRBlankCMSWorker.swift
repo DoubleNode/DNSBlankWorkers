@@ -9,16 +9,16 @@
 import DNSCore
 import DNSProtocols
 
-open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
+open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCms
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLCMS_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLCms?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLCMS_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLCms,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -40,7 +40,7 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
     // MARK: - Protocol Interface Methods
     public func doLoad(for group: String,
                        with progress: PTCLProgressBlock?,
-                       and block: PTCLCMSBlockVoidArrayDNSError?) throws {
+                       and block: PTCLCmsBlockVoidArrayAny?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoad(for: group, with: progress, and: block)
@@ -53,7 +53,7 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCMS_Protocol
     // MARK: - Internal Work Methods
     open func intDoLoad(for group: String,
                         with progress: PTCLProgressBlock?,
-                        and block: PTCLCMSBlockVoidArrayDNSError?,
+                        and block: PTCLCmsBlockVoidArrayAny?,
                         then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

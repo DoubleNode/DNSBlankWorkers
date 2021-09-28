@@ -8,6 +8,9 @@
 
 import DNSError
 
-open class DNSCoreBlankWorkersCodeLocation: DNSCodeLocation {
+public extension DNSCodeLocation {
+    typealias blankWorkers = DNSBlankWorkersCodeLocation
+}
+open class DNSBlankWorkersCodeLocation: DNSCodeLocation {
     override open class var domainPreface: String { "com.doublenode.blankWorkers." }
 }

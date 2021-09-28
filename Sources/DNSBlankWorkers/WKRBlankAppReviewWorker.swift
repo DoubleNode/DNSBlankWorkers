@@ -9,7 +9,7 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
+open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
 {
     public var launchedCount: UInt = 0
     public var launchedFirstTime: Date = Date()
@@ -24,14 +24,14 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview_Protocol
     public var usesSinceFirstLaunch: UInt = 0
     public var usesUntilPrompt: UInt = 0
 
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLAppReview_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLAppReview?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLAppReview_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLAppReview,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

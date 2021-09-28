@@ -10,16 +10,16 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
-open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
+open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLBeacons_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLBeacons?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLBeacons_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLBeacons,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -41,7 +41,7 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
     // MARK: - Protocol Interface Methods
     public func doLoadBeacons(in center: DAOCenter,
                               with progress: PTCLProgressBlock?,
-                              and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+                              and block: PTCLBeaconsBlockVoidArrayBeacon?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeacons(in: center, with: progress, and: block)
@@ -53,7 +53,7 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
     public func doLoadBeacons(in center: DAOCenter,
                               for activity: DAOActivity,
                               with progress: PTCLProgressBlock?,
-                              and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+                              and block: PTCLBeaconsBlockVoidArrayBeacon?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeacons(in: center, for: activity, with: progress, and: block)
@@ -65,7 +65,7 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
     public func doRangeBeacons(named uuids: [UUID],
                                for processKey: String,
                                with progress: PTCLProgressBlock?,
-                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?) throws {
+                               and block: PTCLBeaconsBlockVoidArrayBeacon?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doRangeBeacons(named: uuids, for: processKey, with: progress, and: block)
@@ -87,21 +87,21 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons_Protocol
     // MARK: - Internal Work Methods
     open func intDoLoadBeacons(in center: DAOCenter,
                                with progress: PTCLProgressBlock?,
-                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                               and block: PTCLBeaconsBlockVoidArrayBeacon?,
                                then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadBeacons(in center: DAOCenter,
                                for activity: DAOActivity,
                                with progress: PTCLProgressBlock?,
-                               and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                               and block: PTCLBeaconsBlockVoidArrayBeacon?,
                                then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRangeBeacons(named uuids: [UUID],
                                 for processKey: String,
                                 with progress: PTCLProgressBlock?,
-                                and block: PTCLBeaconsBlockVoidArrayDAOBeaconError?,
+                                and block: PTCLBeaconsBlockVoidArrayBeacon?,
                                 then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

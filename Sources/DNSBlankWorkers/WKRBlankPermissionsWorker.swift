@@ -9,16 +9,16 @@
 import DNSCore
 import DNSProtocols
 
-open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protocol
+open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLPermissions_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLPermissions?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLPermissions_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLPermissions,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -38,10 +38,10 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
     }
 
     // MARK: - Protocol Interface Methods
-    public func doRequest(_ desire: PTCLPermissions.Desire,
-                          _ permission: PTCLPermissions.Permission,
+    public func doRequest(_ desire: PTCLPermissions.Data.Desire,
+                          _ permission: PTCLPermissions.Data.System,
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
+                          and block: PTCLPermissionsBlockVoidPermissionAction?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doRequest(desire, permission, with: progress, and: block)
@@ -50,10 +50,10 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
             return try self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
         })
     }
-    public func doRequest(_ desire: PTCLPermissions.Desire,
-                          _ permissions: [PTCLPermissions.Permission],
+    public func doRequest(_ desire: PTCLPermissions.Data.Desire,
+                          _ permissions: [PTCLPermissions.Data.System],
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
+                          and block: PTCLPermissionsBlockVoidArrayPermissionAction?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doRequest(desire, permissions, with: progress, and: block)
@@ -62,9 +62,9 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
             return try self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
         })
     }
-    public func doStatus(of permissions: [PTCLPermissions.Permission],
+    public func doStatus(of permissions: [PTCLPermissions.Data.System],
                          with progress: PTCLProgressBlock?,
-                         and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?) throws {
+                         and block: PTCLPermissionsBlockVoidArrayPermissionAction?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doStatus(of: permissions, with: progress, and: block)
@@ -73,9 +73,9 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
             return try self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
         })
     }
-    public func doWait(for permission: PTCLPermissions.Permission,
+    public func doWait(for permission: PTCLPermissions.Data.System,
                        with progress: PTCLProgressBlock?,
-                       and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?) throws {
+                       and block: PTCLPermissionsBlockVoidPermissionAction?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doWait(for: permission, with: progress, and: block)
@@ -86,29 +86,29 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions_Protoc
     }
 
     // MARK: - Internal Work Methods
-    open func intDoRequest(_ desire: PTCLPermissions.Desire,
-                           _ permission: PTCLPermissions.Permission,
+    open func intDoRequest(_ desire: PTCLPermissions.Data.Desire,
+                           _ permission: PTCLPermissions.Data.System,
                            with progress: PTCLProgressBlock?,
-                           and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?,
+                           and block: PTCLPermissionsBlockVoidPermissionAction?,
                            then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoRequest(_ desire: PTCLPermissions.Desire,
-                           _ permissions: [PTCLPermissions.Permission],
+    open func intDoRequest(_ desire: PTCLPermissions.Data.Desire,
+                           _ permissions: [PTCLPermissions.Data.System],
                            with progress: PTCLProgressBlock?,
-                           and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?,
+                           and block: PTCLPermissionsBlockVoidArrayPermissionAction?,
                            then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoStatus(of permissions: [PTCLPermissions.Permission],
+    open func intDoStatus(of permissions: [PTCLPermissions.Data.System],
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLPermissionsBlockVoidArrayPTCLPermissionActionError?,
+                          and block: PTCLPermissionsBlockVoidArrayPermissionAction?,
                           then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoWait(for permission: PTCLPermissions.Permission,
+    open func intDoWait(for permission: PTCLPermissions.Data.System,
                         with progress: PTCLProgressBlock?,
-                        and block: PTCLPermissionsBlockVoidPTCLPermissionActionError?,
+                        and block: PTCLPermissionsBlockVoidPermissionAction?,
                         then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

@@ -11,16 +11,16 @@ import DNSCore
 import DNSProtocols
 import UIKit
 
-open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport_Protocol
+open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLSupport_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLSupport?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLSupport_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLSupport,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

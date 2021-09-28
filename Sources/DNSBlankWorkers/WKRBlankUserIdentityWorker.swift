@@ -10,16 +10,16 @@ import Combine
 import DNSCore
 import DNSProtocols
 
-open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity_Protocol
+open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLUserIdentity_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLUserIdentity?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLUserIdentity_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLUserIdentity,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

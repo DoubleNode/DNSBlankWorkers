@@ -12,16 +12,16 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports_Protocol
+open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLPassports_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLPassports?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLPassports_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLPassports,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

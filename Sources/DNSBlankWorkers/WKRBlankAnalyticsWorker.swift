@@ -9,16 +9,16 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics_Protocol
+open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLAnalytics_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLAnalytics?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLAnalytics_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLAnalytics,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }

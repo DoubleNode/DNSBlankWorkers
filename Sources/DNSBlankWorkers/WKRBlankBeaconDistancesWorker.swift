@@ -9,16 +9,16 @@
 import DNSCore
 import DNSProtocols
 
-open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistances_Protocol
+open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistances
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLBeaconDistances_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLBeaconDistances?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLBeaconDistances_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLBeaconDistances,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -39,7 +39,7 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistance
 
     // MARK: - Protocol Interface Methods
     public func doLoadBeaconDistances(with progress: PTCLProgressBlock?,
-                                      and block: PTCLBeaconDistancesBlockVoidArrayDAOBeaconDistanceError?) throws {
+                                      and block: PTCLBeaconDistancesBlockVoidArrayBeaconDistance?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doLoadBeaconDistances(with: progress, and: block)
@@ -51,7 +51,7 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistance
 
     // MARK: - Internal Work Methods
     open func intDoLoadBeaconDistances(with progress: PTCLProgressBlock?,
-                                       and block: PTCLBeaconDistancesBlockVoidArrayDAOBeaconDistanceError?,
+                                       and block: PTCLBeaconDistancesBlockVoidArrayBeaconDistance?,
                                        then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

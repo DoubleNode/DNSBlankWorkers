@@ -10,16 +10,16 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_Protocol
+open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication
 {
-    public var callNextWhen: PTCLCallNextWhen = .whenUnhandled
-    public var nextWorker: PTCLAuthentication_Protocol?
+    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
+    public var nextWorker: PTCLAuthentication?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLAuthentication_Protocol,
-                         for callNextWhen: PTCLCallNextWhen) {
+    public func register(nextWorker: PTCLAuthentication,
+                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -41,7 +41,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     // MARK: - Protocol Interface Methods
     public func doCheckAuthentication(using parameters: [String: Any],
                                       with progress: PTCLProgressBlock?,
-                                      and block: PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError?) throws {
+                                      and block: PTCLAuthenticationBlockVoidBoolBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doCheckAuthentication(using: parameters, with: progress, and: block)
@@ -54,7 +54,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                          and password: String?,
                          using parameters: [String: Any],
                          with progress: PTCLProgressBlock?,
-                         and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
+                         and block: PTCLAuthenticationBlockVoidBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doSignIn(from: username, and: password, using: parameters, with: progress, and: block)
@@ -65,7 +65,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     }
     public func doSignOut(using parameters: [String: Any],
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLAuthenticationBlockVoidBoolDNSError?) throws {
+                          and block: PTCLAuthenticationBlockVoidBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doSignOut(using: parameters, with: progress, and: block)
@@ -78,7 +78,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                          and password: String?,
                          using parameters: [String: Any],
                          with progress: PTCLProgressBlock?,
-                         and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?) throws {
+                         and block: PTCLAuthenticationBlockVoidBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doSignUp(from: user, and: password, using: parameters, with: progress, and: block)
@@ -91,7 +91,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
     // MARK: - Internal Work Methods
     open func intDoCheckAuthentication(using parameters: [String: Any],
                                        with progress: PTCLProgressBlock?,
-                                       and block: PTCLAuthenticationBlockVoidBoolBoolAccessDataDNSError?,
+                                       and block: PTCLAuthenticationBlockVoidBoolBoolAccessData?,
                                        then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
@@ -99,13 +99,13 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                           and password: String?,
                           using parameters: [String: Any],
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?,
+                          and block: PTCLAuthenticationBlockVoidBoolAccessData?,
                           then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignOut(using parameters: [String: Any],
                            with progress: PTCLProgressBlock?,
-                           and block: PTCLAuthenticationBlockVoidBoolDNSError?,
+                           and block: PTCLAuthenticationBlockVoidBool?,
                            then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
@@ -113,7 +113,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, PTCLAuthentication_
                           and password: String?,
                           using parameters: [String: Any],
                           with progress: PTCLProgressBlock?,
-                          and block: PTCLAuthenticationBlockVoidBoolAccessDataDNSError?,
+                          and block: PTCLAuthenticationBlockVoidBoolAccessData?,
                           then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
