@@ -14,6 +14,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, PTCLValidation
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLValidation?
+    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
 
     public required init() {
         super.init()

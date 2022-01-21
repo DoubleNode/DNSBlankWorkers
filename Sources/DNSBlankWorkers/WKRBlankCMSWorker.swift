@@ -13,6 +13,7 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, PTCLCms
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLCms?
+    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
 
     public required init() {
         super.init()

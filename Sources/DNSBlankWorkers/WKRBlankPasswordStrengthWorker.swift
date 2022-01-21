@@ -13,6 +13,7 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLPasswordStrength?
+    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
 
     public var minimumLength: Int32 = 6
 
