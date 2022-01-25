@@ -13,7 +13,7 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, PTCLBeaconDistance
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLBeaconDistances?
-    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
+    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

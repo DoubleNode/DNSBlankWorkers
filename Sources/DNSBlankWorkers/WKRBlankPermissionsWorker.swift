@@ -13,7 +13,7 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, PTCLPermissions
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLPermissions?
-    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
+    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

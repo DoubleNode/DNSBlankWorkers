@@ -16,7 +16,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLPassports?
-    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
+    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

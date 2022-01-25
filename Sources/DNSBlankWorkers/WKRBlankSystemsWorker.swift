@@ -11,15 +11,15 @@ import DNSCore
 import DNSProtocols
 import UIKit
 
-open class WKRBlankSystemsStateWorker: WKRBlankBaseWorker, PTCLSystemsState
+open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLSystemsState?
+    public var nextWorker: PTCLSystems?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLSystemsState,
+    public func register(nextWorker: PTCLSystems,
                          for callNextWhen: PTCLProtocol.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -40,6 +40,27 @@ open class WKRBlankSystemsStateWorker: WKRBlankBaseWorker, PTCLSystemsState
     }
 
     // MARK: - Protocol Interface Methods
+    public func doLoadSystem(for id: String,
+                             with progress: PTCLProgressBlock?,
+                             and block: PTCLSystemsBlockVoidSystem?) throws {
+        try self.runDo(runNext: {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLoadSystem(for: id, with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadSystems(with progress: PTCLProgressBlock?,
+                              and block: PTCLSystemsBlockVoidArraySystem?) throws {
+        try self.runDo(runNext: {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLoadSystems(with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoLoadSystems(with: progress, and: block, then: $0)
+        })
+    }
     public func doReportState(of state: String,
                               for system: String,
                               and endPoint: String,
@@ -59,6 +80,17 @@ open class WKRBlankSystemsStateWorker: WKRBlankBaseWorker, PTCLSystemsState
     }
 
     // MARK: - Internal Work Methods
+    open func intDoLoadSystem(for id: String,
+                               with progress: PTCLProgressBlock?,
+                               and block: PTCLSystemsBlockVoidSystem?,
+                               then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadSystems(with progress: PTCLProgressBlock?,
+                               and block: PTCLSystemsBlockVoidArraySystem?,
+                               then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoReportState(of state: String,
                                for system: String,
                                and endPoint: String,

@@ -14,7 +14,7 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, PTCLUserIdentity
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLUserIdentity?
-    public var systemsStateWorker: PTCLSystemsState? = WKRBlankSystemsStateWorker()
+    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()
