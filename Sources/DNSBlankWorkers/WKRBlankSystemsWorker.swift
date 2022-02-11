@@ -51,6 +51,17 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             return try self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadSystemHistory(for id: String,
+                                    with progress: PTCLProgressBlock?,
+                                    and block: PTCLSystemsBlockVoidArraySystemState?) throws {
+        try self.runDo(runNext: {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLoadSystemHistory(for: id, with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoLoadSystemHistory(for: id, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadSystems(with progress: PTCLProgressBlock?,
                               and block: PTCLSystemsBlockVoidArraySystem?) throws {
         try self.runDo(runNext: {
@@ -84,6 +95,12 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
                                with progress: PTCLProgressBlock?,
                                and block: PTCLSystemsBlockVoidSystem?,
                                then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadSystemHistory(for id: String,
+                                     with progress: PTCLProgressBlock?,
+                                     and block: PTCLSystemsBlockVoidArraySystemState?,
+                                     then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSystems(with progress: PTCLProgressBlock?,
