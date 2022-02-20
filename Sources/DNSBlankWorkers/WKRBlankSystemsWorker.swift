@@ -75,6 +75,17 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             return try self.intDoLoadHistory(for: system, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadHistory(for endPoint: DAOSystemEndPoint,
+                              with progress: PTCLProgressBlock?,
+                              and block: PTCLSystemsBlockVoidArraySystemState?) throws {
+        try self.runDo(runNext: {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doLoadHistory(for: endPoint, with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoLoadHistory(for: endPoint, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadSystems(with progress: PTCLProgressBlock?,
                               and block: PTCLSystemsBlockVoidArraySystem?) throws {
         try self.runDo(runNext: {
@@ -117,6 +128,12 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for system: DAOSystem,
+                               with progress: PTCLProgressBlock?,
+                               and block: PTCLSystemsBlockVoidArraySystemState?,
+                               then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadHistory(for endPoint: DAOSystemEndPoint,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLSystemsBlockVoidArraySystemState?,
                                then resultBlock: PTCLResultBlock?) throws {
