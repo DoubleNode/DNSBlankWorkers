@@ -100,17 +100,30 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
                          for systemId: String,
                          and endPointId: String,
                          with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+        return doReport(state: state,
+                        and: "",
+                        for: systemId,
+                        and: endPointId,
+                        with: progress)
+    }
+    public func doReport(state: String,
+                         and failureCode: String,
+                         for systemId: String,
+                         and endPointId: String,
+                         with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doReport(state: state,
+                                       and: failureCode,
                                        for: systemId,
                                        and: endPointId,
                                        with: progress)
         },
                                doWork: {
-            return self.intDoReport(state: state, for: systemId, and: endPointId, with: progress, then: $0)
+            return self.intDoReport(state: state, and: failureCode, for: systemId,
+                                    and: endPointId, with: progress, then: $0)
         }) as! AnyPublisher<Bool, Error>
     }
 
@@ -145,6 +158,7 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
         _ = resultBlock?(.unhandled)
     }
     open func intDoReport(state: String,
+                          and failureCode: String,
                           for systemId: String,
                           and endPointId: String,
                           with progress: PTCLProgressBlock?,
