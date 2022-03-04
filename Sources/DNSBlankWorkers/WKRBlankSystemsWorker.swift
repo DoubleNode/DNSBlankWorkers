@@ -65,25 +65,31 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
         })
     }
     public func doLoadHistory(for system: DAOSystem,
+                              since time: Date,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLSystemsBlockVoidArraySystemState?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadHistory(for: system, with: progress, and: block)
+            return try nextWorker.doLoadHistory(for: system, since: time, with: progress, and: block)
         },
                        doWork: {
-            return try self.intDoLoadHistory(for: system, with: progress, and: block, then: $0)
+            return try self.intDoLoadHistory(for: system, since: time,
+                                             with: progress, and: block, then: $0)
         })
     }
     public func doLoadHistory(for endPoint: DAOSystemEndPoint,
+                              since time: Date,
+                              include failureCodes: Bool,
                               with progress: PTCLProgressBlock?,
                               and block: PTCLSystemsBlockVoidArraySystemState?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadHistory(for: endPoint, with: progress, and: block)
+            return try nextWorker.doLoadHistory(for: endPoint, since: time, include: failureCodes,
+                                                with: progress, and: block)
         },
                        doWork: {
-            return try self.intDoLoadHistory(for: endPoint, with: progress, and: block, then: $0)
+            return try self.intDoLoadHistory(for: endPoint, since: time, include: failureCodes,
+                                             with: progress, and: block, then: $0)
         })
     }
     public func doLoadSystems(with progress: PTCLProgressBlock?,
@@ -141,12 +147,15 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for system: DAOSystem,
+                               since time: Date,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLSystemsBlockVoidArraySystemState?,
                                then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for endPoint: DAOSystemEndPoint,
+                               since time: Date,
+                               include failureCodes: Bool,
                                with progress: PTCLProgressBlock?,
                                and block: PTCLSystemsBlockVoidArraySystemState?,
                                then resultBlock: PTCLResultBlock?) throws {
