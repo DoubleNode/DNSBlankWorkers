@@ -102,6 +102,18 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             return try self.intDoLoadSystems(with: progress, and: block, then: $0)
         })
     }
+    public func doOverride(system: DAOSystem,
+                           with state: DAOSystemState.State,
+                           with progress: PTCLProgressBlock?,
+                           and block: PTCLSystemsBlockVoidSystem?) throws {
+        try self.runDo(runNext: {
+            guard let nextWorker = self.nextWorker else { return nil }
+            return try nextWorker.doOverride(system: system, with: state, with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoOverride(system: system, with: state, with: progress, and: block, then: $0)
+        })
+    }
     public func doReport(state: String,
                          for systemId: String,
                          and endPointId: String,
@@ -164,6 +176,13 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
     open func intDoLoadSystems(with progress: PTCLProgressBlock?,
                                and block: PTCLSystemsBlockVoidArraySystem?,
                                then resultBlock: PTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoOverride(system: DAOSystem,
+                            with state: DAOSystemState.State,
+                            with progress: PTCLProgressBlock?,
+                            and block: PTCLSystemsBlockVoidSystem?,
+                            then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoReport(state: String,
