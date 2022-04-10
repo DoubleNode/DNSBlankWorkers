@@ -120,12 +120,14 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
                          with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         return doReport(state: state,
                         and: "",
+                        and: "",
                         for: systemId,
                         and: endPointId,
                         with: progress)
     }
     public func doReport(state: String,
                          and failureCode: String,
+                         and debugString: String,
                          for systemId: String,
                          and endPointId: String,
                          with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
@@ -135,13 +137,15 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             }
             return nextWorker.doReport(state: state,
                                        and: failureCode,
+                                       and: debugString,
                                        for: systemId,
                                        and: endPointId,
                                        with: progress)
         },
                                doWork: {
-            return self.intDoReport(state: state, and: failureCode, for: systemId,
-                                    and: endPointId, with: progress, then: $0)
+            return self.intDoReport(state: state, and: failureCode, and: debugString,
+                                    for: systemId, and: endPointId,
+                                    with: progress, then: $0)
         }) as! AnyPublisher<Bool, Error>
     }
 
@@ -187,6 +191,7 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
     }
     open func intDoReport(state: String,
                           and failureCode: String,
+                          and debugString: String,
                           for systemId: String,
                           and endPointId: String,
                           with progress: PTCLProgressBlock?,
