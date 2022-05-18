@@ -14,7 +14,6 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, PTCLBeacons
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLBeacons?
-    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

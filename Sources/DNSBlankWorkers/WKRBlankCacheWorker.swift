@@ -14,7 +14,6 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, PTCLCache
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLCache?
-    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

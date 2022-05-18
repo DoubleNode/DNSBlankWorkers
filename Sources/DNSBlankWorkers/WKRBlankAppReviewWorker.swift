@@ -26,7 +26,6 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
 
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLAppReview?
-    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()

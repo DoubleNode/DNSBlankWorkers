@@ -114,30 +114,30 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             return try self.intDoOverride(system: system, with: state, with: progress, and: block, then: $0)
         })
     }
-    public func doReport(state: String,
+    public func doReport(result: PTCLSystemsData.Result,
                          for systemId: String,
                          and endPointId: String,
                          with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return doReport(state: state,
+        return doReport(result: result,
                         and: "",
                         and: "",
                         for: systemId,
                         and: endPointId,
                         with: progress)
     }
-    public func doReport(state: String,
+    public func doReport(result: PTCLSystemsData.Result,
                          and failureCode: String,
                          for systemId: String,
                          and endPointId: String,
                          with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return doReport(state: state,
+        return doReport(result: result,
                         and: failureCode,
                         and: "",
                         for: systemId,
                         and: endPointId,
                         with: progress)
     }
-    public func doReport(state: String,
+    public func doReport(result: PTCLSystemsData.Result,
                          and failureCode: String,
                          and debugString: String,
                          for systemId: String,
@@ -147,7 +147,7 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
-            return nextWorker.doReport(state: state,
+            return nextWorker.doReport(result: result,
                                        and: failureCode,
                                        and: debugString,
                                        for: systemId,
@@ -155,7 +155,7 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
                                        with: progress)
         },
                                doWork: {
-            return self.intDoReport(state: state, and: failureCode, and: debugString,
+            return self.intDoReport(result: result, and: failureCode, and: debugString,
                                     for: systemId, and: endPointId,
                                     with: progress, then: $0)
         }) as! AnyPublisher<Bool, Error>
@@ -163,9 +163,9 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
 
     // MARK: - Internal Work Methods
     open func intDoLoadSystem(for id: String,
-                               with progress: PTCLProgressBlock?,
-                               and block: PTCLSystemsBlockVoidSystem?,
-                               then resultBlock: PTCLResultBlock?) throws {
+                              with progress: PTCLProgressBlock?,
+                              and block: PTCLSystemsBlockVoidSystem?,
+                              then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEndPoints(for system: DAOSystem,
@@ -201,7 +201,7 @@ open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
                             then resultBlock: PTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoReport(state: String,
+    open func intDoReport(result: PTCLSystemsData.Result,
                           and failureCode: String,
                           and debugString: String,
                           for systemId: String,

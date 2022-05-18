@@ -6,6 +6,7 @@
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import Alamofire
 import AtomicSwift
 import DNSCore
 import DNSProtocols
@@ -17,7 +18,8 @@ open class WKRBlankBaseWorker: NSObject, PTCLProtocolBase
     private var options: [String] = []
     
     public var networkConfigurator: PTCLNetworkConfigurator?
-    
+    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
+
     static public var languageCode: String = {
         let currentLocale = NSLocale.current
         var languageCode = currentLocale.languageCode ?? "en"
@@ -106,5 +108,48 @@ open class WKRBlankBaseWorker: NSObject, PTCLProtocolBase
             return nil
         }
         return try doWork(resultBlock)
+    }
+
+    // MARK: - Utility methods
+    open func utilityReportSystemSuccess(for systemId: String,
+                                         and endPointId: String) {
+        self.utilityReportSystem(debugString: "",
+                                 result: PTCLSystemsData.Result.success,
+                                 and: "",
+                                 for: systemId,
+                                 and: endPointId)
+    }
+    open func utilityReportSystemFailure(sendDebug: Bool,
+                                         response: DataResponse<Any, AFError>,
+                                         and failureCode: String,
+                                         for systemId: String,
+                                         and endPointId: String) {
+        self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
+                                 result: PTCLSystemsData.Result.failure,
+                                 and: failureCode,
+                                 for: systemId,
+                                 and: endPointId)
+    }
+    open func utilityReportSystemFailure(sendDebug: Bool,
+                                         debugString: String,
+                                         and failureCode: String,
+                                         for systemId: String,
+                                         and endPointId: String) {
+        self.utilityReportSystem(debugString: sendDebug ? debugString : "",
+                                 result: PTCLSystemsData.Result.failure,
+                                 and: failureCode,
+                                 for: systemId,
+                                 and: endPointId)
+    }
+    open func utilityReportSystem(debugString: String,
+                                  result: PTCLSystemsData.Result,
+                                  and failureCode: String,
+                                  for systemId: String,
+                                  and endPointId: String) {
+        _ = self.systemsWorker?.doReport(result: result,
+                                         and: failureCode,
+                                         and: debugString,
+                                         for: systemId,
+                                         and: endPointId, with: nil)
     }
 }

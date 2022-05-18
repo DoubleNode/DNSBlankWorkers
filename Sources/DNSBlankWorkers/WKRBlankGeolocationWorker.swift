@@ -13,7 +13,6 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, PTCLGeolocation
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLGeolocation?
-    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
 
     public required init() {
         super.init()
