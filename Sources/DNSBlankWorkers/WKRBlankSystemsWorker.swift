@@ -12,7 +12,7 @@ import DNSDataObjects
 import DNSProtocols
 import UIKit
 
-open class WKRBlankSystemsWorker: WKRBlankBaseWorker, PTCLSystems
+open class WKRBlankSystemsWorker: WKRBaseWorker, PTCLSystems
 {
     public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
     public var nextWorker: PTCLSystems?
