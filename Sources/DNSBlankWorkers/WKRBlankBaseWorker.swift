@@ -120,6 +120,17 @@ open class WKRBlankBaseWorker: NSObject, PTCLProtocolBase
                                  and: endPointId)
     }
     open func utilityReportSystemFailure(sendDebug: Bool,
+                                         response: DataResponse<Data, AFError>,
+                                         and failureCode: String,
+                                         for systemId: String,
+                                         and endPointId: String) {
+        self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
+                                 result: PTCLSystemsData.Result.failure,
+                                 and: failureCode,
+                                 for: systemId,
+                                 and: endPointId)
+    }
+    open func utilityReportSystemFailure(sendDebug: Bool,
                                          response: DataResponse<Any, AFError>,
                                          and failureCode: String,
                                          for systemId: String,
