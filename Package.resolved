@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "2f6ff2a177a521842daa07b8bdc328e90914e8d2",
-          "version": "1.8.0"
+          "revision": "3689463197d4628892b8bfce76dcf9dee368af5c",
+          "version": "1.8.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "452369e306f5976a12ba5549c0da6713614ce31d",
-          "version": "1.8.0"
+          "revision": "2c4a379f6528ae162aa28256c16d913066951225",
+          "version": "1.8.9"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "cb9b26fe981de1f564c47df9bd3e974d6b3444ed",
-          "version": "1.8.0"
+          "revision": "01b046e2f2aa7ae857b5e0729472ee43081fa790",
+          "version": "1.8.2"
         }
       },
       {
@@ -80,15 +80,6 @@
           "branch": null,
           "revision": "12b5acf96d98f91d50de447369bd18df74600f1a",
           "version": "1.9.6"
-        }
-      },
-      {
-        "package": "Tagging",
-        "repositoryURL": "https://github.com/alexruperez/Tagging",
-        "state": {
-          "branch": null,
-          "revision": "038ec53dc6fde61c0fe14744114e4758e57caf1a",
-          "version": "0.1.0"
         }
       }
     ]

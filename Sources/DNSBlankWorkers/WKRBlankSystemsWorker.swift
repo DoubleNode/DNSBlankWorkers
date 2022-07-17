@@ -103,7 +103,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, PTCLSystems
         })
     }
     public func doOverride(system: DAOSystem,
-                           with state: DAOSystemState.State,
+                           with state: DNSSystemState,
                            with progress: PTCLProgressBlock?,
                            and block: PTCLSystemsBlockVoidSystem?) throws {
         try self.runDo(runNext: {
@@ -195,7 +195,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, PTCLSystems
         _ = resultBlock?(.unhandled)
     }
     open func intDoOverride(system: DAOSystem,
-                            with state: DAOSystemState.State,
+                            with state: DNSSystemState,
                             with progress: PTCLProgressBlock?,
                             and block: PTCLSystemsBlockVoidSystem?,
                             then resultBlock: PTCLResultBlock?) throws {
