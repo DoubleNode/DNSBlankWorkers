@@ -12,14 +12,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAlerts?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAlerts,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -33,14 +33,14 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doLoadAlerts(for center: DAOCenter,
-                             with progress: WKRPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                             with progress: DNSPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -54,7 +54,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         }) as! AnyPublisher<[DAOAlert], Error>
     }
     public func doLoadAlerts(for district: DAODistrict,
-                             with progress: WKRPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                             with progress: DNSPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -68,7 +68,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         }) as! AnyPublisher<[DAOAlert], Error>
     }
     public func doLoadAlerts(for region: DAORegion,
-                             with progress: WKRPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                             with progress: DNSPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -81,7 +81,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
             // swiftlint:disable:next force_cast
         }) as! AnyPublisher<[DAOAlert], Error>
     }
-    public func doLoadAlerts(with progress: WKRPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
+    public func doLoadAlerts(with progress: DNSPTCLProgressBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -95,27 +95,41 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         }) as! AnyPublisher<[DAOAlert], Error>
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadAlerts(for center: DAOCenter) -> AnyPublisher<[DAOAlert], Error> {
+        return self.doLoadAlerts(for: center, with: nil)
+    }
+    public func doLoadAlerts(for district: DAODistrict) -> AnyPublisher<[DAOAlert], Error> {
+        return self.doLoadAlerts(for: district, with: nil)
+    }
+    public func doLoadAlerts(for region: DAORegion) -> AnyPublisher<[DAOAlert], Error> {
+        return self.doLoadAlerts(for: region, with: nil)
+    }
+    public func doLoadAlerts() -> AnyPublisher<[DAOAlert], Error> {
+        return self.doLoadAlerts(with: nil)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoLoadAlerts(for center: DAOCenter,
-                              with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                              with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<[DAOAlert], Error>
     }
     open func intDoLoadAlerts(for district: DAODistrict,
-                              with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                              with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<[DAOAlert], Error>
     }
     open func intDoLoadAlerts(for region: DAORegion,
-                              with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
+                              with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<[DAOAlert], Error>
     }
-    open func intDoLoadAlerts(with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
+    open func intDoLoadAlerts(with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<[DAOAlert], Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<[DAOAlert], Error>
     }

@@ -10,14 +10,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, WKRPTCLGeolocation {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLGeolocation?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLGeolocation,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -31,13 +31,13 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, WKRPTCLGeolocation {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
-    public func doLocate(with progress: WKRPTCLProgressBlock?,
+    // MARK: - Worker Logic (Public) -
+    public func doLocate(with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLGeolocationBlockString?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -48,7 +48,7 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, WKRPTCLGeolocation {
         })
     }
     public func doTrackLocation(for processKey: String,
-                                with progress: WKRPTCLProgressBlock?,
+                                with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLGeolocationBlockString?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -68,20 +68,29 @@ open class WKRBlankGeolocationWorker: WKRBlankBaseWorker, WKRPTCLGeolocation {
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLocate(with block: WKRPTCLGeolocationBlockString?) throws {
+        try self.doLocate(with: nil, and: block)
+    }
+    public func doTrackLocation(for processKey: String,
+                                with block: WKRPTCLGeolocationBlockString?) throws {
+        try self.doTrackLocation(for: processKey, with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
-    open func intDoLocate(with progress: WKRPTCLProgressBlock?,
+    open func intDoLocate(with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLGeolocationBlockString?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoTrackLocation(for processKey: String,
-                                 with progress: WKRPTCLProgressBlock?,
+                                 with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLGeolocationBlockString?,
-                                 then resultBlock: WKRPTCLResultBlock?) throws {
+                                 then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoStopTrackLocation(for processKey: String,
-                                     then resultBlock: WKRPTCLResultBlock?) throws {
+                                     then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

@@ -12,14 +12,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAdmin?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAdmin,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -33,15 +33,15 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doChange(_ user: DAOUser,
                          to role: DNSUserRole,
-                         with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                         with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -54,7 +54,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
             // swiftlint:disable:next force_cast
         }) as! AnyPublisher<Bool, Error>
     }
-    public func doCheckAdmin(with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+    public func doCheckAdmin(with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -68,7 +68,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         }) as! AnyPublisher<Bool, Error>
     }
     public func doDenyChangeRequest(for user: DAOUser,
-                                    with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                                    with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -81,7 +81,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
             // swiftlint:disable:next force_cast
         }) as! AnyPublisher<Bool, Error>
     }
-    public func doLoadChangeRequests(with progress: WKRPTCLProgressBlock?) ->
+    public func doLoadChangeRequests(with progress: DNSPTCLProgressBlock?) ->
         AnyPublisher<(DAOUserChangeRequest?, [DAOUserChangeRequest]), Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
@@ -96,7 +96,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
             // swiftlint:disable:next force_cast
         }) as! AnyPublisher<(DAOUserChangeRequest?, [DAOUserChangeRequest]), Error>
     }
-    public func doLoadTabs(with progress: WKRPTCLProgressBlock?) -> AnyPublisher<[String], Error> {
+    public func doLoadTabs(with progress: DNSPTCLProgressBlock?) -> AnyPublisher<[String], Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -110,7 +110,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         }) as! AnyPublisher<[String], Error>
     }
     public func doRequestChange(to role: DNSUserRole,
-                                with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                                with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_try
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
@@ -124,39 +124,60 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         }) as! AnyPublisher<Bool, Error>
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doChange(_ user: DAOUser,
+                         to role: DNSUserRole) -> AnyPublisher<Bool, Error> {
+        return self.doChange(user, to: role, with: nil)
+    }
+    public func doCheckAdmin() -> AnyPublisher<Bool, Error> {
+        return self.doCheckAdmin(with: nil)
+    }
+    public func doDenyChangeRequest(for user: DAOUser) -> AnyPublisher<Bool, Error> {
+        return self.doDenyChangeRequest(for: user, with: nil)
+    }
+    public func doLoadChangeRequests() -> AnyPublisher<(DAOUserChangeRequest?, [DAOUserChangeRequest]), Error> {
+        return self.doLoadChangeRequests(with: nil)
+    }
+    public func doLoadTabs() -> AnyPublisher<[String], Error> {
+        return self.doLoadTabs(with: nil)
+    }
+    public func doRequestChange(to role: DNSUserRole) -> AnyPublisher<Bool, Error> {
+        return self.doRequestChange(to: role, with: nil)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoChange(_ user: DAOUser,
                           to role: DNSUserRole,
-                          with progress: WKRPTCLProgressBlock?,
-                          then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+                          with progress: DNSPTCLProgressBlock?,
+                          then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }
-    open func intDoCheckAdmin(with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+    open func intDoCheckAdmin(with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }
     open func intDoDenyChangeRequest(for user: DAOUser,
-                                     with progress: WKRPTCLProgressBlock?,
-                                     then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+                                     with progress: DNSPTCLProgressBlock?,
+                                     then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }
-    open func intDoLoadChangeRequests(with progress: WKRPTCLProgressBlock?,
-                                      then resultBlock: WKRPTCLResultBlock?) ->
+    open func intDoLoadChangeRequests(with progress: DNSPTCLProgressBlock?,
+                                      then resultBlock: DNSPTCLResultBlock?) ->
     AnyPublisher<(DAOUserChangeRequest?, [DAOUserChangeRequest]), Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<(DAOUserChangeRequest?, [DAOUserChangeRequest]), Error>
     }
-    open func intDoLoadTabs(with progress: WKRPTCLProgressBlock?,
-                            then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<[String], Error> {
+    open func intDoLoadTabs(with progress: DNSPTCLProgressBlock?,
+                            then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<[String], Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<[String], Error>
     }
     open func intDoRequestChange(to role: DNSUserRole,
-                                 with progress: WKRPTCLProgressBlock?,
-                                 then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+                                 with progress: DNSPTCLProgressBlock?,
+                                 then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }

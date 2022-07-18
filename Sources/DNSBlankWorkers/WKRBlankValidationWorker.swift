@@ -11,14 +11,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLValidation?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLValidation,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,12 +32,12 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doValidateBirthdate(for birthdate: Date?,
                                     with config: WKRPTCLValidation.Data.Config.Birthdate) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
@@ -162,62 +162,62 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     // MARK: - Internal Work Methods
     open func intDoValidateBirthdate(for birthdate: Date?,
                                      with config: WKRPTCLValidation.Data.Config.Birthdate,
-                                     then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                     then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateCalendarDate(for date: Date?,
                                         with config: WKRPTCLValidation.Data.Config.CalendarDate,
-                                        then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                        then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateEmail(for email: String?,
                                  with config: WKRPTCLValidation.Data.Config.Email,
-                                 then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                 then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateHandle(for handle: String?,
                                   with config: WKRPTCLValidation.Data.Config.Handle,
-                                  then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                  then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateName(for name: String?,
                                 with config: WKRPTCLValidation.Data.Config.Name,
-                                then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateNumber(for number: String?,
                                   with config: WKRPTCLValidation.Data.Config.Number,
-                                  then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                  then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidatePassword(for password: String?,
                                     with config: WKRPTCLValidation.Data.Config.Password,
-                                    then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                    then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidatePercentage(for percentage: String?,
                                       with config: WKRPTCLValidation.Data.Config.Percentage,
-                                      then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                      then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidatePhone(for phone: String?,
                                  with config: WKRPTCLValidation.Data.Config.Phone,
-                                 then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                 then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateSearch(for search: String?,
                                   with config: WKRPTCLValidation.Data.Config.Search,
-                                  then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                  then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateState(for state: String?,
                                  with config: WKRPTCLValidation.Data.Config.State,
-                                 then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                 then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
     open func intDoValidateUnsignedNumber(for number: String?,
                                           with config: WKRPTCLValidation.Data.Config.UnsignedNumber,
-                                          then resultBlock: WKRPTCLResultBlock?) throws -> DNSError.Validation? {
+                                          then resultBlock: DNSPTCLResultBlock?) throws -> DNSError.Validation? {
         return resultBlock?(.unhandled) as! DNSError.Validation?
     }
 }

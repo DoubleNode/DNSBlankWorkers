@@ -11,14 +11,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAccount?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAccount,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,14 +32,14 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doLoadAccount(for user: DAOUser,
-                              with progress: WKRPTCLProgressBlock?,
+                              with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlockAccount?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -50,7 +50,7 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
         })
     }
     public func doUpdate(account: DAOAccount,
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -61,17 +61,27 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadAccount(for user: DAOUser,
+                              with block: WKRPTCLAccountBlockAccount?) throws {
+        try self.doLoadAccount(for: user, with: nil, and: block)
+    }
+    public func doUpdate(account: DAOAccount,
+                         with block: WKRPTCLAccountBlockBool?) throws {
+        try self.doUpdate(account: account, with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoLoadAccount(for user: DAOUser,
-                               with progress: WKRPTCLProgressBlock?,
+                               with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlockAccount?,
-                               then resultBlock: WKRPTCLResultBlock?) throws {
+                               then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(account: DAOAccount,
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlockBool?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

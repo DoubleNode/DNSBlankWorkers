@@ -11,14 +11,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthentication {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAuthentication?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAuthentication,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,14 +32,14 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthenticati
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doCheckAuthentication(using parameters: [String: Any],
-                                      with progress: WKRPTCLProgressBlock?,
+                                      with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLAuthenticationBlockBoolBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -52,7 +52,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthenticati
     public func doSignIn(from username: String?,
                          and password: String?,
                          using parameters: [String: Any],
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthenticationBlockBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -63,7 +63,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthenticati
         })
     }
     public func doSignOut(using parameters: [String: Any],
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthenticationBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -76,7 +76,7 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthenticati
     public func doSignUp(from user: DAOUser?,
                          and password: String?,
                          using parameters: [String: Any],
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthenticationBlockBoolAccessData?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -87,33 +87,55 @@ open class WKRBlankAuthenticationWorker: WKRBlankBaseWorker, WKRPTCLAuthenticati
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doCheckAuthentication(using parameters: [String: Any],
+                                      with block: WKRPTCLAuthenticationBlockBoolBoolAccessData?) throws {
+        try self.doCheckAuthentication(using: parameters, with: nil, and: block)
+    }
+    public func doSignIn(from username: String?,
+                         and password: String?,
+                         using parameters: [String: Any],
+                         with block: WKRPTCLAuthenticationBlockBoolAccessData?) throws {
+        try self.doSignIn(from: username, and: password, using: parameters, with: nil, and: block)
+    }
+    public func doSignOut(using parameters: [String: Any],
+                          with block: WKRPTCLAuthenticationBlockBool?) throws {
+        try self.doSignOut(using: parameters, with: nil, and: block)
+    }
+    public func doSignUp(from user: DAOUser?,
+                         and password: String?,
+                         using parameters: [String: Any],
+                         with block: WKRPTCLAuthenticationBlockBoolAccessData?) throws {
+        try self.doSignUp(from: user, and: password, using: parameters, with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoCheckAuthentication(using parameters: [String: Any],
-                                       with progress: WKRPTCLProgressBlock?,
+                                       with progress: DNSPTCLProgressBlock?,
                                        and block: WKRPTCLAuthenticationBlockBoolBoolAccessData?,
-                                       then resultBlock: WKRPTCLResultBlock?) throws {
+                                       then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignIn(from username: String?,
                           and password: String?,
                           using parameters: [String: Any],
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthenticationBlockBoolAccessData?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignOut(using parameters: [String: Any],
-                           with progress: WKRPTCLProgressBlock?,
+                           with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAuthenticationBlockBool?,
-                           then resultBlock: WKRPTCLResultBlock?) throws {
+                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignUp(from user: DAOUser?,
                           and password: String?,
                           using parameters: [String: Any],
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthenticationBlockBoolAccessData?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

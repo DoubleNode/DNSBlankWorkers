@@ -23,14 +23,14 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
     public var usesSinceFirstLaunch: UInt = 0
     public var usesUntilPrompt: UInt = 0
 
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAppReview?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAppReview,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -44,12 +44,12 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doReview() throws -> Bool {
         return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return false }
@@ -61,7 +61,7 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoReview(then resultBlock: WKRPTCLResultBlock?) throws -> Bool {
+    open func intDoReview(then resultBlock: DNSPTCLResultBlock?) throws -> Bool {
         return resultBlock?(.unhandled) as! Bool
     }
 }

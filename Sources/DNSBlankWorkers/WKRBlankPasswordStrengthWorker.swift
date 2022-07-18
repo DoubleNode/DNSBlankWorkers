@@ -10,7 +10,7 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordStrength {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPasswordStrength?
 
     public var minimumLength: Int32 = 6
@@ -19,7 +19,7 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordSt
         super.init()
     }
     public func register(nextWorker: WKRPTCLPasswordStrength,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -33,12 +33,12 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordSt
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doCheckPasswordStrength(for password: String) throws -> WKRPTCLPasswordStrength.Level {
         return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -51,7 +51,7 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordSt
 
     // MARK: - Internal Work Methods
     open func intDoCheckPasswordStrength(for password: String,
-                                         then resultBlock: WKRPTCLResultBlock?) throws -> WKRPTCLPasswordStrength.Level {
+                                         then resultBlock: DNSPTCLResultBlock?) throws -> WKRPTCLPasswordStrength.Level {
         return resultBlock?(.unhandled) as! WKRPTCLPasswordStrength.Level
     }
 }

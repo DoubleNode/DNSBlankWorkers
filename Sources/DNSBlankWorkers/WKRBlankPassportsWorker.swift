@@ -13,14 +13,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPassports?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLPassports,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -34,16 +34,16 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doBuildPassport(ofType passportType: String,
                                 using data: [String: String],
                                 for account: DAOAccount,
-                                with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Data, Error> {
+                                with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Data, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
@@ -55,12 +55,19 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
         }) as! AnyPublisher<Data, Error>
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doBuildPassport(ofType passportType: String,
+                                using data: [String: String],
+                                for account: DAOAccount) -> AnyPublisher<Data, Error> {
+        return self.doBuildPassport(ofType: passportType, using: data, for: account, with: nil)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoBuildPassport(ofType passportType: String,
                                  using data: [String: String],
                                  for account: DAOAccount,
-                                 with progress: WKRPTCLProgressBlock?,
-                                 then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Data, Error> {
+                                 with progress: DNSPTCLProgressBlock?,
+                                 then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Data, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Data, Error>
     }
 }

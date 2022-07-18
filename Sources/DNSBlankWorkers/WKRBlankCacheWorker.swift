@@ -11,14 +11,14 @@ import DNSProtocols
 import UIKit
 
 open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCache?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLCache,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,14 +32,14 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doDeleteObject(for id: String,
-                               with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                               with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
@@ -52,7 +52,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
     public func doLoadImage(from url: NSURL,
                             for id: String,
-                            with progress: WKRPTCLProgressBlock?) -> AnyPublisher<UIImage, Error> {
+                            with progress: DNSPTCLProgressBlock?) -> AnyPublisher<UIImage, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<UIImage, Error> { $0(.success(UIImage())) }.eraseToAnyPublisher()
@@ -64,7 +64,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
         }) as! AnyPublisher<UIImage, Error>
     }
     public func doReadObject(for id: String,
-                             with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Any, Error> {
+                             with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Any, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Any, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
@@ -76,7 +76,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
         }) as! AnyPublisher<Any, Error>
     }
     public func doReadObject(for id: String,
-                             with progress: WKRPTCLProgressBlock?) -> AnyPublisher<String, Error> {
+                             with progress: DNSPTCLProgressBlock?) -> AnyPublisher<String, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<String, Error> { $0(.success("")) }.eraseToAnyPublisher()
@@ -89,7 +89,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
     public func doUpdate(object: Any,
                          for id: String,
-                         with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Any, Error> {
+                         with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Any, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Any, Error> { $0(.success(object)) }.eraseToAnyPublisher()
@@ -101,32 +101,51 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
         }) as! AnyPublisher<Any, Error>
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doDeleteObject(for id: String) -> AnyPublisher<Bool, Error> {
+        return self.doDeleteObject(for: id, with: nil)
+    }
+    public func doLoadImage(from url: NSURL,
+                            for id: String) -> AnyPublisher<UIImage, Error> {
+        return self.doLoadImage(from: url, for: id, with: nil)
+    }
+    public func doReadObject(for id: String) -> AnyPublisher<Any, Error> {
+        return (AnyPublisher<Any, Error>)(self.doReadObject(for: id, with: nil))
+    }
+    public func doReadObject(for id: String) -> AnyPublisher<String, Error> {
+        return (AnyPublisher<String, Error>)(self.doReadObject(for: id, with: nil))
+    }
+    public func doUpdate(object: Any,
+                         for id: String) -> AnyPublisher<Any, Error> {
+        return self.doUpdate(object: object, for: id, with: nil)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoDeleteObject(for id: String,
-                                with progress: WKRPTCLProgressBlock?,
-                                then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+                                with progress: DNSPTCLProgressBlock?,
+                                then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }
     open func intDoLoadImage(from url: NSURL,
                              for id: String,
-                             with progress: WKRPTCLProgressBlock?,
-                             then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<UIImage, Error> {
+                             with progress: DNSPTCLProgressBlock?,
+                             then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<UIImage, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<UIImage, Error>
     }
     open func intDoReadObject(for id: String,
-                              with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Any, Error> {
+                              with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Any, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Any, Error>
     }
     open func intDoReadObject(for id: String,
-                              with progress: WKRPTCLProgressBlock?,
-                              then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<String, Error> {
+                              with progress: DNSPTCLProgressBlock?,
+                              then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<String, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<String, Error>
     }
     open func intDoUpdate(object: Any,
                           for id: String,
-                          with progress: WKRPTCLProgressBlock?,
-                          then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Any, Error> {
+                          with progress: DNSPTCLProgressBlock?,
+                          then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Any, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Any, Error>
     }
 }

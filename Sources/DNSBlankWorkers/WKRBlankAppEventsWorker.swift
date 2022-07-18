@@ -10,14 +10,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAppEvents?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLAppEvents,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -31,13 +31,13 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
-    public func doLoadAppEvents(with progress: WKRPTCLProgressBlock?,
+    // MARK: - Worker Logic (Public) -
+    public func doLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLAppEventsBlockArrayAppEvent?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -48,10 +48,15 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadAppEvents(with block: WKRPTCLAppEventsBlockArrayAppEvent?) throws {
+        try self.doLoadAppEvents(with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
-    open func intDoLoadAppEvents(with progress: WKRPTCLProgressBlock?,
+    open func intDoLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAppEventsBlockArrayAppEvent?,
-                                 then resultBlock: WKRPTCLResultBlock?) throws {
+                                 then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

@@ -13,20 +13,19 @@ import DNSProtocols
 import Foundation
 
 open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
+    static public var languageCode: String {
+        DNSCore.languageCode
+    }
+    
     @Atomic
     private var options: [String] = []
     
     public var networkConfigurator: NETPTCLConfigurator?
 
-    static public var languageCode: String {
-        DNSCore.languageCode
-    }
-    
     override public required init() {
         super.init()
     }
-    open func configure() {
-    }
+    open func configure() { }
 
     public func checkOption(_ option: String) -> Bool {
         return self.options.contains(option)
@@ -39,14 +38,6 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
         self.options.removeAll { $0 == option }
     }
 
-    open func defaultHeaders() -> [String: String] {
-        return [
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Accept-Language": "\(WKRBlankBaseWorker.languageCode), en;q=0.5, *;q=0.1"
-        ]
-    }
-    
     // MARK: - UIWindowSceneDelegate methods
     // Called when the scene has moved from an inactive state to an active state.
     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
@@ -62,10 +53,10 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     // to restore the scene back to its current state.
     open func didEnterBackground() { }
 
-    public func runDo(callNextWhen: WKRPTCLWorker.Call.NextWhen,
-                      runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows) throws -> Any? {
-        let resultBlock: WKRPTCLResultBlock = { callResult in
+    public func runDo(callNextWhen: DNSPTCLWorker.Call.NextWhen,
+                      runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows) throws -> Any? {
+        let resultBlock: DNSPTCLResultBlock = { callResult in
             switch callResult {
             case .completed:
                 guard [.always].contains(where: { $0 == callNextWhen }) else { return nil }

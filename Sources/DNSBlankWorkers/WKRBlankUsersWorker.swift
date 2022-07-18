@@ -11,14 +11,14 @@ import DNSDataObjects
 import DNSProtocols
 
 open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLUsers?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLUsers,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,13 +32,13 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
-    public func doLoadCurrentUser(with progress: WKRPTCLProgressBlock?,
+    // MARK: - Worker Logic (Public) -
+    public func doLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLUsersBlockUser?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -49,7 +49,7 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         })
     }
     public func doLoadUser(for id: String,
-                           with progress: WKRPTCLProgressBlock?,
+                           with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlockUser?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -59,7 +59,7 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
             return try self.intDoLoadUser(for: id, with: progress, and: block, then: $0)
         })
     }
-    public func doRemoveCurrentUser(with progress: WKRPTCLProgressBlock?,
+    public func doRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLUsersBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -70,7 +70,7 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         })
     }
     public func doRemove(_ user: DAOUser,
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -81,7 +81,7 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         })
     }
     public func doUpdate(_ user: DAOUser,
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -92,33 +92,53 @@ open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadCurrentUser(with block: WKRPTCLUsersBlockUser?) throws {
+        try self.doLoadCurrentUser(with: nil, and: block)
+    }
+    public func doLoadUser(for id: String,
+                           with block: WKRPTCLUsersBlockUser?) throws {
+        try self.doLoadUser(for: id, with: nil, and: block)
+    }
+    public func doRemoveCurrentUser(with block: WKRPTCLUsersBlockBool?) throws {
+        try self.doRemoveCurrentUser(with: nil, and: block)
+    }
+    public func doRemove(_ user: DAOUser,
+                         with block: WKRPTCLUsersBlockBool?) throws {
+        try self.doRemove(user, with: nil, and: block)
+    }
+    public func doUpdate(_ user: DAOUser,
+                         with block: WKRPTCLUsersBlockBool?) throws {
+        try self.doUpdate(user, with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
-    open func intDoLoadCurrentUser(with progress: WKRPTCLProgressBlock?,
+    open func intDoLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlockUser?,
-                                   then resultBlock: WKRPTCLResultBlock?) throws {
+                                   then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadUser(for id: String,
-                            with progress: WKRPTCLProgressBlock?,
+                            with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLUsersBlockUser?,
-                            then resultBlock: WKRPTCLResultBlock?) throws {
+                            then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoRemoveCurrentUser(with progress: WKRPTCLProgressBlock?,
+    open func intDoRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLUsersBlockBool?,
-                                     then resultBlock: WKRPTCLResultBlock?) throws {
+                                     then resultBlock: DNSPTCLResultBlock?) throws {
          _ = resultBlock?(.unhandled)
      }
     open func intDoRemove(_ user: DAOUser,
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlockBool?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ user: DAOUser,
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlockBool?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

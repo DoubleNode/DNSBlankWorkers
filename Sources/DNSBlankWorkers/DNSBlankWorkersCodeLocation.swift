@@ -1,6 +1,6 @@
 //
 //  DNSBlankWorkersCodeLocation.swift
-//  DoubleNode Swift Framework (DNSFramework) - DNSCore
+//  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.

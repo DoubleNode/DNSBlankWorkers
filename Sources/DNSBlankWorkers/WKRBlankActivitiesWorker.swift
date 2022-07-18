@@ -11,14 +11,14 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
-    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLActivities?
 
     public required init() {
         super.init()
     }
     public func register(nextWorker: WKRPTCLActivities,
-                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
+                         for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,15 +32,15 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: WKRPTCLCallBlock?,
-                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: DNSPTCLCallBlock?,
+                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
-    // MARK: - Protocol Interface Methods
+    // MARK: - Worker Logic (Public) -
     public func doLoadActivities(for center: DAOCenter,
                                  using activityTypes: [DAOActivityType],
-                                 with progress: WKRPTCLProgressBlock?,
+                                 with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLActivitiesBlockArrayActivity?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -52,7 +52,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     }
     public func doUpdate(_ activities: [DAOActivity],
                          for center: DAOCenter,
-                         with progress: WKRPTCLProgressBlock?,
+                         with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivitiesBlockBool?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
@@ -63,19 +63,31 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
         })
     }
 
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadActivities(for center: DAOCenter,
+                                 using activityTypes: [DAOActivityType],
+                                 with block: WKRPTCLActivitiesBlockArrayActivity?) throws {
+        try self.doLoadActivities(for: center, using: activityTypes, with: nil, and: block)
+    }
+    public func doUpdate(_ activities: [DAOActivity],
+                         for center: DAOCenter,
+                         with block: WKRPTCLActivitiesBlockBool?) throws {
+        try self.doUpdate(activities, for: center, with: nil, and: block)
+    }
+
     // MARK: - Internal Work Methods
     open func intDoLoadActivities(for center: DAOCenter,
                                   using activityTypes: [DAOActivityType],
-                                  with progress: WKRPTCLProgressBlock?,
+                                  with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLActivitiesBlockArrayActivity?,
-                                  then resultBlock: WKRPTCLResultBlock?) throws {
+                                  then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activities: [DAOActivity],
                           for center: DAOCenter,
-                          with progress: WKRPTCLProgressBlock?,
+                          with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLActivitiesBlockBool?,
-                          then resultBlock: WKRPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }
