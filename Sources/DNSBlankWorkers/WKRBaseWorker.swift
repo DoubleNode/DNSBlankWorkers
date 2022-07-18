@@ -12,21 +12,15 @@ import DNSCore
 import DNSProtocols
 import Foundation
 
-open class WKRBaseWorker: NSObject, PTCLProtocolBase
-{
+open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     @Atomic
     private var options: [String] = []
     
-    public var networkConfigurator: PTCLNetworkConfigurator?
+    public var networkConfigurator: NETPTCLConfigurator?
 
-    static public var languageCode: String = {
-        let currentLocale = NSLocale.current
-        var languageCode = currentLocale.languageCode ?? "en"
-        if languageCode == "es" {
-            languageCode = "es-419"
-        }
-        return languageCode
-    }()
+    static public var languageCode: String {
+        DNSCore.languageCode
+    }
     
     override public required init() {
         super.init()
@@ -38,16 +32,14 @@ open class WKRBaseWorker: NSObject, PTCLProtocolBase
         return self.options.contains(option)
     }
     open func enableOption(_ option: String) {
-        if !self.checkOption(option) {
-            self.options.append(option)
-        }
+        guard !self.checkOption(option) else { return }
+        self.options.append(option)
     }
     open func disableOption(_ option: String) {
         self.options.removeAll { $0 == option }
     }
 
     open func defaultHeaders() -> [String: String] {
-        
         return [
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -56,53 +48,37 @@ open class WKRBaseWorker: NSObject, PTCLProtocolBase
     }
     
     // MARK: - UIWindowSceneDelegate methods
-
     // Called when the scene has moved from an inactive state to an active state.
     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-    open func didBecomeActive() {
-    }
-
+    open func didBecomeActive() { }
     // Called when the scene will move from an active state to an inactive state.
     // This may occur due to temporary interruptions (ex. an incoming phone call).
-    open func willResignActive() {
-    }
-
+    open func willResignActive() { }
     // Called as the scene transitions from the background to the foreground.
     // Use this method to undo the changes made on entering the background.
-    open func willEnterForeground() {
-    }
-
+    open func willEnterForeground() { }
     // Called as the scene transitions from the foreground to the background.
     // Use this method to save data, release shared resources, and store enough scene-specific state information
     // to restore the scene back to its current state.
-    open func didEnterBackground() {
-    }
+    open func didEnterBackground() { }
 
-    public func runDo(callNextWhen: PTCLProtocol.Call.NextWhen,
-                      runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows) throws -> Any? {
-        let resultBlock: PTCLResultBlock = { callResult in
+    public func runDo(callNextWhen: WKRPTCLWorker.Call.NextWhen,
+                      runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows) throws -> Any? {
+        let resultBlock: WKRPTCLResultBlock = { callResult in
             switch callResult {
             case .completed:
                 guard [.always].contains(where: { $0 == callNextWhen }) else { return nil }
-                do {
-                    return try runNext?()
-                } catch { }
+                do { return try runNext?() } catch { }
             case .error:
                 guard [.always, .whenError].contains(where: { $0 == callNextWhen }) else { return nil }
-                do {
-                    return try runNext?()
-                } catch { }
+                do { return try runNext?() } catch { }
             case .notFound:
                 guard [.always, .whenNotFound].contains(where: { $0 == callNextWhen }) else { return nil }
-                do {
-                    return try runNext?()
-                } catch { }
+                do { return try runNext?() } catch { }
             case .unhandled:
 //                guard [.always, .whenUnhandled].contains(where: { $0 == callNextWhen }) else { return nil }
-                do {
-                    return try runNext?()
-                } catch { }
+                do { return try runNext?() } catch { }
             }
             return nil
         }

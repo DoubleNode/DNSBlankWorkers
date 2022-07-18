@@ -12,15 +12,14 @@ import DNSCore
 import DNSProtocols
 import Foundation
 
-open class WKRBlankBaseWorker: WKRBaseWorker
-{
-    public var systemsWorker: PTCLSystems? = WKRBlankSystemsWorker()
+open class WKRBlankBaseWorker: WKRBaseWorker {
+    public var systemsWorker: WKRPTCLSystems? = WKRBlankSystemsWorker()
 
     // MARK: - Utility methods
     open func utilityReportSystemSuccess(for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: "",
-                                 result: PTCLSystemsData.Result.success,
+                                 result: WKRPTCLSystemsData.Result.success,
                                  and: "",
                                  for: systemId,
                                  and: endPointId)
@@ -31,7 +30,7 @@ open class WKRBlankBaseWorker: WKRBaseWorker
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: PTCLSystemsData.Result.failure,
+                                 result: WKRPTCLSystemsData.Result.failure,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
@@ -42,7 +41,7 @@ open class WKRBlankBaseWorker: WKRBaseWorker
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: PTCLSystemsData.Result.failure,
+                                 result: WKRPTCLSystemsData.Result.failure,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
@@ -53,7 +52,7 @@ open class WKRBlankBaseWorker: WKRBaseWorker
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: PTCLSystemsData.Result.failure,
+                                 result: WKRPTCLSystemsData.Result.failure,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
@@ -64,13 +63,13 @@ open class WKRBlankBaseWorker: WKRBaseWorker
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? debugString : "",
-                                 result: PTCLSystemsData.Result.failure,
+                                 result: WKRPTCLSystemsData.Result.failure,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
     }
     open func utilityReportSystem(debugString: String,
-                                  result: PTCLSystemsData.Result,
+                                  result: WKRPTCLSystemsData.Result,
                                   and failureCode: String,
                                   for systemId: String,
                                   and endPointId: String) {

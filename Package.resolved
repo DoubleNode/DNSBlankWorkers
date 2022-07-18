@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "AlamofireImage",
+        "repositoryURL": "https://github.com/Alamofire/AlamofireImage.git",
+        "state": {
+          "branch": null,
+          "revision": "98cbb00ce0ec5fc8e52a5b50a6bfc08d3e5aee10",
+          "version": "4.2.0"
+        }
+      },
+      {
         "package": "AtomicSwift",
         "repositoryURL": "https://github.com/DoubleNodeOpen/AtomicSwift.git",
         "state": {
@@ -42,8 +51,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "2c4a379f6528ae162aa28256c16d913066951225",
-          "version": "1.8.9"
+          "revision": "e7d8d75ffbdea00a1275b0fc7f7c3bca4d4d379f",
+          "version": "1.8.22"
         }
       },
       {
@@ -60,8 +69,17 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "01b046e2f2aa7ae857b5e0729472ee43081fa790",
-          "version": "1.8.2"
+          "revision": "9c329aaa57385a97645ba4087e982d172e3b75a2",
+          "version": "1.9.3"
+        }
+      },
+      {
+        "package": "Gifu",
+        "repositoryURL": "https://github.com/kaishin/Gifu.git",
+        "state": {
+          "branch": null,
+          "revision": "51f2eab32903e336f590c013267cfa4d7f8b06c4",
+          "version": "3.3.1"
         }
       },
       {

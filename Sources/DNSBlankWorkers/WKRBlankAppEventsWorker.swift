@@ -1,22 +1,22 @@
 //
-//  WKRBlankCMSWorker.swift
+//  WKRBlankAppEventsWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
 //
 
-import DNSCore
 import DNSProtocols
+import Foundation
 
-open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
+open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
     public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLCms?
+    public var nextWorker: WKRPTCLAppEvents?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: WKRPTCLCms,
+    public func register(nextWorker: WKRPTCLAppEvents,
                          for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -37,23 +37,21 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
     }
 
     // MARK: - Protocol Interface Methods
-    public func doLoad(for group: String,
-                       with progress: WKRPTCLProgressBlock?,
-                       and block: WKRPTCLCmsBlockArrayAny?) throws {
+    public func doLoadAppEvents(with progress: WKRPTCLProgressBlock?,
+                                and block: WKRPTCLAppEventsBlockArrayAppEvent?) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoad(for: group, with: progress, and: block)
+            return try nextWorker.doLoadAppEvents(with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoad(for: group, with: progress, and: block, then: $0)
+            return try self.intDoLoadAppEvents(with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoad(for group: String,
-                        with progress: WKRPTCLProgressBlock?,
-                        and block: WKRPTCLCmsBlockArrayAny?,
-                        then resultBlock: WKRPTCLResultBlock?) throws {
+    open func intDoLoadAppEvents(with progress: WKRPTCLProgressBlock?,
+                                 and block: WKRPTCLAppEventsBlockArrayAppEvent?,
+                                 then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 }

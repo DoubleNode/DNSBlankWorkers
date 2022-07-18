@@ -9,16 +9,15 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
-{
-    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLAnalytics?
+open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
+    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var nextWorker: WKRPTCLAnalytics?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLAnalytics,
-                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
+    public func register(nextWorker: WKRPTCLAnalytics,
+                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -32,8 +31,8 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -74,7 +73,7 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
             return try self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
         })
     }
-    public func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
+    public func doTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
         try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doTrack(event: event, properties: properties, options: options)
@@ -86,23 +85,23 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
 
     // MARK: - Internal Work Methods
     open func intDoAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any],
-                             then resultBlock: PTCLResultBlock?) throws {
+                             then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoGroup(groupId: String, traits: [String: Any], options: [String: Any],
-                         then resultBlock: PTCLResultBlock?) throws {
+                         then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoIdentify(userId: String, traits: [String: Any], options: [String: Any],
-                            then resultBlock: PTCLResultBlock?) throws {
+                            then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoScreen(screenTitle: String, properties: [String: Any], options: [String: Any],
-                          then resultBlock: PTCLResultBlock?) throws {
+                          then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoTrack(event: PTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:],
-                         then resultBlock: PTCLResultBlock?) throws {
+    open func intDoTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:],
+                         then resultBlock: WKRPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
 
@@ -131,10 +130,10 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, PTCLAnalytics
     open func doScreen(screenTitle: String, properties: [String: Any]) throws {
         try self.doScreen(screenTitle: screenTitle, properties: properties, options: [:])
     }
-    open func doTrack(event: PTCLAnalyticsEvents) throws {
+    open func doTrack(event: WKRPTCLAnalyticsEvents) throws {
         return try self.doTrack(event: event, properties: [:], options: [:])
     }
-    open func doTrack(event: PTCLAnalyticsEvents, properties: [String: Any]) throws {
+    open func doTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any]) throws {
         return try self.doTrack(event: event, properties: properties, options: [:])
     }
 }

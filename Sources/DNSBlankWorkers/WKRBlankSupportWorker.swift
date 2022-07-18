@@ -11,16 +11,15 @@ import DNSCore
 import DNSProtocols
 import UIKit
 
-open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport
-{
-    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLSupport?
+open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
+    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var nextWorker: WKRPTCLSupport?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLSupport,
-                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
+    public func register(nextWorker: WKRPTCLSupport,
+                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -34,13 +33,13 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Protocol Interface Methods
-    public func doGetUpdatedCount(with progress: PTCLProgressBlock?) -> AnyPublisher<Int, Error> {
+    public func doGetUpdatedCount(with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Int, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Int, Error> { $0(.success(0)) }.eraseToAnyPublisher()
@@ -52,25 +51,25 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport
         }) as! AnyPublisher<Int, Error>
     }
     public func doPrepare(attachment image: UIImage,
-                          with progress: PTCLProgressBlock?) -> AnyPublisher<PTCLSupportAttachment, Error> {
+                          with progress: WKRPTCLProgressBlock?) -> AnyPublisher<WKRPTCLSupportAttachment, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<PTCLSupportAttachment, Error> {
-                    $0(.success(PTCLSupportAttachment(image: image)))
+                return Future<WKRPTCLSupportAttachment, Error> {
+                    $0(.success(WKRPTCLSupportAttachment(image: image)))
                 }.eraseToAnyPublisher()
             }
             return nextWorker.doPrepare(attachment: image, with: progress)
         },
         doWork: {
             return self.intDoPrepare(attachment: image, with: progress, then: $0)
-        }) as! AnyPublisher<PTCLSupportAttachment, Error>
+        }) as! AnyPublisher<WKRPTCLSupportAttachment, Error>
     }
     public func doSendRequest(subject: String,
                               body: String,
                               tags: [String],
-                              attachments: [PTCLSupportAttachment],
+                              attachments: [WKRPTCLSupportAttachment],
                               properties: [String: String],
-                              with progress: PTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                              with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
@@ -87,22 +86,22 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, PTCLSupport
     }
 
     // MARK: - Internal Work Methods
-    open func intDoGetUpdatedCount(with progress: PTCLProgressBlock?,
-                                   then resultBlock: PTCLResultBlock?) -> AnyPublisher<Int, Error> {
+    open func intDoGetUpdatedCount(with progress: WKRPTCLProgressBlock?,
+                                   then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Int, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Int, Error>
     }
     open func intDoPrepare(attachment image: UIImage,
-                           with progress: PTCLProgressBlock?,
-                           then resultBlock: PTCLResultBlock?) -> AnyPublisher<PTCLSupportAttachment, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<PTCLSupportAttachment, Error>
+                           with progress: WKRPTCLProgressBlock?,
+                           then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<WKRPTCLSupportAttachment, Error> {
+        return resultBlock?(.unhandled) as! AnyPublisher<WKRPTCLSupportAttachment, Error>
     }
     open func intDoSendRequest(subject: String,
                                body: String,
                                tags: [String],
-                               attachments: [PTCLSupportAttachment],
+                               attachments: [WKRPTCLSupportAttachment],
                                properties: [String: String],
-                               with progress: PTCLProgressBlock?,
-                               then resultBlock: PTCLResultBlock?) -> AnyPublisher<Bool, Error> {
+                               with progress: WKRPTCLProgressBlock?,
+                               then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
     }
 }

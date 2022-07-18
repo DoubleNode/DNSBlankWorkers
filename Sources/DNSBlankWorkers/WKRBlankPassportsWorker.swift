@@ -12,16 +12,15 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
-{
-    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLPassports?
+open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
+    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var nextWorker: WKRPTCLPassports?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLPassports,
-                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
+    public func register(nextWorker: WKRPTCLPassports,
+                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -35,8 +34,8 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -44,7 +43,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
     public func doBuildPassport(ofType passportType: String,
                                 using data: [String: String],
                                 for account: DAOAccount,
-                                with progress: PTCLProgressBlock?) -> AnyPublisher<Data, Error> {
+                                with progress: WKRPTCLProgressBlock?) -> AnyPublisher<Data, Error> {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
@@ -60,8 +59,8 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, PTCLPassports
     open func intDoBuildPassport(ofType passportType: String,
                                  using data: [String: String],
                                  for account: DAOAccount,
-                                 with progress: PTCLProgressBlock?,
-                                 then resultBlock: PTCLResultBlock?) -> AnyPublisher<Data, Error> {
+                                 with progress: WKRPTCLProgressBlock?,
+                                 then resultBlock: WKRPTCLResultBlock?) -> AnyPublisher<Data, Error> {
         return resultBlock?(.unhandled) as! AnyPublisher<Data, Error>
     }
 }

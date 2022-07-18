@@ -9,8 +9,7 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
-{
+open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
     public var launchedCount: UInt = 0
     public var launchedFirstTime: Date = Date()
     public var launchedLastTime: Date?
@@ -24,14 +23,14 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
     public var usesSinceFirstLaunch: UInt = 0
     public var usesUntilPrompt: UInt = 0
 
-    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLAppReview?
+    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var nextWorker: WKRPTCLAppReview?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLAppReview,
-                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
+    public func register(nextWorker: WKRPTCLAppReview,
+                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -45,8 +44,8 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -62,7 +61,7 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, PTCLAppReview
     }
 
     // MARK: - Internal Work Methods
-    open func intDoReview(then resultBlock: PTCLResultBlock?) throws -> Bool {
+    open func intDoReview(then resultBlock: WKRPTCLResultBlock?) throws -> Bool {
         return resultBlock?(.unhandled) as! Bool
     }
 }

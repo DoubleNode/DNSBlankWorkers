@@ -9,18 +9,17 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStrength
-{
-    public var callNextWhen: PTCLProtocol.Call.NextWhen = .whenUnhandled
-    public var nextWorker: PTCLPasswordStrength?
+open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordStrength {
+    public var callNextWhen: WKRPTCLWorker.Call.NextWhen = .whenUnhandled
+    public var nextWorker: WKRPTCLPasswordStrength?
 
     public var minimumLength: Int32 = 6
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: PTCLPasswordStrength,
-                         for callNextWhen: PTCLProtocol.Call.NextWhen) {
+    public func register(nextWorker: WKRPTCLPasswordStrength,
+                         for callNextWhen: WKRPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
     }
@@ -34,25 +33,25 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, PTCLPasswordStren
         nextWorker?.enableOption(option)
     }
     @discardableResult
-    public func runDo(runNext: PTCLCallBlock?,
-                      doWork: PTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+    public func runDo(runNext: WKRPTCLCallBlock?,
+                      doWork: WKRPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Protocol Interface Methods
-    public func doCheckPasswordStrength(for password: String) throws -> PTCLPasswordStrength.Level {
+    public func doCheckPasswordStrength(for password: String) throws -> WKRPTCLPasswordStrength.Level {
         return try self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else { return nil }
             return try nextWorker.doCheckPasswordStrength(for: password)
         },
         doWork: {
             return try self.intDoCheckPasswordStrength(for: password, then: $0)
-        }) as! PTCLPasswordStrength.Level
+        }) as! WKRPTCLPasswordStrength.Level
     }
 
     // MARK: - Internal Work Methods
     open func intDoCheckPasswordStrength(for password: String,
-                                         then resultBlock: PTCLResultBlock?) throws -> PTCLPasswordStrength.Level {
-        return resultBlock?(.unhandled) as! PTCLPasswordStrength.Level
+                                         then resultBlock: WKRPTCLResultBlock?) throws -> WKRPTCLPasswordStrength.Level {
+        return resultBlock?(.unhandled) as! WKRPTCLPasswordStrength.Level
     }
 }
