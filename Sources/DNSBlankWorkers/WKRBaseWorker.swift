@@ -9,6 +9,7 @@
 import Alamofire
 import AtomicSwift
 import DNSCore
+import DNSCrashNetwork
 import DNSProtocols
 import Foundation
 
@@ -20,7 +21,7 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     @Atomic
     private var options: [String] = []
     
-    public var networkConfigurator: NETPTCLConfigurator?
+    public var networkConfigurator: NETPTCLConfigurator = NETCrashConfigurator()
 
     override public required init() {
         super.init()
