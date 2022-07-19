@@ -1,5 +1,5 @@
 //
-//  WKRBlankUserWorker.swift
+//  WKRBlankUsersWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -10,7 +10,7 @@ import DNSCore
 import DNSDataObjects
 import DNSProtocols
 
-open class WKRBlankUserWorker: WKRBlankBaseWorker, WKRPTCLUsers {
+open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLUsers?
 
