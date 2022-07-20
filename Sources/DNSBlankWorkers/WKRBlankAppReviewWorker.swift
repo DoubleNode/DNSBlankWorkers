@@ -46,14 +46,14 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doReview() throws -> Bool {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return false }
-            return try nextWorker.doReview()
+            return try self.nextWorker?.doReview()
         },
         doWork: {
             return try self.intDoReview(then: $0)

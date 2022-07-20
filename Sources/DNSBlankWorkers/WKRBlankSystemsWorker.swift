@@ -36,16 +36,16 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadSystem(for id: String,
                              with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLSystemsBlockSystem?) throws {
+                             and block: WKRPTCLSystemsBlkSystem?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadSystem(for: id, with: progress, and: block)
+            return try self.nextWorker?.doLoadSystem(for: id, with: progress, and: block)
         },
                        doWork: {
             return try self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
@@ -53,10 +53,9 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     }
     public func doLoadEndPoints(for system: DAOSystem,
                                 with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLSystemsBlockArraySystemEndPoint?) throws {
+                                and block: WKRPTCLSystemsBlkASystemEndPoint?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadEndPoints(for: system, with: progress, and: block)
+            return try self.nextWorker?.doLoadEndPoints(for: system, with: progress, and: block)
         },
                        doWork: {
             return try self.intDoLoadEndPoints(for: system, with: progress, and: block, then: $0)
@@ -65,10 +64,10 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     public func doLoadHistory(for system: DAOSystem,
                               since time: Date,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLSystemsBlockArraySystemState?) throws {
+                              and block: WKRPTCLSystemsBlkASystemState?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadHistory(for: system, since: time, with: progress, and: block)
+            return try self.nextWorker?.doLoadHistory(for: system, since: time,
+                                                      with: progress, and: block)
         },
                        doWork: {
             return try self.intDoLoadHistory(for: system, since: time,
@@ -79,11 +78,10 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                               since time: Date,
                               include failureCodes: Bool,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLSystemsBlockArraySystemState?) throws {
+                              and block: WKRPTCLSystemsBlkASystemState?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadHistory(for: endPoint, since: time, include: failureCodes,
-                                                with: progress, and: block)
+            return try self.nextWorker?.doLoadHistory(for: endPoint, since: time, include: failureCodes,
+                                                      with: progress, and: block)
         },
                        doWork: {
             return try self.intDoLoadHistory(for: endPoint, since: time, include: failureCodes,
@@ -91,10 +89,9 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
         })
     }
     public func doLoadSystems(with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLSystemsBlockArraySystem?) throws {
+                              and block: WKRPTCLSystemsBlkASystem?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadSystems(with: progress, and: block)
+            return try self.nextWorker?.doLoadSystems(with: progress, and: block)
         },
                        doWork: {
             return try self.intDoLoadSystems(with: progress, and: block, then: $0)
@@ -103,10 +100,10 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     public func doOverride(system: DAOSystem,
                            with state: DNSSystemState,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLSystemsBlockSystem?) throws {
+                           and block: WKRPTCLSystemsBlkSystem?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doOverride(system: system, with: state, with: progress, and: block)
+            return try self.nextWorker?.doOverride(system: system, with: state,
+                                                   with: progress, and: block)
         },
                        doWork: {
             return try self.intDoOverride(system: system, with: state, with: progress, and: block, then: $0)
@@ -115,7 +112,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     public func doReport(result: WKRPTCLSystemsData.Result,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
         return doReport(result: result,
                         and: "",
                         and: "",
@@ -127,7 +124,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and failureCode: String,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
         return doReport(result: result,
                         and: failureCode,
                         and: "",
@@ -140,10 +137,10 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and debugString: String,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLSystemsRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doReport(result: result,
                                        and: failureCode,
@@ -156,47 +153,47 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
             return self.intDoReport(result: result, and: failureCode, and: debugString,
                                     for: systemId, and: endPointId,
                                     with: progress, then: $0)
-        }) as! AnyPublisher<Bool, Error>
+        }) as! WKRPTCLSystemsPubBool
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadSystem(for id: String,
-                             with block: WKRPTCLSystemsBlockSystem?) throws {
+                             with block: WKRPTCLSystemsBlkSystem?) throws {
         try self.doLoadSystem(for: id, with: nil, and: block)
     }
     public func doLoadEndPoints(for system: DAOSystem,
-                                with block: WKRPTCLSystemsBlockArraySystemEndPoint?) throws {
+                                with block: WKRPTCLSystemsBlkASystemEndPoint?) throws {
         try self.doLoadEndPoints(for: system, with: nil, and: block)
     }
     public func doLoadHistory(for system: DAOSystem,
                               since time: Date,
-                              with block: WKRPTCLSystemsBlockArraySystemState?) throws {
+                              with block: WKRPTCLSystemsBlkASystemState?) throws {
         try self.doLoadHistory(for: system, since: time, with: nil, and: block)
     }
     public func doLoadHistory(for endPoint: DAOSystemEndPoint,
                               since time: Date,
                               include failureCodes: Bool,
-                              with block: WKRPTCLSystemsBlockArraySystemState?) throws {
+                              with block: WKRPTCLSystemsBlkASystemState?) throws {
         try self.doLoadHistory(for: endPoint, since: time, include: failureCodes, with: nil, and: block)
     }
-    public func doLoadSystems(with block: WKRPTCLSystemsBlockArraySystem?) throws {
+    public func doLoadSystems(with block: WKRPTCLSystemsBlkASystem?) throws {
         try self.doLoadSystems(with: nil, and: block)
     }
     public func doOverride(system: DAOSystem,
                            with state: DNSSystemState,
-                           with block: WKRPTCLSystemsBlockSystem?) throws {
+                           with block: WKRPTCLSystemsBlkSystem?) throws {
         try self.doOverride(system: system, with: state, with: nil, and: block)
     }
     public func doReport(result: WKRPTCLSystemsData.Result,
                          for systemId: String,
-                         and endPointId: String) -> AnyPublisher<Bool, Error> {
+                         and endPointId: String) -> WKRPTCLSystemsPubBool {
         return self.doReport(result: result, and: "", and: "",
                              for: systemId, and: endPointId, with: nil)
     }
     public func doReport(result: WKRPTCLSystemsData.Result,
                          and failureCode: String,
                          for systemId: String,
-                         and endPointId: String) -> AnyPublisher<Bool, Error> {
+                         and endPointId: String) -> WKRPTCLSystemsPubBool {
         return self.doReport(result: result, and: failureCode, and: "",
                              for: systemId, and: endPointId, with: nil)
     }
@@ -204,7 +201,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and failureCode: String,
                          and debugString: String,
                          for systemId: String,
-                         and endPointId: String) -> AnyPublisher<Bool, Error> {
+                         and endPointId: String) -> WKRPTCLSystemsPubBool {
         return self.doReport(result: result, and: failureCode, and: debugString,
                              for: systemId, and: endPointId, with: nil)
     }
@@ -212,20 +209,20 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     // MARK: - Internal Work Methods
     open func intDoLoadSystem(for id: String,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLSystemsBlockSystem?,
+                              and block: WKRPTCLSystemsBlkSystem?,
                               then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEndPoints(for system: DAOSystem,
                                  with progress: DNSPTCLProgressBlock?,
-                                 and block: WKRPTCLSystemsBlockArraySystemEndPoint?,
+                                 and block: WKRPTCLSystemsBlkASystemEndPoint?,
                                  then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for system: DAOSystem,
                                since time: Date,
                                with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLSystemsBlockArraySystemState?,
+                               and block: WKRPTCLSystemsBlkASystemState?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
@@ -233,19 +230,19 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                                since time: Date,
                                include failureCodes: Bool,
                                with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLSystemsBlockArraySystemState?,
+                               and block: WKRPTCLSystemsBlkASystemState?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSystems(with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLSystemsBlockArraySystem?,
+                               and block: WKRPTCLSystemsBlkASystem?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoOverride(system: DAOSystem,
                             with state: DNSSystemState,
                             with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLSystemsBlockSystem?,
+                            and block: WKRPTCLSystemsBlkSystem?,
                             then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
@@ -255,7 +252,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                           for systemId: String,
                           and endPointId: String,
                           with progress: DNSPTCLProgressBlock?,
-                          then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSystemsPubBool {
+        return resultBlock?(.unhandled) as! WKRPTCLSystemsPubBool
     }
 }

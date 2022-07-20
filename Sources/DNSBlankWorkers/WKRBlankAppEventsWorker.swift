@@ -33,15 +33,15 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadAppEvents(with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLAppEventsBlockArrayAppEvent?) throws {
+                                and block: WKRPTCLAppEventsBlkAAppEvent?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadAppEvents(with: progress, and: block)
+            return try self.nextWorker?.doLoadAppEvents(with: progress, and: block)
         },
         doWork: {
             return try self.intDoLoadAppEvents(with: progress, and: block, then: $0)
@@ -49,13 +49,13 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadAppEvents(with block: WKRPTCLAppEventsBlockArrayAppEvent?) throws {
+    public func doLoadAppEvents(with block: WKRPTCLAppEventsBlkAAppEvent?) throws {
         try self.doLoadAppEvents(with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadAppEvents(with progress: DNSPTCLProgressBlock?,
-                                 and block: WKRPTCLAppEventsBlockArrayAppEvent?,
+                                 and block: WKRPTCLAppEventsBlkAAppEvent?,
                                  then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

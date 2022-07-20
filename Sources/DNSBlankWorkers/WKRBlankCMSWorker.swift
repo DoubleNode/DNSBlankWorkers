@@ -33,16 +33,16 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoad(for group: String,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLCmsBlockArrayAny?) throws {
+                       and block: WKRPTCLCmsBlkAAny?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoad(for: group, with: progress, and: block)
+            return try self.nextWorker?.doLoad(for: group, with: progress, and: block)
         },
         doWork: {
             return try self.intDoLoad(for: group, with: progress, and: block, then: $0)
@@ -51,14 +51,14 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoad(for group: String,
-                       with block: WKRPTCLCmsBlockArrayAny?) throws {
+                       with block: WKRPTCLCmsBlkAAny?) throws {
         try self.doLoad(for: group, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoad(for group: String,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLCmsBlockArrayAny?,
+                        and block: WKRPTCLCmsBlkAAny?,
                         then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

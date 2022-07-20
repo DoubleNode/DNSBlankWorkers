@@ -34,6 +34,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -41,37 +42,39 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     public func doLoadActivities(for center: DAOCenter,
                                  using activityTypes: [DAOActivityType],
                                  with progress: DNSPTCLProgressBlock?,
-                                 and block: WKRPTCLActivitiesBlockArrayActivity?) throws {
+                                 and block: WKRPTCLActivitiesBlkAActivity?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadActivities(for: center, using: activityTypes, with: progress, and: block)
+            return try self.nextWorker?.doLoadActivities(for: center, using: activityTypes,
+                                                         with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadActivities(for: center, using: activityTypes, with: progress, and: block, then: $0)
+            return try self.intDoLoadActivities(for: center, using: activityTypes,
+                                                with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ activities: [DAOActivity],
                          for center: DAOCenter,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLActivitiesBlockBool?) throws {
+                         and block: WKRPTCLActivitiesBlkBool?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doUpdate(activities, for: center, with: progress, and: block)
+            return try self.nextWorker?.doUpdate(activities, for: center,
+                                                with: progress, and: block)
         },
         doWork: {
-            return try self.intDoUpdate(activities, for: center, with: progress, and: block, then: $0)
+            return try self.intDoUpdate(activities, for: center,
+                                        with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadActivities(for center: DAOCenter,
                                  using activityTypes: [DAOActivityType],
-                                 with block: WKRPTCLActivitiesBlockArrayActivity?) throws {
+                                 with block: WKRPTCLActivitiesBlkAActivity?) throws {
         try self.doLoadActivities(for: center, using: activityTypes, with: nil, and: block)
     }
     public func doUpdate(_ activities: [DAOActivity],
                          for center: DAOCenter,
-                         with block: WKRPTCLActivitiesBlockBool?) throws {
+                         with block: WKRPTCLActivitiesBlkBool?) throws {
         try self.doUpdate(activities, for: center, with: nil, and: block)
     }
 
@@ -79,14 +82,14 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     open func intDoLoadActivities(for center: DAOCenter,
                                   using activityTypes: [DAOActivityType],
                                   with progress: DNSPTCLProgressBlock?,
-                                  and block: WKRPTCLActivitiesBlockArrayActivity?,
+                                  and block: WKRPTCLActivitiesBlkAActivity?,
                                   then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activities: [DAOActivity],
                           for center: DAOCenter,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLActivitiesBlockBool?,
+                          and block: WKRPTCLActivitiesBlkBool?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

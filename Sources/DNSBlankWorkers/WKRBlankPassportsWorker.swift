@@ -36,6 +36,12 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    @discardableResult
+    public func runDoPub(runNext: DNSPTCLCallBlock?,
+                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -43,22 +49,22 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
     public func doBuildPassport(ofType passportType: String,
                                 using data: [String: String],
                                 for account: DAOAccount,
-                                with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Data, Error> {
-        return try! self.runDo(runNext: {
+                                with progress: DNSPTCLProgressBlock?) -> WKRPTCLPassportsPubData {
+        return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Data, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
+                return Future<WKRPTCLPassportsRtnData, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
             }
             return nextWorker.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },
-        doWork: {
+                                  doWork: {
             return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)
-        }) as! AnyPublisher<Data, Error>
+        }) as! WKRPTCLPassportsPubData
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doBuildPassport(ofType passportType: String,
                                 using data: [String: String],
-                                for account: DAOAccount) -> AnyPublisher<Data, Error> {
+                                for account: DAOAccount) -> WKRPTCLPassportsPubData {
         return self.doBuildPassport(ofType: passportType, using: data, for: account, with: nil)
     }
 
@@ -67,7 +73,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
                                  using data: [String: String],
                                  for account: DAOAccount,
                                  with progress: DNSPTCLProgressBlock?,
-                                 then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Data, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Data, Error>
+                                 then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassportsPubData {
+        return resultBlock?(.unhandled) as! WKRPTCLPassportsPubData
     }
 }

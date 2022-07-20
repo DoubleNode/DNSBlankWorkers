@@ -34,6 +34,7 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -41,43 +42,45 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     public func doFavorite(_ activityType: DAOActivityType,
                            for user: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLActivityTypesBlockVoid?) throws {
+                           and block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doFavorite(activityType, for: user, with: progress, and: block)
+            return try self.nextWorker?.doFavorite(activityType, for: user,
+                                                   with: progress, and: block)
         },
         doWork: {
-            return try self.intDoFavorite(activityType, for: user, with: progress, and: block, then: $0)
+            return try self.intDoFavorite(activityType, for: user,
+                                          with: progress, and: block, then: $0)
         })
     }
     public func doIsFavorited(_ activityType: DAOActivityType,
                               for user: DAOUser,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLActivityTypesBlockBool?) throws {
+                              and block: WKRPTCLActivityTypesBlkBool?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doIsFavorited(activityType, for: user, with: progress, and: block)
+            return try self.nextWorker?.doIsFavorited(activityType, for: user,
+                                                      with: progress, and: block)
         },
         doWork: {
-            return try self.intDoIsFavorited(activityType, for: user, with: progress, and: block, then: $0)
+            return try self.intDoIsFavorited(activityType, for: user,
+                                             with: progress, and: block, then: $0)
         })
     }
     public func doLoadActivityType(for code: String,
                                    with progress: DNSPTCLProgressBlock?,
-                                   and block: WKRPTCLActivityTypesBlockActivityType?) throws {
+                                   and block: WKRPTCLActivityTypesBlkActivityType?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadActivityType(for: code, with: progress, and: block)
+            return try self.nextWorker?.doLoadActivityType(for: code,
+                                                           with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadActivityType(for: code, with: progress, and: block, then: $0)
+            return try self.intDoLoadActivityType(for: code,
+                                                  with: progress, and: block, then: $0)
         })
     }
     public func doLoadActivityTypes(with progress: DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLActivityTypesBlockArrayActivityType?) throws {
+                                    and block: WKRPTCLActivityTypesBlkAActivityType?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadActivityTypes(with: progress, and: block)
+            return try self.nextWorker?.doLoadActivityTypes(with: progress, and: block)
         },
         doWork: {
             return try self.intDoLoadActivityTypes(with: progress, and: block, then: $0)
@@ -86,21 +89,21 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     public func doUnfavorite(_ activityType: DAOActivityType,
                              for user: DAOUser,
                              with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLActivityTypesBlockVoid?) throws {
+                             and block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doUnfavorite(activityType, for: user, with: progress, and: block)
+            return try self.nextWorker?.doUnfavorite(activityType, for: user,
+                                                     with: progress, and: block)
         },
         doWork: {
-            return try self.intDoUnfavorite(activityType, for: user, with: progress, and: block, then: $0)
+            return try self.intDoUnfavorite(activityType, for: user,
+                                            with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ activityType: DAOActivityType,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLActivityTypesBlockBool?) throws {
+                         and block: WKRPTCLActivityTypesBlkBool?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doUpdate(activityType, with: progress, and: block)
+            return try self.nextWorker?.doUpdate(activityType, with: progress, and: block)
         },
         doWork: {
             return try self.intDoUpdate(activityType, with: progress, and: block, then: $0)
@@ -110,73 +113,73 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     // MARK: - Worker Logic (Shortcuts) -
     public func doFavorite(_ activityType: DAOActivityType,
                            for user: DAOUser,
-                           with block: WKRPTCLActivityTypesBlockVoid?) throws {
+                           with block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.doFavorite(activityType, for: user, with: nil, and: block)
     }
     public func doIsFavorited(_ activityType: DAOActivityType,
                               for user: DAOUser,
-                              with block: WKRPTCLActivityTypesBlockBool?) throws {
+                              with block: WKRPTCLActivityTypesBlkBool?) throws {
         try self.doIsFavorited(activityType, for: user, with: nil, and: block)
     }
     public func doLoadActivityType(for code: String,
-                                   with block: WKRPTCLActivityTypesBlockActivityType?) throws {
+                                   with block: WKRPTCLActivityTypesBlkActivityType?) throws {
         try self.doLoadActivityType(for: code, with: nil, and: block)
     }
-    public func doLoadActivityTypes(with block: WKRPTCLActivityTypesBlockArrayActivityType?) throws {
+    public func doLoadActivityTypes(with block: WKRPTCLActivityTypesBlkAActivityType?) throws {
         try self.doLoadActivityTypes(with: nil, and: block)
     }
     public func doUnfavorite(_ activityType: DAOActivityType,
                              for user: DAOUser,
-                             with block: WKRPTCLActivityTypesBlockVoid?) throws {
+                             with block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.doUnfavorite(activityType, for: user, with: nil, and: block)
     }
     public func doUpdate(_ activityType: DAOActivityType,
-                         with block: WKRPTCLActivityTypesBlockBool?) throws {
+                         with block: WKRPTCLActivityTypesBlkBool?) throws {
         try self.doUpdate(activityType, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadAccount(for user: DAOUser,
                                with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLAccountBlockAccount?,
+                               and block: WKRPTCLAccountBlkAccount?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoFavorite(_ activityType: DAOActivityType,
                     for user: DAOUser,
                     with progress: DNSPTCLProgressBlock?,
-                    and block: WKRPTCLActivityTypesBlockVoid?,
+                    and block: WKRPTCLActivityTypesBlkVoid?,
                             then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoIsFavorited(_ activityType: DAOActivityType,
                        for user: DAOUser,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLActivityTypesBlockBool?,
+                       and block: WKRPTCLActivityTypesBlkBool?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityType(for code: String,
                             with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLActivityTypesBlockActivityType?,
+                            and block: WKRPTCLActivityTypesBlkActivityType?,
                                     then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityTypes(with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLActivityTypesBlockArrayActivityType?,
+                             and block: WKRPTCLActivityTypesBlkAActivityType?,
                                      then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUnfavorite(_ activityType: DAOActivityType,
                       for user: DAOUser,
                       with progress: DNSPTCLProgressBlock?,
-                      and block: WKRPTCLActivityTypesBlockVoid?,
+                      and block: WKRPTCLActivityTypesBlkVoid?,
                               then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activityType: DAOActivityType,
                   with progress: DNSPTCLProgressBlock?,
-                  and block: WKRPTCLActivityTypesBlockBool?,
+                  and block: WKRPTCLActivityTypesBlkBool?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

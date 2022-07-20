@@ -34,6 +34,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
@@ -41,8 +42,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateBirthdate(for birthdate: Date?,
                                     with config: WKRPTCLValidation.Data.Config.Birthdate) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateBirthdate(for: birthdate, with: config)
+            return try self.nextWorker?.doValidateBirthdate(for: birthdate, with: config)
         },
         doWork: {
             return try self.intDoValidateBirthdate(for: birthdate, with: config, then: $0)
@@ -51,8 +51,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateCalendarDate(for date: Date?,
                                        with config: WKRPTCLValidation.Data.Config.CalendarDate) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateCalendarDate(for: date, with: config)
+            return try self.nextWorker?.doValidateCalendarDate(for: date, with: config)
         },
         doWork: {
             return try self.intDoValidateCalendarDate(for: date, with: config, then: $0)
@@ -61,8 +60,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateEmail(for email: String?,
                                 with config: WKRPTCLValidation.Data.Config.Email) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateEmail(for: email, with: config)
+            return try self.nextWorker?.doValidateEmail(for: email, with: config)
         },
         doWork: {
             return try self.intDoValidateEmail(for: email, with: config, then: $0)
@@ -71,8 +69,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateHandle(for handle: String?,
                                  with config: WKRPTCLValidation.Data.Config.Handle) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateHandle(for: handle, with: config)
+            return try self.nextWorker?.doValidateHandle(for: handle, with: config)
         },
         doWork: {
             return try self.intDoValidateHandle(for: handle, with: config, then: $0)
@@ -81,8 +78,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateName(for name: String?,
                                with config: WKRPTCLValidation.Data.Config.Name) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateName(for: name, with: config)
+            return try self.nextWorker?.doValidateName(for: name, with: config)
         },
         doWork: {
             return try self.intDoValidateName(for: name, with: config, then: $0)
@@ -91,8 +87,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateNumber(for number: String?,
                                  with config: WKRPTCLValidation.Data.Config.Number) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateNumber(for: number, with: config)
+            return try self.nextWorker?.doValidateNumber(for: number, with: config)
         },
         doWork: {
             return try self.intDoValidateNumber(for: number, with: config, then: $0)
@@ -101,8 +96,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidatePassword(for password: String?,
                                    with config: WKRPTCLValidation.Data.Config.Password) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidatePassword(for: password, with: config)
+            return try self.nextWorker?.doValidatePassword(for: password, with: config)
         },
         doWork: {
             return try self.intDoValidatePassword(for: password, with: config, then: $0)
@@ -111,8 +105,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidatePercentage(for percentage: String?,
                                      with config: WKRPTCLValidation.Data.Config.Percentage) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidatePercentage(for: percentage, with: config)
+            return try self.nextWorker?.doValidatePercentage(for: percentage, with: config)
         },
         doWork: {
             return try self.intDoValidatePercentage(for: percentage, with: config, then: $0)
@@ -121,8 +114,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidatePhone(for phone: String?,
                                 with config: WKRPTCLValidation.Data.Config.Phone) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidatePhone(for: phone, with: config)
+            return try self.nextWorker?.doValidatePhone(for: phone, with: config)
         },
         doWork: {
             return try self.intDoValidatePhone(for: phone, with: config, then: $0)
@@ -131,8 +123,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateSearch(for search: String?,
                                  with config: WKRPTCLValidation.Data.Config.Search) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateSearch(for: search, with: config)
+            return try self.nextWorker?.doValidateSearch(for: search, with: config)
         },
         doWork: {
             return try self.intDoValidateSearch(for: search, with: config, then: $0)
@@ -141,8 +132,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateState(for state: String?,
                                 with config: WKRPTCLValidation.Data.Config.State) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateState(for: state, with: config)
+            return try self.nextWorker?.doValidateState(for: state, with: config)
         },
         doWork: {
             return try self.intDoValidateState(for: state, with: config, then: $0)
@@ -151,8 +141,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
     public func doValidateUnsignedNumber(for number: String?,
                                          with config: WKRPTCLValidation.Data.Config.UnsignedNumber) throws -> DNSError.Validation? {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doValidateUnsignedNumber(for: number, with: config)
+            return try self.nextWorker?.doValidateUnsignedNumber(for: number, with: config)
         },
         doWork: {
             return try self.intDoValidateUnsignedNumber(for: number, with: config, then: $0)

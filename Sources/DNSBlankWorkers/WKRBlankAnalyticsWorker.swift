@@ -33,14 +33,14 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any]) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+            return try self.nextWorker?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
         },
         doWork: {
             return try self.intDoAutoTrack(class: `class`, method: method, properties: properties, options: options, then: $0)
@@ -48,8 +48,7 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     }
     public func doGroup(groupId: String, traits: [String: Any], options: [String: Any]) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doGroup(groupId: groupId, traits: traits, options: options)
+            return try self.nextWorker?.doGroup(groupId: groupId, traits: traits, options: options)
         },
         doWork: {
             return try self.intDoGroup(groupId: groupId, traits: traits, options: options, then: $0)
@@ -57,8 +56,7 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     }
     public func doIdentify(userId: String, traits: [String: Any], options: [String: Any]) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doIdentify(userId: userId, traits: traits, options: options)
+            return try self.nextWorker?.doIdentify(userId: userId, traits: traits, options: options)
         },
         doWork: {
             return try self.intDoIdentify(userId: userId, traits: traits, options: options, then: $0)
@@ -66,8 +64,7 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     }
     public func doScreen(screenTitle: String, properties: [String: Any], options: [String: Any]) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doScreen(screenTitle: screenTitle, properties: properties, options: options)
+            return try self.nextWorker?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
         },
         doWork: {
             return try self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
@@ -75,8 +72,7 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     }
     public func doTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doTrack(event: event, properties: properties, options: options)
+            return try self.nextWorker?.doTrack(event: event, properties: properties, options: options)
         },
         doWork: {
             return try self.intDoTrack(event: event, properties: properties, options: options, then: $0)

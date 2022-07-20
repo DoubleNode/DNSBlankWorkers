@@ -1,5 +1,5 @@
 //
-//  WKRBlankBeaconDistancesWorker.swift
+//  WKRBlankBeaconDistWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -9,14 +9,14 @@
 import DNSCore
 import DNSProtocols
 
-open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, WKRPTCLBeaconDistances {
+open class WKRBlankBeaconDistWorker: WKRBlankBaseWorker, WKRPTCLBeaconDist {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLBeaconDistances?
+    public var nextWorker: WKRPTCLBeaconDist?
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: WKRPTCLBeaconDistances,
+    public func register(nextWorker: WKRPTCLBeaconDist,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -33,15 +33,15 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, WKRPTCLBeaconDista
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLBeaconDistancesBlockArrayBeaconDistance?) throws {
+                                      and block: WKRPTCLBeaconDistBlkABeaconDistance?) throws {
         try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doLoadBeaconDistances(with: progress, and: block)
+            return try self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
         },
         doWork: {
             return try self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
@@ -49,13 +49,13 @@ open class WKRBlankBeaconDistancesWorker: WKRBlankBaseWorker, WKRPTCLBeaconDista
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistancesBlockArrayBeaconDistance?) throws {
+    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistBlkABeaconDistance?) throws {
         try self.doLoadBeaconDistances(with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
-                                       and block: WKRPTCLBeaconDistancesBlockArrayBeaconDistance?,
+                                       and block: WKRPTCLBeaconDistBlkABeaconDistance?,
                                        then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

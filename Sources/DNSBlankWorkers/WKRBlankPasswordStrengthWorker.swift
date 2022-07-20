@@ -35,14 +35,14 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordSt
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doCheckPasswordStrength(for password: String) throws -> WKRPTCLPasswordStrength.Level {
         return try self.runDo(runNext: {
-            guard let nextWorker = self.nextWorker else { return nil }
-            return try nextWorker.doCheckPasswordStrength(for: password)
+            return try self.nextWorker?.doCheckPasswordStrength(for: password)
         },
         doWork: {
             return try self.intDoCheckPasswordStrength(for: password, then: $0)

@@ -34,90 +34,96 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, WKRPTCLUserIdentity {
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+        let runNext = (self.nextWorker != nil) ? runNext : nil
+        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    @discardableResult
+    public func runDoPub(runNext: DNSPTCLCallBlock?,
+                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
         return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doClearIdentity(with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo(runNext: {
+    public func doClearIdentity(with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubBool {
+        return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLUserIdentityRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doClearIdentity(with: progress)
         },
-        doWork: {
+                                  doWork: {
             return self.intDoClearIdentity(with: progress, then: $0)
-        }) as! AnyPublisher<Bool, Error>
+        }) as! WKRPTCLUserIdentityPubBool
     }
     public func doJoin(group: String,
-                       with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo(runNext: {
+                       with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubBool {
+        return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLUserIdentityRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doJoin(group: group, with: progress)
         },
-        doWork: {
+                                  doWork: {
             return self.intDoJoin(group: group, with: progress, then: $0)
-        }) as! AnyPublisher<Bool, Error>
+        }) as! WKRPTCLUserIdentityPubBool
     }
     public func doLeave(group: String,
-                        with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo(runNext: {
+                        with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubBool {
+        return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLUserIdentityRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doLeave(group: group, with: progress)
         },
-        doWork: {
+                                  doWork: {
             return self.intDoLeave(group: group, with: progress, then: $0)
-        }) as! AnyPublisher<Bool, Error>
+        }) as! WKRPTCLUserIdentityPubBool
     }
     public func doSetIdentity(using data: [String: Any?],
-                              with progress: DNSPTCLProgressBlock?) -> AnyPublisher<Bool, Error> {
-        return try! self.runDo(runNext: {
+                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubBool {
+        return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<Bool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLUserIdentityRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doSetIdentity(using: data, with: progress)
         },
-        doWork: {
+                                  doWork: {
             return self.intDoSetIdentity(using: data, with: progress, then: $0)
-        }) as! AnyPublisher<Bool, Error>
+        }) as! WKRPTCLUserIdentityPubBool
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doClearIdentity() -> AnyPublisher<Bool, Error> {
+    public func doClearIdentity() -> WKRPTCLUserIdentityPubBool {
         return self.doClearIdentity(with: nil)
     }
-    public func doJoin(group: String) -> AnyPublisher<Bool, Error> {
+    public func doJoin(group: String) -> WKRPTCLUserIdentityPubBool {
         return self.doJoin(group: group, with: nil)
     }
-    public func doLeave(group: String) -> AnyPublisher<Bool, Error> {
+    public func doLeave(group: String) -> WKRPTCLUserIdentityPubBool {
         return self.doLeave(group: group, with: nil)
     }
-    public func doSetIdentity(using data: [String: Any?]) -> AnyPublisher<Bool, Error> {
+    public func doSetIdentity(using data: [String: Any?]) -> WKRPTCLUserIdentityPubBool {
         return self.doSetIdentity(using: data, with: nil)
     }
 
     // MARK: - Internal Work Methods
     open func intDoClearIdentity(with progress: DNSPTCLProgressBlock?,
-                                 then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+                                 then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLUserIdentityPubBool {
+        return resultBlock?(.unhandled) as! WKRPTCLUserIdentityPubBool
     }
     open func intDoJoin(group: String,
                         with progress: DNSPTCLProgressBlock?,
-                        then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+                        then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLUserIdentityPubBool {
+        return resultBlock?(.unhandled) as! WKRPTCLUserIdentityPubBool
     }
     open func intDoLeave(group: String,
                          with progress: DNSPTCLProgressBlock?,
-                         then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+                         then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLUserIdentityPubBool {
+        return resultBlock?(.unhandled) as! WKRPTCLUserIdentityPubBool
     }
     open func intDoSetIdentity(using data: [String: Any?],
                                with progress: DNSPTCLProgressBlock?,
-                               then resultBlock: DNSPTCLResultBlock?) -> AnyPublisher<Bool, Error> {
-        return resultBlock?(.unhandled) as! AnyPublisher<Bool, Error>
+                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLUserIdentityPubBool {
+        return resultBlock?(.unhandled) as! WKRPTCLUserIdentityPubBool
    }
 }
