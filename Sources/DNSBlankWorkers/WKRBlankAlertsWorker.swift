@@ -45,17 +45,17 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoadAlerts(for center: DAOCenter,
+    public func doLoadAlerts(for place: DAOPlace,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return Future<WKRPTCLAlertsRtnAAlert, Error> { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return nextWorker.doLoadAlerts(for: center, with: progress)
+            return nextWorker.doLoadAlerts(for: place, with: progress)
         },
                                   doWork: {
-            return self.intDoLoadAlerts(for: center, with: progress, then: $0)
+            return self.intDoLoadAlerts(for: place, with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAlertsPubAAlert
     }
@@ -102,8 +102,8 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadAlerts(for center: DAOCenter) -> WKRPTCLAlertsPubAAlert {
-        return self.doLoadAlerts(for: center, with: nil)
+    public func doLoadAlerts(for place: DAOPlace) -> WKRPTCLAlertsPubAAlert {
+        return self.doLoadAlerts(for: place, with: nil)
     }
     public func doLoadAlerts(for district: DAODistrict) -> WKRPTCLAlertsPubAAlert {
         return self.doLoadAlerts(for: district, with: nil)
@@ -116,7 +116,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadAlerts(for center: DAOCenter,
+    open func intDoLoadAlerts(for place: DAOPlace,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAlertsPubAAlert {
         // swiftlint:disable:next force_cast

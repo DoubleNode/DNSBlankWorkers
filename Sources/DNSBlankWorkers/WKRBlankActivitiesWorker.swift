@@ -39,47 +39,47 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoadActivities(for center: DAOCenter,
+    public func doLoadActivities(for place: DAOPlace,
                                  using activityTypes: [DAOActivityType],
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLActivitiesBlkAActivity?) throws {
         try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadActivities(for: center, using: activityTypes,
+            return try self.nextWorker?.doLoadActivities(for: place, using: activityTypes,
                                                          with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadActivities(for: center, using: activityTypes,
+            return try self.intDoLoadActivities(for: place, using: activityTypes,
                                                 with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ activities: [DAOActivity],
-                         for center: DAOCenter,
+                         for place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivitiesBlkBool?) throws {
         try self.runDo(runNext: {
-            return try self.nextWorker?.doUpdate(activities, for: center,
+            return try self.nextWorker?.doUpdate(activities, for: place,
                                                 with: progress, and: block)
         },
         doWork: {
-            return try self.intDoUpdate(activities, for: center,
+            return try self.intDoUpdate(activities, for: place,
                                         with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadActivities(for center: DAOCenter,
+    public func doLoadActivities(for place: DAOPlace,
                                  using activityTypes: [DAOActivityType],
                                  with block: WKRPTCLActivitiesBlkAActivity?) throws {
-        try self.doLoadActivities(for: center, using: activityTypes, with: nil, and: block)
+        try self.doLoadActivities(for: place, using: activityTypes, with: nil, and: block)
     }
     public func doUpdate(_ activities: [DAOActivity],
-                         for center: DAOCenter,
+                         for place: DAOPlace,
                          with block: WKRPTCLActivitiesBlkBool?) throws {
-        try self.doUpdate(activities, for: center, with: nil, and: block)
+        try self.doUpdate(activities, for: place, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadActivities(for center: DAOCenter,
+    open func intDoLoadActivities(for place: DAOPlace,
                                   using activityTypes: [DAOActivityType],
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLActivitiesBlkAActivity?,
@@ -87,7 +87,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activities: [DAOActivity],
-                          for center: DAOCenter,
+                          for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLActivitiesBlkBool?,
                           then resultBlock: DNSPTCLResultBlock?) throws {

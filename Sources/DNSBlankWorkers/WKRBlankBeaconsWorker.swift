@@ -39,26 +39,26 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoadBeacons(in center: DAOCenter,
+    public func doLoadBeacons(in place: DAOPlace,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLBeaconsBlkABeacon?) throws {
         try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadBeacons(in: center, with: progress, and: block)
+            return try self.nextWorker?.doLoadBeacons(in: place, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadBeacons(in: center, with: progress, and: block, then: $0)
+            return try self.intDoLoadBeacons(in: place, with: progress, and: block, then: $0)
         })
     }
-    public func doLoadBeacons(in center: DAOCenter,
+    public func doLoadBeacons(in place: DAOPlace,
                               for activity: DAOActivity,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLBeaconsBlkABeacon?) throws {
         try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadBeacons(in: center, for: activity,
+            return try self.nextWorker?.doLoadBeacons(in: place, for: activity,
                                                       with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadBeacons(in: center, for: activity,
+            return try self.intDoLoadBeacons(in: place, for: activity,
                                              with: progress, and: block, then: $0)
         })
     }
@@ -85,14 +85,14 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadBeacons(in center: DAOCenter,
+    public func doLoadBeacons(in place: DAOPlace,
                               with block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.doLoadBeacons(in: center, with: nil, and: block)
+        try self.doLoadBeacons(in: place, with: nil, and: block)
     }
-    public func doLoadBeacons(in center: DAOCenter,
+    public func doLoadBeacons(in place: DAOPlace,
                               for activity: DAOActivity,
                               with block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.doLoadBeacons(in: center, for: activity, with: nil, and: block)
+        try self.doLoadBeacons(in: place, for: activity, with: nil, and: block)
     }
     public func doRangeBeacons(named uuids: [UUID],
                                for processKey: String,
@@ -101,13 +101,13 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadBeacons(in center: DAOCenter,
+    open func intDoLoadBeacons(in place: DAOPlace,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
                                then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoLoadBeacons(in center: DAOCenter,
+    open func intDoLoadBeacons(in place: DAOPlace,
                                for activity: DAOActivity,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
