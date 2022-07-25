@@ -58,6 +58,16 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
             return try self.intDoLoadUser(for: id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadUsers(for account: DAOAccount,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLUsersBlkAUser?) throws {
+        try self.runDo(runNext: {
+            return try self.nextWorker?.doLoadUsers(for: account, with: progress, and: block)
+        },
+                       doWork: {
+            return try self.intDoLoadUsers(for: account, with: progress, and: block, then: $0)
+        })
+    }
     public func doRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLUsersBlkBool?) throws {
         try self.runDo(runNext: {
@@ -96,6 +106,10 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
                            with block: WKRPTCLUsersBlkUser?) throws {
         try self.doLoadUser(for: id, with: nil, and: block)
     }
+    public func doLoadUsers(for account: DAOAccount,
+                            with block: WKRPTCLUsersBlkAUser?) throws {
+        try self.doLoadUsers(for: account, with: nil, and: block)
+    }
     public func doRemoveCurrentUser(with block: WKRPTCLUsersBlkBool?) throws {
         try self.doRemoveCurrentUser(with: nil, and: block)
     }
@@ -118,6 +132,12 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLUsersBlkUser?,
                             then resultBlock: DNSPTCLResultBlock?) throws {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadUsers(for account: DAOAccount,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLUsersBlkAUser?,
+                             then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
