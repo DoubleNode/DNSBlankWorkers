@@ -21,7 +21,7 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     @Atomic
     private var options: [String] = []
     
-    public var networkConfigurator: NETPTCLConfigurator = NETCrashConfigurator()
+    public var netConfig: NETPTCLConfig = NETCrashConfig()
 
     override public required init() {
         super.init()
