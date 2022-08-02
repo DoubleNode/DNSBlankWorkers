@@ -67,7 +67,7 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
     }
     public func doSignOut(using parameters: [String: Any],
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAuthBlkBool?) throws {
+                          and block: WKRPTCLAuthBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doSignOut(using: parameters, with: progress, and: block)
         },
@@ -102,7 +102,7 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
         try self.doSignIn(from: username, and: password, using: parameters, with: nil, and: block)
     }
     public func doSignOut(using parameters: [String: Any],
-                          with block: WKRPTCLAuthBlkBool?) throws {
+                          with block: WKRPTCLAuthBlkVoid?) throws {
         try self.doSignOut(using: parameters, with: nil, and: block)
     }
     public func doSignUp(from user: DAOUser?,
@@ -129,7 +129,7 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
     }
     open func intDoSignOut(using parameters: [String: Any],
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLAuthBlkBool?,
+                           and block: WKRPTCLAuthBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

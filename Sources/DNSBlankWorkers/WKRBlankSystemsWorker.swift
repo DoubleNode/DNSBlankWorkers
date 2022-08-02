@@ -112,7 +112,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     public func doReport(result: WKRPTCLSystemsData.Result,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubVoid {
         return doReport(result: result,
                         and: "",
                         and: "",
@@ -124,7 +124,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and failureCode: String,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubVoid {
         return doReport(result: result,
                         and: failureCode,
                         and: "",
@@ -137,10 +137,10 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and debugString: String,
                          for systemId: String,
                          and endPointId: String,
-                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubBool {
+                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubVoid {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSystemsRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLSystemsRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
             }
             return nextWorker.doReport(result: result,
                                        and: failureCode,
@@ -153,7 +153,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
             return self.intDoReport(result: result, and: failureCode, and: debugString,
                                     for: systemId, and: endPointId,
                                     with: progress, then: $0)
-        }) as! WKRPTCLSystemsPubBool
+        }) as! WKRPTCLSystemsPubVoid
     }
 
     // MARK: - Worker Logic (Shortcuts) -
@@ -186,14 +186,14 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
     }
     public func doReport(result: WKRPTCLSystemsData.Result,
                          for systemId: String,
-                         and endPointId: String) -> WKRPTCLSystemsPubBool {
+                         and endPointId: String) -> WKRPTCLSystemsPubVoid {
         return self.doReport(result: result, and: "", and: "",
                              for: systemId, and: endPointId, with: nil)
     }
     public func doReport(result: WKRPTCLSystemsData.Result,
                          and failureCode: String,
                          for systemId: String,
-                         and endPointId: String) -> WKRPTCLSystemsPubBool {
+                         and endPointId: String) -> WKRPTCLSystemsPubVoid {
         return self.doReport(result: result, and: failureCode, and: "",
                              for: systemId, and: endPointId, with: nil)
     }
@@ -201,7 +201,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          and failureCode: String,
                          and debugString: String,
                          for systemId: String,
-                         and endPointId: String) -> WKRPTCLSystemsPubBool {
+                         and endPointId: String) -> WKRPTCLSystemsPubVoid {
         return self.doReport(result: result, and: failureCode, and: debugString,
                              for: systemId, and: endPointId, with: nil)
     }
@@ -252,7 +252,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                           for systemId: String,
                           and endPointId: String,
                           with progress: DNSPTCLProgressBlock?,
-                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSystemsPubBool {
-        return resultBlock?(.unhandled) as! WKRPTCLSystemsPubBool
+                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSystemsPubVoid {
+        return resultBlock?(.unhandled) as! WKRPTCLSystemsPubVoid
     }
 }

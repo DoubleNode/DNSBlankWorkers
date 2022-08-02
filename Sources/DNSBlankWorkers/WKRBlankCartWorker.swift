@@ -112,7 +112,7 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
     }
     public func doRemove(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?) throws {
+                         and block: WKRPTCLCartBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemove(basket, with: progress, and: block)
         },
@@ -122,7 +122,7 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
     }
     public func doRemove(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?) throws {
+                         and block: WKRPTCLCartBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemove(basketItem, with: progress, and: block)
         },
@@ -132,7 +132,7 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
     }
     public func doUpdate(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?) throws {
+                         and block: WKRPTCLCartBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(basket, with: progress, and: block)
         },
@@ -142,7 +142,7 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
     }
     public func doUpdate(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?) throws {
+                         and block: WKRPTCLCartBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(basketItem, with: progress, and: block)
         },
@@ -182,19 +182,19 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
         try self.doLoadOrders(for: account, and: state, with: nil, and: block)
     }
     public func doRemove(_ basket: DAOBasket,
-                         with block: WKRPTCLCartBlkBool?) throws {
+                         with block: WKRPTCLCartBlkVoid?) throws {
         try self.doRemove(basket, with: nil, and: block)
     }
     public func doRemove(_ basketItem: DAOBasketItem,
-                         with block: WKRPTCLCartBlkBool?) throws {
+                         with block: WKRPTCLCartBlkVoid?) throws {
         try self.doRemove(basketItem, with: nil, and: block)
     }
     public func doUpdate(_ basket: DAOBasket,
-                         with block: WKRPTCLCartBlkBool?) throws {
+                         with block: WKRPTCLCartBlkVoid?) throws {
         try self.doUpdate(basket, with: nil, and: block)
     }
     public func doUpdate(_ basketItem: DAOBasketItem,
-                         with block: WKRPTCLCartBlkBool?) throws {
+                         with block: WKRPTCLCartBlkVoid?) throws {
         try self.doUpdate(basketItem, with: nil, and: block)
     }
 
@@ -244,25 +244,25 @@ open class WKRBlankCartWorker: WKRBlankBaseWorker, WKRPTCLCart {
     }
     open func intDoRemove(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?,
+                         and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?,
+                         and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?,
+                         and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCartBlkBool?,
+                         and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

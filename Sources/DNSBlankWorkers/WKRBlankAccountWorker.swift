@@ -60,7 +60,7 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
     }
     public func doUpdate(account: DAOAccount,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAccountBlkBool?) throws {
+                         and block: WKRPTCLAccountBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(account: account, with: progress, and: block)
         },
@@ -88,7 +88,7 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
         })
     }
     public func doUpdate(account: DAOAccount,
-                         with block: WKRPTCLAccountBlkBool?) throws {
+                         with block: WKRPTCLAccountBlkVoid?) throws {
         try self.doUpdate(account: account, with: nil, and: block)
     }
 
@@ -106,7 +106,7 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
     }
     open func intDoUpdate(account: DAOAccount,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAccountBlkBool?,
+                          and block: WKRPTCLAccountBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

@@ -101,7 +101,7 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     }
     public func doUpdate(_ activityType: DAOActivityType,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLActivityTypesBlkBool?) throws {
+                         and block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(activityType, with: progress, and: block)
         },
@@ -134,7 +134,7 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
         try self.doUnfavorite(activityType, for: user, with: nil, and: block)
     }
     public func doUpdate(_ activityType: DAOActivityType,
-                         with block: WKRPTCLActivityTypesBlkBool?) throws {
+                         with block: WKRPTCLActivityTypesBlkVoid?) throws {
         try self.doUpdate(activityType, with: nil, and: block)
     }
 
@@ -179,7 +179,7 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
     }
     open func intDoUpdate(_ activityType: DAOActivityType,
                   with progress: DNSPTCLProgressBlock?,
-                  and block: WKRPTCLActivityTypesBlkBool?,
+                  and block: WKRPTCLActivityTypesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

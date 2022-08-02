@@ -45,16 +45,16 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
 
     // MARK: - Worker Logic (Public) -
     public func doDeleteObject(for id: String,
-                               with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubBool {
+                               with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLCacheRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
             }
             return nextWorker.doDeleteObject(for: id, with: progress)
         },
                                   doWork: {
             return self.intDoDeleteObject(for: id, with: progress, then: $0)
-        }) as! WKRPTCLCachePubBool
+        }) as! WKRPTCLCachePubVoid
     }
     public func doLoadImage(from url: NSURL,
                             for id: String,
@@ -108,7 +108,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doDeleteObject(for id: String) -> WKRPTCLCachePubBool {
+    public func doDeleteObject(for id: String) -> WKRPTCLCachePubVoid {
         return self.doDeleteObject(for: id, with: nil)
     }
     public func doLoadImage(from url: NSURL,
@@ -129,8 +129,8 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     // MARK: - Internal Work Methods
     open func intDoDeleteObject(for id: String,
                                 with progress: DNSPTCLProgressBlock?,
-                                then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubBool {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubBool
+                                then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubVoid {
+        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid
     }
     open func intDoLoadImage(from url: NSURL,
                              for id: String,

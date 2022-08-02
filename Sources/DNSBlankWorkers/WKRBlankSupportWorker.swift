@@ -75,10 +75,10 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                               tags: [String],
                               attachments: [WKRPTCLSupportAttachment],
                               properties: [String: String],
-                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubBool {
+                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSupportRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return Future<WKRPTCLSupportRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
             }
             return nextWorker.doSendRequest(subject: subject, body: body, tags: tags,
                                             attachments: attachments, properties: properties,
@@ -88,7 +88,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
             return self.intDoSendRequest(subject: subject, body: body, tags: tags,
                                          attachments: attachments, properties: properties,
                                          with: progress, then: $0)
-        }) as! WKRPTCLSupportPubBool
+        }) as! WKRPTCLSupportPubVoid
     }
 
     // MARK: - Worker Logic (Shortcuts) -
@@ -102,7 +102,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                               body: String,
                               tags: [String],
                               attachments: [WKRPTCLSupportAttachment],
-                              properties: [String: String]) -> WKRPTCLSupportPubBool {
+                              properties: [String: String]) -> WKRPTCLSupportPubVoid {
         return self.doSendRequest(subject: subject, body: body, tags: tags,
                                   attachments: attachments, properties: properties,
                                   with: nil)
@@ -124,7 +124,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                                attachments: [WKRPTCLSupportAttachment],
                                properties: [String: String],
                                with progress: DNSPTCLProgressBlock?,
-                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubBool {
-        return resultBlock?(.unhandled) as! WKRPTCLSupportPubBool
+                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubVoid {
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubVoid
     }
 }

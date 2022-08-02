@@ -60,7 +60,7 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
     }
     public func doRemove(_ product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLProductsBlkBool?) throws {
+                         and block: WKRPTCLProductsBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemove(product, with: progress, and: block)
         },
@@ -70,7 +70,7 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
     }
     public func doUpdate(_ product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLProductsBlkBool?) throws {
+                         and block: WKRPTCLProductsBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(product, with: progress, and: block)
         },
@@ -88,11 +88,11 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
         try self.doLoadProducts(with: nil, and: block)
     }
     public func doRemove(_ product: DAOProduct,
-                         with block: WKRPTCLProductsBlkBool?) throws {
+                         with block: WKRPTCLProductsBlkVoid?) throws {
         try self.doRemove(product, with: nil, and: block)
     }
     public func doUpdate(_ product: DAOProduct,
-                         with block: WKRPTCLProductsBlkBool?) throws {
+                         with block: WKRPTCLProductsBlkVoid?) throws {
         try self.doUpdate(product, with: nil, and: block)
     }
 
@@ -110,13 +110,13 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
     }
     open func intDoRemove(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLProductsBlkBool?,
+                          and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLProductsBlkBool?,
+                          and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

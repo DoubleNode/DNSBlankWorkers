@@ -55,7 +55,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     public func doUpdate(_ activities: [DAOActivity],
                          for place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLActivitiesBlkBool?) throws {
+                         and block: WKRPTCLActivitiesBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(activities, for: place,
                                                 with: progress, and: block)
@@ -74,7 +74,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     }
     public func doUpdate(_ activities: [DAOActivity],
                          for place: DAOPlace,
-                         with block: WKRPTCLActivitiesBlkBool?) throws {
+                         with block: WKRPTCLActivitiesBlkVoid?) throws {
         try self.doUpdate(activities, for: place, with: nil, and: block)
     }
 
@@ -89,7 +89,7 @@ open class WKRBlankActivitiesWorker: WKRBlankBaseWorker, WKRPTCLActivities {
     open func intDoUpdate(_ activities: [DAOActivity],
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLActivitiesBlkBool?,
+                          and block: WKRPTCLActivitiesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

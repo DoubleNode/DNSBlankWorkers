@@ -42,7 +42,7 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     public func doAdd(_ card: DAOCard,
                       to user: DAOUser,
                       with progress: DNSPTCLProgressBlock?,
-                      and block: WKRPTCLCardsBlkBool?) throws {
+                      and block: WKRPTCLCardsBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
         },
@@ -93,7 +93,7 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     public func doRemove(_ card: DAOCard,
                          from user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCardsBlkBool?) throws {
+                         and block: WKRPTCLCardsBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
         },
@@ -103,7 +103,7 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     }
     public func doUpdate(_ card: DAOCard,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCardsBlkBool?) throws {
+                         and block: WKRPTCLCardsBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(card, with: progress, and: block)
         },
@@ -115,7 +115,7 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     // MARK: - Worker Logic (Shortcuts) -
     public func doAdd(_ card: DAOCard,
                       to user: DAOUser,
-                      with block: WKRPTCLCardsBlkBool?) throws {
+                      with block: WKRPTCLCardsBlkVoid?) throws {
         try self.doAdd(card, to: user, with: nil, and: block)
     }
     public func doLoadCard(for id: String,
@@ -136,11 +136,11 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     }
     public func doRemove(_ card: DAOCard,
                          from user: DAOUser,
-                         with block: WKRPTCLCardsBlkBool?) throws {
+                         with block: WKRPTCLCardsBlkVoid?) throws {
         try self.doRemove(card, from: user, with: nil, and: block)
     }
     public func doUpdate(_ card: DAOCard,
-                         with block: WKRPTCLCardsBlkBool?) throws {
+                         with block: WKRPTCLCardsBlkVoid?) throws {
         try self.doUpdate(card, with: nil, and: block)
     }
 
@@ -148,7 +148,7 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     open func intDoAdd(_ card: DAOCard,
                        to user: DAOUser,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLCardsBlkBool?,
+                       and block: WKRPTCLCardsBlkVoid?,
                        then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
@@ -179,13 +179,13 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     open func intDoRemove(_ card: DAOCard,
                           from user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLCardsBlkBool?,
+                          and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ card: DAOCard,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLCardsBlkBool?,
+                          and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

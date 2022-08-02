@@ -69,7 +69,7 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         })
     }
     public func doRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLUsersBlkBool?) throws {
+                                    and block: WKRPTCLUsersBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemoveCurrentUser(with: progress, and: block)
         },
@@ -79,7 +79,7 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
     }
     public func doRemove(_ user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLUsersBlkBool?) throws {
+                         and block: WKRPTCLUsersBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doRemove(user, with: progress, and: block)
         },
@@ -89,7 +89,7 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
     }
     public func doUpdate(_ user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLUsersBlkBool?) throws {
+                         and block: WKRPTCLUsersBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(user, with: progress, and: block)
         },
@@ -110,15 +110,15 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
                             with block: WKRPTCLUsersBlkAUser?) throws {
         try self.doLoadUsers(for: account, with: nil, and: block)
     }
-    public func doRemoveCurrentUser(with block: WKRPTCLUsersBlkBool?) throws {
+    public func doRemoveCurrentUser(with block: WKRPTCLUsersBlkVoid?) throws {
         try self.doRemoveCurrentUser(with: nil, and: block)
     }
     public func doRemove(_ user: DAOUser,
-                         with block: WKRPTCLUsersBlkBool?) throws {
+                         with block: WKRPTCLUsersBlkVoid?) throws {
         try self.doRemove(user, with: nil, and: block)
     }
     public func doUpdate(_ user: DAOUser,
-                         with block: WKRPTCLUsersBlkBool?) throws {
+                         with block: WKRPTCLUsersBlkVoid?) throws {
         try self.doUpdate(user, with: nil, and: block)
     }
 
@@ -141,19 +141,19 @@ open class WKRBlankUsersWorker: WKRBlankBaseWorker, WKRPTCLUsers {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
-                                     and block: WKRPTCLUsersBlkBool?,
+                                     and block: WKRPTCLUsersBlkVoid?,
                                      then resultBlock: DNSPTCLResultBlock?) throws {
          _ = resultBlock?(.unhandled)
      }
     open func intDoRemove(_ user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLUsersBlkBool?,
+                          and block: WKRPTCLUsersBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLUsersBlkBool?,
+                          and block: WKRPTCLUsersBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }

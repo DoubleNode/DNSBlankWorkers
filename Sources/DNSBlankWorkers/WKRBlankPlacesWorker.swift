@@ -119,7 +119,7 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
     }
     public func doUpdate(_ place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLPlacesBlkBool?) throws {
+                         and block: WKRPTCLPlacesBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(place, with: progress, and: block)
         },
@@ -130,7 +130,7 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
     public func doUpdate(_ hours: DAOPlaceHours,
                          for place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLPlacesBlkBool?) throws {
+                         and block: WKRPTCLPlacesBlkVoid?) throws {
         try self.runDo(runNext: {
             return try self.nextWorker?.doUpdate(hours, for: place, with: progress, and: block)
         },
@@ -168,12 +168,12 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
         try self.doSearchPlace(for: geohash, with: nil, and: block)
     }
     public func doUpdate(_ place: DAOPlace,
-                         with block: WKRPTCLPlacesBlkBool?) throws {
+                         with block: WKRPTCLPlacesBlkVoid?) throws {
         try self.doUpdate(place, with: nil, and: block)
     }
     public func doUpdate(_ hours: DAOPlaceHours,
                          for place: DAOPlace,
-                         with block: WKRPTCLPlacesBlkBool?) throws {
+                         with block: WKRPTCLPlacesBlkVoid?) throws {
         try self.doUpdate(hours, for: place, with: nil, and: block)
     }
 
@@ -222,14 +222,14 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
     }
     open func intDoUpdate(_ place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLPlacesBlkBool?,
+                          and block: WKRPTCLPlacesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ hours: DAOPlaceHours,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLPlacesBlkBool?,
+                          and block: WKRPTCLPlacesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) throws {
         _ = resultBlock?(.unhandled)
     }
