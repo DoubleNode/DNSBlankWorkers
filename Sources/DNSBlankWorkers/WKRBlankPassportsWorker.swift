@@ -52,7 +52,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
                                 with progress: DNSPTCLProgressBlock?) -> WKRPTCLPassportsPubData {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLPassportsRtnData, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
+                return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
             }
             return nextWorker.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },

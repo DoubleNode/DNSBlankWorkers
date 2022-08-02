@@ -48,7 +48,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
                                with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLCacheFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doDeleteObject(for: id, with: progress)
         },
@@ -61,7 +61,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
                             with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubImage {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnImage, Error> { $0(.success(UIImage())) }.eraseToAnyPublisher()
+                return WKRPTCLCacheFutImage { $0(.success(UIImage())) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadImage(from: url, for: id, with: progress)
         },
@@ -73,7 +73,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnAny, Error> { $0(.success(Data())) }.eraseToAnyPublisher()
+                return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
             }
             return (WKRPTCLCachePubAny)(nextWorker.doReadObject(for: id, with: progress))
         },
@@ -85,7 +85,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubString {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnString, Error> { $0(.success("")) }.eraseToAnyPublisher()
+                return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
             }
             return (WKRPTCLCachePubString)(nextWorker.doReadObject(for: id, with: progress))
         },
@@ -98,7 +98,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
                          with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLCacheRtnAny, Error> { $0(.success(object)) }.eraseToAnyPublisher()
+                return WKRPTCLCacheFutAny { $0(.success(object)) }.eraseToAnyPublisher()
             }
             return nextWorker.doUpdate(object: object, for: id, with: progress)
         },

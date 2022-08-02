@@ -99,7 +99,7 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
                             with progress: DNSPTCLProgressBlock?) -> WKRPTCLPlacesPubAlertEventStatus {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLPlacesRtnAlertEventStatus, Error> { $0(.success(([], [], []))) }.eraseToAnyPublisher()
+                return WKRPTCLPlacesFutAlertEventStatus { $0(.success(([], [], []))) }.eraseToAnyPublisher()
             }
             return (WKRPTCLPlacesPubAlertEventStatus)(nextWorker.doLoadState(for: place, with: progress))
         },
