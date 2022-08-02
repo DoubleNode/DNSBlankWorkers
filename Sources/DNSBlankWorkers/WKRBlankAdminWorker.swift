@@ -51,7 +51,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAdminRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doChange(user, to: role, with: progress)
         },
@@ -64,7 +64,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAdminRtnBool, Error> { $0(.success(true)) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutBool { $0(.success(true)) }.eraseToAnyPublisher()
             }
             return nextWorker.doCheckAdmin(with: progress)
         },
@@ -78,7 +78,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAdminRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doDenyChangeRequest(for: user, with: progress)
         },
@@ -92,7 +92,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 // swiftlint:disable:next line_length
-                return Future<WKRPTCLAdminRtnUserChangeRequest, Error> { $0(.success((nil, []))) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutUserChangeRequest { $0(.success((nil, []))) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadChangeRequests(with: progress)
         },
@@ -105,7 +105,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAdminRtnAString, Error> { $0(.success([])) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutAString { $0(.success([])) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadTabs(with: progress)
         },
@@ -119,7 +119,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAdminRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doRequestChange(to: role, with: progress)
         },

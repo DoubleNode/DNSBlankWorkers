@@ -140,7 +140,7 @@ open class WKRBlankSystemsWorker: WKRBaseWorker, WKRPTCLSystems {
                          with progress: DNSPTCLProgressBlock?) -> WKRPTCLSystemsPubVoid {
         return try! self.runDo(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSystemsRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLSystemsFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doReport(result: result,
                                        and: failureCode,

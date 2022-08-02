@@ -47,7 +47,7 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, WKRPTCLUserIdentity {
     public func doClearIdentity(with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLUserIdentityRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLUserIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doClearIdentity(with: progress)
         },
@@ -59,7 +59,7 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, WKRPTCLUserIdentity {
                        with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLUserIdentityRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLUserIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doJoin(group: group, with: progress)
         },
@@ -71,7 +71,7 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, WKRPTCLUserIdentity {
                         with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLUserIdentityRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLUserIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doLeave(group: group, with: progress)
         },
@@ -83,7 +83,7 @@ open class WKRBlankUserIdentityWorker: WKRBlankBaseWorker, WKRPTCLUserIdentity {
                               with progress: DNSPTCLProgressBlock?) -> WKRPTCLUserIdentityPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLUserIdentityRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLUserIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doSetIdentity(using: data, with: progress)
         },

@@ -50,7 +50,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAlertsRtnAAlert, Error> { $0(.success([])) }.eraseToAnyPublisher()
+                return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadAlerts(for: place, with: progress)
         },
@@ -64,7 +64,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAlertsRtnAAlert, Error> { $0(.success([])) }.eraseToAnyPublisher()
+                return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadAlerts(for: district, with: progress)
         },
@@ -78,7 +78,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAlertsRtnAAlert, Error> { $0(.success([])) }.eraseToAnyPublisher()
+                return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadAlerts(for: region, with: progress)
         },
@@ -91,7 +91,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         // swiftlint:disable:next force_try
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLAlertsRtnAAlert, Error> { $0(.success([])) }.eraseToAnyPublisher()
+                return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
             return nextWorker.doLoadAlerts(with: progress)
         },

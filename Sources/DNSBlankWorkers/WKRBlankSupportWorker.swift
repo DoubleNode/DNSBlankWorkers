@@ -48,7 +48,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
     public func doGetUpdatedCount(with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubInt {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSupportRtnInt, Error> { $0(.success(0)) }.eraseToAnyPublisher()
+                return WKRPTCLSupportFutInt { $0(.success(0)) }.eraseToAnyPublisher()
             }
             return nextWorker.doGetUpdatedCount(with: progress)
         },
@@ -60,7 +60,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                           with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubAttach {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSupportRtnAttach, Error> {
+                return WKRPTCLSupportFutAttach {
                     $0(.success(WKRPTCLSupportAttachment(image: image)))
                 }.eraseToAnyPublisher()
             }
@@ -78,7 +78,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                               with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubVoid {
         return try! self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
-                return Future<WKRPTCLSupportRtnVoid, Error> { $0(.success(())) }.eraseToAnyPublisher()
+                return WKRPTCLSupportFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
             return nextWorker.doSendRequest(subject: subject, body: body, tags: tags,
                                             attachments: attachments, properties: properties,
