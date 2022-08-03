@@ -14,6 +14,8 @@ import DNSProtocols
 import Foundation
 
 open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
+    public static var xlt = DNSDataTranslation()
+        
     static public var languageCode: String {
         DNSCore.languageCode
     }
@@ -22,6 +24,7 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     private var options: [String] = []
     
     public var netConfig: NETPTCLConfig = NETCrashConfig()
+    public var netRouter: NETPTCLRouter = NETCrashRouter()
 
     override public required init() {
         super.init()
