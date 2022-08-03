@@ -13,7 +13,7 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankBaseWorker: WKRBaseWorker {
-    public var systemsWorker: WKRPTCLSystems? = WKRBlankSystemsWorker()
+    public var systemsWorker: WKRPTCLSystems = WKRBlankSystemsWorker()
 
     // MARK: - Utility methods
     open func utilityReportSystemSuccess(for systemId: String,
@@ -73,10 +73,8 @@ open class WKRBlankBaseWorker: WKRBaseWorker {
                                   and failureCode: String,
                                   for systemId: String,
                                   and endPointId: String) {
-        _ = self.systemsWorker?.doReport(result: result,
-                                         and: failureCode,
-                                         and: debugString,
-                                         for: systemId,
-                                         and: endPointId, with: nil)
+        _ = self.systemsWorker.doReport(result: result, and: failureCode,
+                                        and: debugString, for: systemId,
+                                        and: endPointId, with: nil)
     }
 }
