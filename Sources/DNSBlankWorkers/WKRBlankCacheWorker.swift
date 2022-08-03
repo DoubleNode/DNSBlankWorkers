@@ -33,20 +33,20 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doDeleteObject(for id: String,
                                with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubVoid {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
@@ -59,7 +59,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     public func doLoadImage(from url: NSURL,
                             for id: String,
                             with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubImage {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutImage { $0(.success(UIImage())) }.eraseToAnyPublisher()
             }
@@ -71,7 +71,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
     public func doReadObject(for id: String,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
             }
@@ -83,7 +83,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     }
     public func doReadObject(for id: String,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubString {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
             }
@@ -96,7 +96,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
     public func doUpdate(object: Any,
                          for id: String,
                          with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutAny { $0(.success(object)) }.eraseToAnyPublisher()
             }

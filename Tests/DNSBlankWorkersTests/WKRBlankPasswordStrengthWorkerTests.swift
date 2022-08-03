@@ -1,5 +1,5 @@
 //
-//  WKRBlankPasswordStrengthWorkerTests.swift
+//  WKRBlankPassStrengthWorkerTests.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkersTests
 //
 //  Created by Darren Ehlers.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import DNSBlankWorkers
 
-final class WKRBlankPasswordStrengthWorkerTests: XCTestCase {
+final class WKRBlankPassStrengthWorkerTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct

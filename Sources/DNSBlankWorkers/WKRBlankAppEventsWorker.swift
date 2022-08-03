@@ -32,31 +32,31 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadAppEvents(with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLAppEventsBlkAAppEvent?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadAppEvents(with: progress, and: block)
+                                and block: WKRPTCLAppEventsBlkAAppEvent?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadAppEvents(with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadAppEvents(with: progress, and: block, then: $0)
+            return self.intDoLoadAppEvents(with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadAppEvents(with block: WKRPTCLAppEventsBlkAAppEvent?) throws {
-        try self.doLoadAppEvents(with: nil, and: block)
+    public func doLoadAppEvents(with block: WKRPTCLAppEventsBlkAAppEvent?) {
+        self.doLoadAppEvents(with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAppEventsBlkAAppEvent?,
-                                 then resultBlock: DNSPTCLResultBlock?) throws {
+                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
 }

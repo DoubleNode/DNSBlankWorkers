@@ -34,19 +34,19 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doGetUpdatedCount(with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubInt {
-        return try! self.runDoPub(runNext: {
+        return  self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLSupportFutInt { $0(.success(0)) }.eraseToAnyPublisher()
             }
@@ -54,11 +54,11 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
         },
                                   doWork: {
             return self.intDoGetUpdatedCount(with: progress, then: $0)
-        }) as! WKRPTCLSupportPubInt
+        }) as! WKRPTCLSupportPubInt // swiftlint:disable:this force_cast
     }
     public func doPrepare(attachment image: UIImage,
                           with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubAttach {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLSupportFutAttach {
                     $0(.success(WKRPTCLSupportAttachment(image: image)))
@@ -68,7 +68,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
         },
                                   doWork: {
             return self.intDoPrepare(attachment: image, with: progress, then: $0)
-        }) as! WKRPTCLSupportPubAttach
+        }) as! WKRPTCLSupportPubAttach // swiftlint:disable:this force_cast
     }
     public func doSendRequest(subject: String,
                               body: String,
@@ -76,7 +76,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                               attachments: [WKRPTCLSupportAttachment],
                               properties: [String: String],
                               with progress: DNSPTCLProgressBlock?) -> WKRPTCLSupportPubVoid {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLSupportFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
@@ -88,7 +88,7 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
             return self.intDoSendRequest(subject: subject, body: body, tags: tags,
                                          attachments: attachments, properties: properties,
                                          with: progress, then: $0)
-        }) as! WKRPTCLSupportPubVoid
+        }) as! WKRPTCLSupportPubVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Worker Logic (Shortcuts) -
@@ -111,12 +111,12 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
     // MARK: - Internal Work Methods
     open func intDoGetUpdatedCount(with progress: DNSPTCLProgressBlock?,
                                    then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubInt {
-        return resultBlock?(.unhandled) as! WKRPTCLSupportPubInt
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubInt // swiftlint:disable:this force_cast
     }
     open func intDoPrepare(attachment image: UIImage,
                            with progress: DNSPTCLProgressBlock?,
                            then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubAttach {
-        return resultBlock?(.unhandled) as! WKRPTCLSupportPubAttach
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubAttach // swiftlint:disable:this force_cast
     }
     open func intDoSendRequest(subject: String,
                                body: String,
@@ -125,6 +125,6 @@ open class WKRBlankSupportWorker: WKRBlankBaseWorker, WKRPTCLSupport {
                                properties: [String: String],
                                with progress: DNSPTCLProgressBlock?,
                                then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubVoid {
-        return resultBlock?(.unhandled) as! WKRPTCLSupportPubVoid
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubVoid // swiftlint:disable:this force_cast
     }
 }

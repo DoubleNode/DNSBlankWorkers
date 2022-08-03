@@ -6,6 +6,8 @@
 //  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
+import DNSError
 import DNSProtocols
 import Foundation
 
@@ -32,104 +34,109 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any]) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+    public func doAutoTrack(class: String, method: String, properties: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
         },
         doWork: {
-            return try self.intDoAutoTrack(class: `class`, method: method, properties: properties, options: options, then: $0)
-        })
+            return self.intDoAutoTrack(class: `class`, method: method, properties: properties, options: options, then: $0)
+        }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
-    public func doGroup(groupId: String, traits: [String: Any], options: [String: Any]) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doGroup(groupId: groupId, traits: traits, options: options)
+    public func doGroup(groupId: String, traits: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doGroup(groupId: groupId, traits: traits, options: options)
         },
         doWork: {
-            return try self.intDoGroup(groupId: groupId, traits: traits, options: options, then: $0)
-        })
+            return self.intDoGroup(groupId: groupId, traits: traits, options: options, then: $0)
+        }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
-    public func doIdentify(userId: String, traits: [String: Any], options: [String: Any]) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doIdentify(userId: userId, traits: traits, options: options)
+    public func doIdentify(userId: String, traits: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doIdentify(userId: userId, traits: traits, options: options)
         },
         doWork: {
-            return try self.intDoIdentify(userId: userId, traits: traits, options: options, then: $0)
-        })
+            return self.intDoIdentify(userId: userId, traits: traits, options: options, then: $0)
+        }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
-    public func doScreen(screenTitle: String, properties: [String: Any], options: [String: Any]) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
+    public func doScreen(screenTitle: String, properties: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
         },
         doWork: {
-            return try self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
-        })
+            return self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
+        }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
-    public func doTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:]) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doTrack(event: event, properties: properties, options: options)
+    public func doTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary = [:], options: DNSDataDictionary = [:]) -> WKRPTCLAnalyticsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doTrack(event: event, properties: properties, options: options)
         },
         doWork: {
-            return try self.intDoTrack(event: event, properties: properties, options: options, then: $0)
-        })
-    }
-
-    // MARK: - Internal Work Methods
-    open func intDoAutoTrack(class: String, method: String, properties: [String: Any], options: [String: Any],
-                             then resultBlock: DNSPTCLResultBlock?) throws {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoGroup(groupId: String, traits: [String: Any], options: [String: Any],
-                         then resultBlock: DNSPTCLResultBlock?) throws {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoIdentify(userId: String, traits: [String: Any], options: [String: Any],
-                            then resultBlock: DNSPTCLResultBlock?) throws {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoScreen(screenTitle: String, properties: [String: Any], options: [String: Any],
-                          then resultBlock: DNSPTCLResultBlock?) throws {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any] = [:], options: [String: Any] = [:],
-                         then resultBlock: DNSPTCLResultBlock?) throws {
-        _ = resultBlock?(.unhandled)
+            return self.intDoTrack(event: event, properties: properties, options: options, then: $0)
+        }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Shortcuts -
-    open func doAutoTrack(class: String, method: String) throws {
-        try self.doAutoTrack(class: `class`, method: method, properties: [:], options: [:])
+    open func doAutoTrack(class: String, method: String) -> WKRPTCLAnalyticsResVoid {
+        return self.doAutoTrack(class: `class`, method: method, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
     }
-    open func doAutoTrack(class: String, method: String, properties: [String: Any]) throws {
-        try self.doAutoTrack(class: `class`, method: method, properties: properties, options: [:])
+    open func doAutoTrack(class: String, method: String, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.doAutoTrack(class: `class`, method: method, properties: properties, options: DNSDataDictionary.empty)
     }
-    open func doGroup(groupId: String) throws {
-        try self.doGroup(groupId: groupId, traits: [:], options: [:])
+    open func doGroup(groupId: String) -> WKRPTCLAnalyticsResVoid {
+        return self.doGroup(groupId: groupId, traits: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
     }
-    open func doGroup(groupId: String, traits: [String: Any]) throws {
-        try self.doGroup(groupId: groupId, traits: traits, options: [:])
+    open func doGroup(groupId: String, traits: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.doGroup(groupId: groupId, traits: traits, options: DNSDataDictionary.empty)
     }
-    open func doIdentify(userId: String) throws {
-        try self.doIdentify(userId: userId, traits: [:], options: [:])
+    open func doIdentify(userId: String) -> WKRPTCLAnalyticsResVoid {
+        return self.doIdentify(userId: userId, traits: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
     }
-    open func doIdentify(userId: String, traits: [String: Any]) throws {
-        try self.doIdentify(userId: userId, traits: traits, options: [:])
+    open func doIdentify(userId: String, traits: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.doIdentify(userId: userId, traits: traits, options: DNSDataDictionary.empty)
     }
-    open func doScreen(screenTitle: String) throws {
-        try self.doScreen(screenTitle: screenTitle, properties: [:], options: [:])
+    open func doScreen(screenTitle: String) -> WKRPTCLAnalyticsResVoid {
+        return self.doScreen(screenTitle: screenTitle, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
     }
-    open func doScreen(screenTitle: String, properties: [String: Any]) throws {
-        try self.doScreen(screenTitle: screenTitle, properties: properties, options: [:])
+    open func doScreen(screenTitle: String, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.doScreen(screenTitle: screenTitle, properties: properties, options: DNSDataDictionary.empty)
     }
-    open func doTrack(event: WKRPTCLAnalyticsEvents) throws {
-        return try self.doTrack(event: event, properties: [:], options: [:])
+    open func doTrack(event: WKRPTCLAnalyticsEvents) -> WKRPTCLAnalyticsResVoid {
+        return self.doTrack(event: event, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
     }
-    open func doTrack(event: WKRPTCLAnalyticsEvents, properties: [String: Any]) throws {
-        return try self.doTrack(event: event, properties: properties, options: [:])
+    open func doTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
+        return self.doTrack(event: event, properties: properties, options: DNSDataDictionary.empty)
+    }
+
+    // MARK: - Internal Work Methods
+    open func intDoAutoTrack(class: String, method: String, properties: DNSDataDictionary, options: DNSDataDictionary,
+                             then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoGroup(groupId: String, traits: DNSDataDictionary, options: DNSDataDictionary,
+                         then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoIdentify(userId: String, traits: DNSDataDictionary, options: DNSDataDictionary,
+                            then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoScreen(screenTitle: String, properties: DNSDataDictionary, options: DNSDataDictionary,
+                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary = [:], options: DNSDataDictionary = [:],
+                         then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
     }
 }

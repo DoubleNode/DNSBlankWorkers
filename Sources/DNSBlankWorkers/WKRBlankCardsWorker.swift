@@ -33,115 +33,115 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doAdd(_ card: DAOCard,
                       to user: DAOUser,
                       with progress: DNSPTCLProgressBlock?,
-                      and block: WKRPTCLCardsBlkVoid?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
+                      and block: WKRPTCLCardsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoAdd(card, to: user, with: progress, and: block, then: $0)
+            return self.intDoAdd(card, to: user, with: progress, and: block, then: $0)
         })
     }
     public func doLoadCard(for id: String,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLCardsBlkCard?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadCard(for: id, with: progress, and: block)
+                           and block: WKRPTCLCardsBlkCard?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadCard(for: id, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadCard(for: id, with: progress, and: block, then: $0)
+            return self.intDoLoadCard(for: id, with: progress, and: block, then: $0)
         })
     }
     public func doLoadCard(for transaction: DAOTransaction,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLCardsBlkCard?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadCard(for: transaction, with: progress, and: block)
+                           and block: WKRPTCLCardsBlkCard?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadCard(for: transaction, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadCard(for: transaction, with: progress, and: block, then: $0)
+            return self.intDoLoadCard(for: transaction, with: progress, and: block, then: $0)
         })
     }
     public func doLoadCards(for user: DAOUser,
                             with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLCardsBlkACard?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadCards(for: user, with: progress, and: block)
+                            and block: WKRPTCLCardsBlkACard?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadCards(for: user, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadCards(for: user, with: progress, and: block, then: $0)
+            return self.intDoLoadCards(for: user, with: progress, and: block, then: $0)
         })
     }
     public func doLoadTransactions(for card: DAOCard,
                                    with progress: DNSPTCLProgressBlock?,
-                                   and block: WKRPTCLCardsBlkATransaction?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadTransactions(for: card, with: progress, and: block)
+                                   and block: WKRPTCLCardsBlkATransaction?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadTransactions(for: card, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadTransactions(for: card, with: progress, and: block, then: $0)
+            return self.intDoLoadTransactions(for: card, with: progress, and: block, then: $0)
         })
     }
     public func doRemove(_ card: DAOCard,
                          from user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCardsBlkVoid?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
+                         and block: WKRPTCLCardsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoRemove(card, from: user, with: progress, and: block, then: $0)
+            return self.intDoRemove(card, from: user, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ card: DAOCard,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLCardsBlkVoid?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doUpdate(card, with: progress, and: block)
+                         and block: WKRPTCLCardsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpdate(card, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoUpdate(card, with: progress, and: block, then: $0)
+            return self.intDoUpdate(card, with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doAdd(_ card: DAOCard,
                       to user: DAOUser,
-                      with block: WKRPTCLCardsBlkVoid?) throws {
-        try self.doAdd(card, to: user, with: nil, and: block)
+                      with block: WKRPTCLCardsBlkVoid?) {
+        self.doAdd(card, to: user, with: nil, and: block)
     }
     public func doLoadCard(for id: String,
-                           with block: WKRPTCLCardsBlkCard?) throws {
-        try self.doLoadCard(for: id, with: nil, and: block)
+                           with block: WKRPTCLCardsBlkCard?) {
+        self.doLoadCard(for: id, with: nil, and: block)
     }
     public func doLoadCard(for transaction: DAOTransaction,
-                           with block: WKRPTCLCardsBlkCard?) throws {
-        try self.doLoadCard(for: transaction, with: nil, and: block)
+                           with block: WKRPTCLCardsBlkCard?) {
+        self.doLoadCard(for: transaction, with: nil, and: block)
     }
     public func doLoadCards(for user: DAOUser,
-                            with block: WKRPTCLCardsBlkACard?) throws {
-        try self.doLoadCards(for: user, with: nil, and: block)
+                            with block: WKRPTCLCardsBlkACard?) {
+        self.doLoadCards(for: user, with: nil, and: block)
     }
     public func doLoadTransactions(for card: DAOCard,
-                                   with block: WKRPTCLCardsBlkATransaction?) throws {
-        try self.doLoadTransactions(for: card, with: nil, and: block)
+                                   with block: WKRPTCLCardsBlkATransaction?) {
+        self.doLoadTransactions(for: card, with: nil, and: block)
     }
     public func doRemove(_ card: DAOCard,
                          from user: DAOUser,
-                         with block: WKRPTCLCardsBlkVoid?) throws {
-        try self.doRemove(card, from: user, with: nil, and: block)
+                         with block: WKRPTCLCardsBlkVoid?) {
+        self.doRemove(card, from: user, with: nil, and: block)
     }
     public func doUpdate(_ card: DAOCard,
-                         with block: WKRPTCLCardsBlkVoid?) throws {
-        try self.doUpdate(card, with: nil, and: block)
+                         with block: WKRPTCLCardsBlkVoid?) {
+        self.doUpdate(card, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -149,44 +149,44 @@ open class WKRBlankCardsWorker: WKRBlankBaseWorker, WKRPTCLCards {
                        to user: DAOUser,
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLCardsBlkVoid?,
-                       then resultBlock: DNSPTCLResultBlock?) throws {
+                       then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCard(for id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
-                            then resultBlock: DNSPTCLResultBlock?) throws {
+                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCard(for transaction: DAOTransaction,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
-                            then resultBlock: DNSPTCLResultBlock?) throws {
+                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCards(for user: DAOUser,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLCardsBlkACard?,
-                             then resultBlock: DNSPTCLResultBlock?) throws {
+                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadTransactions(for card: DAOCard,
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLCardsBlkATransaction?,
-                                    then resultBlock: DNSPTCLResultBlock?) throws {
+                                    then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ card: DAOCard,
                           from user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ card: DAOCard,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
 }

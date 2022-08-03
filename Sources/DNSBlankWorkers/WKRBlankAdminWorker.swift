@@ -34,14 +34,14 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
@@ -49,7 +49,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
                          to role: DNSUserRole,
                          with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubVoid {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
@@ -62,7 +62,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     }
     public func doCheckAdmin(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubBool {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAdminFutBool { $0(.success(true)) }.eraseToAnyPublisher()
             }
@@ -76,7 +76,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     public func doDenyChangeRequest(for user: DAOUser,
                                     with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubVoid {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
@@ -89,7 +89,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     }
     public func doLoadChangeRequests(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubUserChangeRequest {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 // swiftlint:disable:next line_length
                 return WKRPTCLAdminFutUserChangeRequest { $0(.success((nil, []))) }.eraseToAnyPublisher()
@@ -103,7 +103,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     }
     public func doLoadTabs(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubAString {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAdminFutAString { $0(.success([])) }.eraseToAnyPublisher()
             }
@@ -117,7 +117,7 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     public func doRequestChange(to role: DNSUserRole,
                                 with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubVoid {
         // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }

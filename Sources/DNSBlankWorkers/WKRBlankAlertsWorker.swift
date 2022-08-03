@@ -34,21 +34,20 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadAlerts(for place: DAOPlace,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
-        // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
@@ -56,13 +55,11 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         },
                                   doWork: {
             return self.intDoLoadAlerts(for: place, with: progress, then: $0)
-            // swiftlint:disable:next force_cast
-        }) as! WKRPTCLAlertsPubAAlert
+        }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
     public func doLoadAlerts(for district: DAODistrict,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
-        // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
@@ -70,13 +67,11 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         },
                                   doWork: {
             return self.intDoLoadAlerts(for: district, with: progress, then: $0)
-            // swiftlint:disable:next force_cast
-        }) as! WKRPTCLAlertsPubAAlert
+        }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
     public func doLoadAlerts(for region: DAORegion,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
-        // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
@@ -84,12 +79,10 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         },
                                   doWork: {
             return self.intDoLoadAlerts(for: region, with: progress, then: $0)
-            // swiftlint:disable:next force_cast
-        }) as! WKRPTCLAlertsPubAAlert
+        }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
     public func doLoadAlerts(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
-        // swiftlint:disable:next force_try
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
@@ -97,8 +90,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
         },
                                   doWork: {
             return self.intDoLoadAlerts(with: progress, then: $0)
-            // swiftlint:disable:next force_cast
-        }) as! WKRPTCLAlertsPubAAlert
+        }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
 
     // MARK: - Worker Logic (Shortcuts) -

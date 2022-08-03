@@ -32,31 +32,31 @@ open class WKRBlankBeaconDistWorker: WKRBlankBaseWorker, WKRPTCLBeaconDist {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLBeaconDistBlkABeaconDistance?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
+                                      and block: WKRPTCLBeaconDistBlkABeaconDistance?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
+            return self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistBlkABeaconDistance?) throws {
-        try self.doLoadBeaconDistances(with: nil, and: block)
+    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistBlkABeaconDistance?) {
+        self.doLoadBeaconDistances(with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
                                        and block: WKRPTCLBeaconDistBlkABeaconDistance?,
-                                       then resultBlock: DNSPTCLResultBlock?) throws {
+                                       then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
 }

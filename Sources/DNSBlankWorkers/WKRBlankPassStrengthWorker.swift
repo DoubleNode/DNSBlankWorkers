@@ -1,5 +1,5 @@
 //
-//  WKRBlankPasswordStrengthWorker.swift
+//  WKRBlankPassStrengthWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -9,16 +9,16 @@
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordStrength {
+open class WKRBlankPassStrengthWorker: WKRBlankBaseWorker, WKRPTCLPassStrength {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLPasswordStrength?
+    public var nextWorker: WKRPTCLPassStrength?
 
     public var minimumLength: Int32 = 6
 
     public required init() {
         super.init()
     }
-    public func register(nextWorker: WKRPTCLPasswordStrength,
+    public func register(nextWorker: WKRPTCLPassStrength,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -34,24 +34,25 @@ open class WKRBlankPasswordStrengthWorker: WKRBlankBaseWorker, WKRPTCLPasswordSt
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doCheckPasswordStrength(for password: String) throws -> WKRPTCLPasswordStrength.Level {
-        return try self.runDo(runNext: {
-            return try self.nextWorker?.doCheckPasswordStrength(for: password)
+    public func doCheckPassStrength(for password: String) -> WKRPTCLPassStrengthResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doCheckPassStrength(for: password)
         },
         doWork: {
-            return try self.intDoCheckPasswordStrength(for: password, then: $0)
-        }) as! WKRPTCLPasswordStrength.Level
+            return self.intDoCheckPassStrength(for: password, then: $0)
+        }) as! WKRPTCLPassStrengthResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Internal Work Methods
-    open func intDoCheckPasswordStrength(for password: String,
-                                         then resultBlock: DNSPTCLResultBlock?) throws -> WKRPTCLPasswordStrength.Level {
-        return resultBlock?(.unhandled) as! WKRPTCLPasswordStrength.Level
+    open func intDoCheckPassStrength(for password: String,
+                                     then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassStrengthResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success(WKRPTCLPassStrength.Level.weak)
     }
 }

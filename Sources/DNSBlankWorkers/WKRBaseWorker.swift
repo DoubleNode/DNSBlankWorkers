@@ -56,24 +56,21 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
 
     public func runDo(callNextWhen: DNSPTCLWorker.Call.NextWhen,
                       runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock) -> Any? {
         let resultBlock: DNSPTCLResultBlock = { callResult in
             switch callResult {
             case .completed:
                 guard [.always].contains(where: { $0 == callNextWhen }) else { return nil }
-                do { return try runNext?() } catch { }
             case .error:
                 guard [.always, .whenError].contains(where: { $0 == callNextWhen }) else { return nil }
-                do { return try runNext?() } catch { }
             case .notFound:
                 guard [.always, .whenNotFound].contains(where: { $0 == callNextWhen }) else { return nil }
-                do { return try runNext?() } catch { }
             case .unhandled:
 //                guard [.always, .whenUnhandled].contains(where: { $0 == callNextWhen }) else { return nil }
-                do { return try runNext?() } catch { }
+                break
             }
-            return nil
+            return runNext?()
         }
-        return try doWork(resultBlock)
+        return doWork(resultBlock)
     }
 }

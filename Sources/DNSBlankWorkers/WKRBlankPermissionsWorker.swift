@@ -32,73 +32,73 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, WKRPTCLPermissions {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                           _ permission: WKRPTCLPermissions.Data.System,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLPermissionsBlkAction?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doRequest(desire, permission, with: progress, and: block)
+                          and block: WKRPTCLPermissionsBlkAction?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRequest(desire, permission, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
+            return self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
         })
     }
     public func doRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                           _ permissions: [WKRPTCLPermissions.Data.System],
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLPermissionsBlkAAction?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doRequest(desire, permissions, with: progress, and: block)
+                          and block: WKRPTCLPermissionsBlkAAction?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRequest(desire, permissions, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
+            return self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
         })
     }
     public func doStatus(of permissions: [WKRPTCLPermissions.Data.System],
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLPermissionsBlkAAction?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doStatus(of: permissions, with: progress, and: block)
+                         and block: WKRPTCLPermissionsBlkAAction?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doStatus(of: permissions, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
+            return self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
         })
     }
     public func doWait(for permission: WKRPTCLPermissions.Data.System,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLPermissionsBlkAction?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doWait(for: permission, with: progress, and: block)
+                       and block: WKRPTCLPermissionsBlkAction?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doWait(for: permission, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoWait(for: permission, with: progress, and: block, then: $0)
+            return self.intDoWait(for: permission, with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                           _ permission: WKRPTCLPermissions.Data.System,
-                          with block: WKRPTCLPermissionsBlkAction?) throws {
-        try self.doRequest(desire, permission, with: nil, and: block)
+                          with block: WKRPTCLPermissionsBlkAction?) {
+        self.doRequest(desire, permission, with: nil, and: block)
     }
     public func doRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                           _ permissions: [WKRPTCLPermissions.Data.System],
-                          with block: WKRPTCLPermissionsBlkAAction?) throws {
-        try self.doRequest(desire, permissions, with: nil, and: block)
+                          with block: WKRPTCLPermissionsBlkAAction?) {
+        self.doRequest(desire, permissions, with: nil, and: block)
     }
     public func doStatus(of permissions: [WKRPTCLPermissions.Data.System],
-                         with block: WKRPTCLPermissionsBlkAAction?) throws {
-        try self.doStatus(of: permissions, with: nil, and: block)
+                         with block: WKRPTCLPermissionsBlkAAction?) {
+        self.doStatus(of: permissions, with: nil, and: block)
     }
     public func doWait(for permission: WKRPTCLPermissions.Data.System,
-                       with block: WKRPTCLPermissionsBlkAction?) throws {
-        try self.doWait(for: permission, with: nil, and: block)
+                       with block: WKRPTCLPermissionsBlkAction?) {
+        self.doWait(for: permission, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -106,26 +106,26 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, WKRPTCLPermissions {
                            _ permission: WKRPTCLPermissions.Data.System,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAction?,
-                           then resultBlock: DNSPTCLResultBlock?) throws {
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                            _ permissions: [WKRPTCLPermissions.Data.System],
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAAction?,
-                           then resultBlock: DNSPTCLResultBlock?) throws {
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoStatus(of permissions: [WKRPTCLPermissions.Data.System],
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAAction?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoWait(for permission: WKRPTCLPermissions.Data.System,
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLPermissionsBlkAction?,
-                        then resultBlock: DNSPTCLResultBlock?) throws {
+                        then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
 }

@@ -35,14 +35,14 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
@@ -50,7 +50,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
                                 using data: [String: String],
                                 for account: DAOAccount,
                                 with progress: DNSPTCLProgressBlock?) -> WKRPTCLPassportsPubData {
-        return try! self.runDoPub(runNext: {
+        return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
             }
@@ -58,7 +58,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
         },
                                   doWork: {
             return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)
-        }) as! WKRPTCLPassportsPubData
+        }) as! WKRPTCLPassportsPubData // swiftlint:disable:this force_cast
     }
 
     // MARK: - Worker Logic (Shortcuts) -
@@ -74,6 +74,6 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
                                  for account: DAOAccount,
                                  with progress: DNSPTCLProgressBlock?,
                                  then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassportsPubData {
-        return resultBlock?(.unhandled) as! WKRPTCLPassportsPubData
+        return resultBlock?(.unhandled) as! WKRPTCLPassportsPubData // swiftlint:disable:this force_cast
     }
 }

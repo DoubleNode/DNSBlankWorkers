@@ -33,91 +33,91 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadProduct(for id: String,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLProductsBlkProduct?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadProduct(for: id, with: progress, and: block)
+                              and block: WKRPTCLProductsBlkProduct?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadProduct(for: id, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadProduct(for: id, with: progress, and: block, then: $0)
+            return self.intDoLoadProduct(for: id, with: progress, and: block, then: $0)
         })
     }
     public func doLoadProducts(with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLProductsBlkAProduct?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadProducts(with: progress, and: block)
+                               and block: WKRPTCLProductsBlkAProduct?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadProducts(with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadProducts(with: progress, and: block, then: $0)
+            return self.intDoLoadProducts(with: progress, and: block, then: $0)
         })
     }
     public func doRemove(_ product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLProductsBlkVoid?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doRemove(product, with: progress, and: block)
+                         and block: WKRPTCLProductsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRemove(product, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoRemove(product, with: progress, and: block, then: $0)
+            return self.intDoRemove(product, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLProductsBlkVoid?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doUpdate(product, with: progress, and: block)
+                         and block: WKRPTCLProductsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpdate(product, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoUpdate(product, with: progress, and: block, then: $0)
+            return self.intDoUpdate(product, with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadProduct(for id: String,
-                              with block: WKRPTCLProductsBlkProduct?) throws {
-        try self.doLoadProduct(for: id, with: nil, and: block)
+                              with block: WKRPTCLProductsBlkProduct?) {
+        self.doLoadProduct(for: id, with: nil, and: block)
     }
-    public func doLoadProducts(with block: WKRPTCLProductsBlkAProduct?) throws {
-        try self.doLoadProducts(with: nil, and: block)
+    public func doLoadProducts(with block: WKRPTCLProductsBlkAProduct?) {
+        self.doLoadProducts(with: nil, and: block)
     }
     public func doRemove(_ product: DAOProduct,
-                         with block: WKRPTCLProductsBlkVoid?) throws {
-        try self.doRemove(product, with: nil, and: block)
+                         with block: WKRPTCLProductsBlkVoid?) {
+        self.doRemove(product, with: nil, and: block)
     }
     public func doUpdate(_ product: DAOProduct,
-                         with block: WKRPTCLProductsBlkVoid?) throws {
-        try self.doUpdate(product, with: nil, and: block)
+                         with block: WKRPTCLProductsBlkVoid?) {
+        self.doUpdate(product, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadProduct(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
-                               then resultBlock: DNSPTCLResultBlock?) throws {
+                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadProducts(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
-                                then resultBlock: DNSPTCLResultBlock?) throws {
+                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
 }

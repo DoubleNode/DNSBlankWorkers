@@ -32,63 +32,64 @@ open class WKRBlankGeoWorker: WKRBlankBaseWorker, WKRPTCLGeo {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLocate(with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLGeoBlkString?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLocate(with: progress, and: block)
+                         and block: WKRPTCLGeoBlkString?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLocate(with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLocate(with: progress, and: block, then: $0)
+            return self.intDoLocate(with: progress, and: block, then: $0)
         })
     }
     public func doTrackLocation(for processKey: String,
                                 with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLGeoBlkString?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doTrackLocation(for: processKey, with: progress, and: block)
+                                and block: WKRPTCLGeoBlkString?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doTrackLocation(for: processKey, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoTrackLocation(for: processKey, with: progress, and: block, then: $0)
+            return self.intDoTrackLocation(for: processKey, with: progress, and: block, then: $0)
         })
     }
-    public func doStopTrackLocation(for processKey: String) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doStopTrackLocation(for: processKey)
+    public func doStopTrackLocation(for processKey: String) -> WKRPTCLGeoResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doStopTrackLocation(for: processKey)
         },
         doWork: {
-            return try self.intDoStopTrackLocation(for: processKey, then: $0)
-        })
+            return self.intDoStopTrackLocation(for: processKey, then: $0)
+        }) as! WKRPTCLGeoResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLocate(with block: WKRPTCLGeoBlkString?) throws {
-        try self.doLocate(with: nil, and: block)
+    public func doLocate(with block: WKRPTCLGeoBlkString?) {
+        self.doLocate(with: nil, and: block)
     }
     public func doTrackLocation(for processKey: String,
-                                with block: WKRPTCLGeoBlkString?) throws {
-        try self.doTrackLocation(for: processKey, with: nil, and: block)
+                                with block: WKRPTCLGeoBlkString?) {
+        self.doTrackLocation(for: processKey, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLocate(with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLGeoBlkString?,
-                          then resultBlock: DNSPTCLResultBlock?) throws {
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoTrackLocation(for processKey: String,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLGeoBlkString?,
-                                 then resultBlock: DNSPTCLResultBlock?) throws {
+                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoStopTrackLocation(for processKey: String,
-                                     then resultBlock: DNSPTCLResultBlock?) throws {
+                                     then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLGeoResVoid {
         _ = resultBlock?(.unhandled)
+        return .success
     }
 }

@@ -33,96 +33,97 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlockThrows = { return $0?(.unhandled) }) throws -> Any? {
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
-        return try self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+        return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
 
     // MARK: - Worker Logic (Public) -
     public func doLoadBeacons(in place: DAOPlace,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadBeacons(in: place, with: progress, and: block)
+                              and block: WKRPTCLBeaconsBlkABeacon?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadBeacons(in: place, with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadBeacons(in: place, with: progress, and: block, then: $0)
+            return self.intDoLoadBeacons(in: place, with: progress, and: block, then: $0)
         })
     }
     public func doLoadBeacons(in place: DAOPlace,
                               for activity: DAOActivity,
                               with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doLoadBeacons(in: place, for: activity,
-                                                      with: progress, and: block)
+                              and block: WKRPTCLBeaconsBlkABeacon?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadBeacons(in: place, for: activity,
+                                                  with: progress, and: block)
         },
         doWork: {
-            return try self.intDoLoadBeacons(in: place, for: activity,
-                                             with: progress, and: block, then: $0)
+            return self.intDoLoadBeacons(in: place, for: activity,
+                                         with: progress, and: block, then: $0)
         })
     }
     public func doRangeBeacons(named uuids: [UUID],
                                for processKey: String,
                                with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doRangeBeacons(named: uuids, for: processKey,
-                                                 with: progress, and: block)
+                               and block: WKRPTCLBeaconsBlkABeacon?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRangeBeacons(named: uuids, for: processKey,
+                                                   with: progress, and: block)
         },
         doWork: {
-            return try self.intDoRangeBeacons(named: uuids, for: processKey,
-                                              with: progress, and: block, then: $0)
+            return self.intDoRangeBeacons(named: uuids, for: processKey,
+                                          with: progress, and: block, then: $0)
         })
     }
-    public func doStopRangeBeacons(for processKey: String) throws {
-        try self.runDo(runNext: {
-            return try self.nextWorker?.doStopRangeBeacons(for: processKey)
+    public func doStopRangeBeacons(for processKey: String) -> WKRPTCLBeaconsResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doStopRangeBeacons(for: processKey)
         },
         doWork: {
-            return try self.intDoStopRangeBeacons(for: processKey, then: $0)
-        })
+            return self.intDoStopRangeBeacons(for: processKey, then: $0)
+        }) as! WKRPTCLBeaconsResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadBeacons(in place: DAOPlace,
-                              with block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.doLoadBeacons(in: place, with: nil, and: block)
+                              with block: WKRPTCLBeaconsBlkABeacon?) {
+        self.doLoadBeacons(in: place, with: nil, and: block)
     }
     public func doLoadBeacons(in place: DAOPlace,
                               for activity: DAOActivity,
-                              with block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.doLoadBeacons(in: place, for: activity, with: nil, and: block)
+                              with block: WKRPTCLBeaconsBlkABeacon?) {
+        self.doLoadBeacons(in: place, for: activity, with: nil, and: block)
     }
     public func doRangeBeacons(named uuids: [UUID],
                                for processKey: String,
-                               with block: WKRPTCLBeaconsBlkABeacon?) throws {
-        try self.doRangeBeacons(named: uuids, for: processKey, with: nil, and: block)
+                               with block: WKRPTCLBeaconsBlkABeacon?) {
+        self.doRangeBeacons(named: uuids, for: processKey, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLoadBeacons(in place: DAOPlace,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
-                               then resultBlock: DNSPTCLResultBlock?) throws {
+                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadBeacons(in place: DAOPlace,
                                for activity: DAOActivity,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
-                               then resultBlock: DNSPTCLResultBlock?) throws {
+                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRangeBeacons(named uuids: [UUID],
                                 for processKey: String,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLBeaconsBlkABeacon?,
-                                then resultBlock: DNSPTCLResultBlock?) throws {
+                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoStopRangeBeacons(for processKey: String,
-                                    then resultBlock: DNSPTCLResultBlock?) throws {
+                                    then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLBeaconsResVoid {
         _ = resultBlock?(.unhandled)
+        return .success
     }
 }
