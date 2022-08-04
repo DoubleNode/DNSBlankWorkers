@@ -83,34 +83,34 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
 
     // MARK: - Shortcuts -
     open func doAutoTrack(class: String, method: String) -> WKRPTCLAnalyticsResVoid {
-        return self.doAutoTrack(class: `class`, method: method, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
+        return self.doAutoTrack(class: `class`, method: method, properties: .empty, options: .empty)
     }
     open func doAutoTrack(class: String, method: String, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
-        return self.doAutoTrack(class: `class`, method: method, properties: properties, options: DNSDataDictionary.empty)
+        return self.doAutoTrack(class: `class`, method: method, properties: properties, options: .empty)
     }
     open func doGroup(groupId: String) -> WKRPTCLAnalyticsResVoid {
-        return self.doGroup(groupId: groupId, traits: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
+        return self.doGroup(groupId: groupId, traits: .empty, options: .empty)
     }
     open func doGroup(groupId: String, traits: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
-        return self.doGroup(groupId: groupId, traits: traits, options: DNSDataDictionary.empty)
+        return self.doGroup(groupId: groupId, traits: traits, options: .empty)
     }
     open func doIdentify(userId: String) -> WKRPTCLAnalyticsResVoid {
-        return self.doIdentify(userId: userId, traits: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
+        return self.doIdentify(userId: userId, traits: .empty, options: .empty)
     }
     open func doIdentify(userId: String, traits: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
-        return self.doIdentify(userId: userId, traits: traits, options: DNSDataDictionary.empty)
+        return self.doIdentify(userId: userId, traits: traits, options: .empty)
     }
     open func doScreen(screenTitle: String) -> WKRPTCLAnalyticsResVoid {
-        return self.doScreen(screenTitle: screenTitle, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
+        return self.doScreen(screenTitle: screenTitle, properties: .empty, options: .empty)
     }
     open func doScreen(screenTitle: String, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
-        return self.doScreen(screenTitle: screenTitle, properties: properties, options: DNSDataDictionary.empty)
+        return self.doScreen(screenTitle: screenTitle, properties: properties, options: .empty)
     }
     open func doTrack(event: WKRPTCLAnalyticsEvents) -> WKRPTCLAnalyticsResVoid {
-        return self.doTrack(event: event, properties: DNSDataDictionary.empty, options: DNSDataDictionary.empty)
+        return self.doTrack(event: event, properties: .empty, options: .empty)
     }
     open func doTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
-        return self.doTrack(event: event, properties: properties, options: DNSDataDictionary.empty)
+        return self.doTrack(event: event, properties: properties, options: .empty)
     }
 
     // MARK: - Internal Work Methods

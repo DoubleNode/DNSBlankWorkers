@@ -73,6 +73,7 @@ open class WKRBlankBaseWorker: WKRBaseWorker {
                                   and failureCode: String,
                                   for systemId: String,
                                   and endPointId: String) {
+        guard !systemId.isEmpty && !endPointId.isEmpty else { return }
         _ = self.systemsWorker.doReport(result: result, and: failureCode,
                                         and: debugString, for: systemId,
                                         and: endPointId, with: nil)

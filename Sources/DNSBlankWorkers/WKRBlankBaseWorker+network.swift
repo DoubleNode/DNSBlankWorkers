@@ -15,6 +15,8 @@ import DNSProtocols
 import Foundation
 
 public struct WKRPTCLSystemsStateData {
+    public static var empty = WKRPTCLSystemsStateData(system: "", endPoint: "", sendDebug: false)
+
     public var system: String
     public var endPoint: String
     public var sendDebug: Bool
@@ -30,7 +32,7 @@ public typealias WKRPTCLRequestBlkError = (Error) -> Void
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
 public extension WKRBlankBaseWorker {
-    func processRequestJSON(_ callData: WKRPTCLSystemsStateData,
+    func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
                             onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
