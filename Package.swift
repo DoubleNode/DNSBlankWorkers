@@ -28,10 +28,10 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.1"),
         .package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.9.13"),
-        .package(url: "https://github.com/DoubleNode/DNSCrashNetwork.git", from: "1.9.9"),
+        .package(url: "https://github.com/DoubleNode/DNSCrashNetwork.git", from: "1.9.10"),
         .package(url: "https://github.com/DoubleNode/DNSDataObjects.git", from: "1.9.21"),
         .package(url: "https://github.com/DoubleNode/DNSError.git", from: "1.8.0"),
-        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.9.54"),
+        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.9.55"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
