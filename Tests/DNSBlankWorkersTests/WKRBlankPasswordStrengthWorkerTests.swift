@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkersTests
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2020 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import XCTest
