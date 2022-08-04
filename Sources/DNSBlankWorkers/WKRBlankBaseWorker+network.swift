@@ -32,6 +32,16 @@ public typealias WKRPTCLRequestBlkError = (Error) -> Void
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
 public extension WKRBlankBaseWorker {
+    func processRequestJSON(_ dataRequest: NETPTCLRouterRtnDataRequest,
+                            with resultBlock: DNSPTCLResultBlock?,
+                            onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
+                            onError errorBlk: WKRPTCLRequestBlkError?) {
+        self.processRequestJSON(.empty,
+                                dataRequest,
+                                with: resultBlock,
+                                onSuccess: successBlk,
+                                onError: errorBlk)
+    }
     func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
