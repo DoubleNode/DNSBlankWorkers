@@ -14,20 +14,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-public struct WKRPTCLSystemsStateData {
-    public static var empty = WKRPTCLSystemsStateData(system: "", endPoint: "", sendDebug: false)
-
-    public var system: String
-    public var endPoint: String
-    public var sendDebug: Bool
-    
-    public init(system: String, endPoint: String, sendDebug: Bool) {
-        self.system = system
-        self.endPoint = endPoint
-        self.sendDebug = sendDebug
-    }
-}
-
+// Protocol Block Types
 public typealias WKRPTCLRequestBlkError = (Error) -> Void
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
