@@ -79,6 +79,19 @@ public extension WKRBlankBaseWorker {
                 errorBlk?(error)
                 _ = resultBlock?(.error)
                 return
+            case 403:
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = Self.xlt.string(from: valueData["error"] as Any?) ?? "Unknown"
+                let error = DNSError.NetworkBase
+                    .upgradeClient(message: message, DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
+                DNSCore.reportError(error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                errorBlk?(error)
+                _ = resultBlock?(.error)
+                return
             default:
                 let error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
