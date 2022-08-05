@@ -22,18 +22,21 @@ public extension WKRBlankBaseWorker {
     func processRequestJSON(_ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
                             onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
-                            onError errorBlk: WKRPTCLRequestBlkError?) {
+                            onError errorBlk: WKRPTCLRequestBlkError?,
+                            onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         self.processRequestJSON(.empty,
                                 dataRequest,
                                 with: resultBlock,
                                 onSuccess: successBlk,
-                                onError: errorBlk)
+                                onError: errorBlk,
+                                onRetry: retryBlk)
     }
     func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
                             onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
-                            onError errorBlk: WKRPTCLRequestBlkError?) {
+                            onError errorBlk: WKRPTCLRequestBlkError?,
+                            onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseJSON(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
@@ -88,6 +91,19 @@ public extension WKRBlankBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 errorBlk?(error)
                 _ = resultBlock?(.error)
+                return
+            case 500...599:
+                let error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
+                guard let request = response.request else { fallthrough }
+                guard let url = request.url else { fallthrough }
+                let retryCount = self.utilityNewRetryCount(for: url)
+                let delay = self.utilityRetryDelay(for: retryCount)
+                guard delay >= 0 else { fallthrough }
+                guard let retryBlk else { fallthrough }
+                DNSUIThread.run(after: delay) { // TODO: DNSThread
+                    retryBlk(error)
+                }
                 return
             default:
                 let error = DNSError.NetworkBase
