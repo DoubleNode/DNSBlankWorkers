@@ -13,6 +13,7 @@ import DNSProtocols
 import Foundation
 
 open class WKRBlankBaseWorker: WKRBaseWorker {
+    @Atomic public var retryCounts: [URL: Int] = [:]
     public var systemsWorker: WKRPTCLSystems = WKRBlankSystemsWorker()
 
     // MARK: - Utility methods
