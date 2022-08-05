@@ -49,6 +49,17 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
             return self.intDoLoadProduct(for: id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadProduct(for id: String,
+                              and place: DAOPlace,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLProductsBlkProduct?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadProduct(for: id, and: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadProduct(for: id, and: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadProducts(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkAProduct?) {
         self.runDo(runNext: {
@@ -56,6 +67,16 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
         },
         doWork: {
             return self.intDoLoadProducts(with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadProducts(for place: DAOPlace,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLProductsBlkAProduct?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadProducts(for: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadProducts(for: place, with: progress, and: block, then: $0)
         })
     }
     public func doRemove(_ product: DAOProduct,
@@ -84,8 +105,17 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
                               with block: WKRPTCLProductsBlkProduct?) {
         self.doLoadProduct(for: id, with: nil, and: block)
     }
+    public func doLoadProduct(for id: String,
+                              and place: DAOPlace,
+                              with block: WKRPTCLProductsBlkProduct?) {
+        self.doLoadProduct(for: id, and: place, with: nil, and: block)
+    }
     public func doLoadProducts(with block: WKRPTCLProductsBlkAProduct?) {
         self.doLoadProducts(with: nil, and: block)
+    }
+    public func doLoadProducts(for place: DAOPlace,
+                               with block: WKRPTCLProductsBlkAProduct?) {
+        self.doLoadProducts(for: place, with: nil, and: block)
     }
     public func doRemove(_ product: DAOProduct,
                          with block: WKRPTCLProductsBlkVoid?) {
@@ -103,7 +133,20 @@ open class WKRBlankProductsWorker: WKRBlankBaseWorker, WKRPTCLProducts {
                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLoadProduct(for id: String,
+                               and place: DAOPlace,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLProductsBlkProduct?,
+                               then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadProducts(with progress: DNSPTCLProgressBlock?,
+                                and block: WKRPTCLProductsBlkAProduct?,
+                                then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadProducts(for place: DAOPlace,
+                                with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
