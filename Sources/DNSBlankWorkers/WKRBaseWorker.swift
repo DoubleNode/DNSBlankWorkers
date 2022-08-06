@@ -57,9 +57,9 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     // to restore the scene back to its current state.
     open func didEnterBackground() { }
 
-    public func runDo(callNextWhen: DNSPTCLWorker.Call.NextWhen,
-                      runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock) -> Any? {
+    open func runDo(callNextWhen: DNSPTCLWorker.Call.NextWhen,
+                    runNext: DNSPTCLCallBlock?,
+                    doWork: DNSPTCLCallResultBlock) -> Any? {
         let resultBlock: DNSPTCLResultBlock = { callResult in
             switch callResult {
             case .completed:

@@ -15,7 +15,7 @@ import DNSProtocols
 import Foundation
 
 // Protocol Block Types
-public typealias WKRPTCLRequestBlkError = (Error) -> Void
+public typealias WKRPTCLRequestBlkError = (Error, Any?) -> Void
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
 public extension WKRBlankBaseWorker {
@@ -53,7 +53,7 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error)
+                errorBlk?(error, nil)
                 _ = resultBlock?(.error)
                 return
             }
@@ -77,7 +77,7 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error)
+                errorBlk?(error, data)
                 _ = resultBlock?(.error)
                 return
             case 403:
@@ -90,7 +90,7 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error)
+                errorBlk?(error, data)
                 _ = resultBlock?(.error)
                 return
             case 500...599:
@@ -102,7 +102,7 @@ public extension WKRBlankBaseWorker {
                 guard delay >= 0 else { fallthrough }
                 guard let retryBlk else { fallthrough }
                 DNSUIThread.run(after: delay) { // TODO: DNSThread
-                    retryBlk(error)
+                    retryBlk(error, data)
                 }
                 return
             default:
@@ -113,7 +113,7 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error)
+                errorBlk?(error, data)
                 _ = resultBlock?(.error)
                 return
             }
@@ -127,7 +127,7 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error)
+                errorBlk?(error, data)
                 _ = resultBlock?(.error)
                 return
             }
