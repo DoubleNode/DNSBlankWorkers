@@ -37,6 +37,13 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
         let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Validation.notFound = error {
+            return .notFound
+        }
+        return result
+    }
 
     // MARK: - Worker Logic (Public) -
     public func doValidateBirthdate(for birthdate: Date?,

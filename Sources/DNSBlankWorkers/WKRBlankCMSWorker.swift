@@ -1,5 +1,5 @@
 //
-//  WKRBlankCMSWorker.swift
+//  WKRBlankCmsWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -7,9 +7,10 @@
 //
 
 import DNSCore
+import DNSError
 import DNSProtocols
 
-open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
+open class WKRBlankCmsWorker: WKRBlankBaseWorker, WKRPTCLCms {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCms?
 
@@ -35,6 +36,13 @@ open class WKRBlankCMSWorker: WKRBlankBaseWorker, WKRPTCLCms {
                       doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Cms.notFound = error {
+            return .notFound
+        }
+        return result
     }
 
     // MARK: - Worker Logic (Public) -

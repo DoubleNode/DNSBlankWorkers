@@ -57,14 +57,22 @@ open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
     // to restore the scene back to its current state.
     open func didEnterBackground() { }
 
+    open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                   with error: Error) -> DNSPTCLWorker.Call.Result {
+        return result
+    }
     open func runDo(callNextWhen: DNSPTCLWorker.Call.NextWhen,
                     runNext: DNSPTCLCallBlock?,
                     doWork: DNSPTCLCallResultBlock) -> Any? {
-        let resultBlock: DNSPTCLResultBlock = { callResult in
-            switch callResult {
+        let resultBlock: DNSPTCLResultBlock = { result in
+            var result = result
+            if case .failure(let error) = result {
+                result = self.confirmFailureResult(result, with: error)
+            }
+            switch result {
             case .completed:
                 guard [.always].contains(where: { $0 == callNextWhen }) else { return nil }
-            case .error:
+            case .error, .failure:
                 guard [.always, .whenError].contains(where: { $0 == callNextWhen }) else { return nil }
             case .notFound:
                 guard [.always, .whenNotFound].contains(where: { $0 == callNextWhen }) else { return nil }

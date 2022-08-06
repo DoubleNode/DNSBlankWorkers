@@ -8,6 +8,7 @@
 
 import Combine
 import DNSDataObjects
+import DNSError
 import DNSProtocols
 import Foundation
 
@@ -42,6 +43,13 @@ open class WKRBlankAdminWorker: WKRBlankBaseWorker, WKRPTCLAdmin {
     public func runDoPub(runNext: DNSPTCLCallBlock?,
                          doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Admin.notFound = error {
+            return .notFound
+        }
+        return result
     }
 
     // MARK: - Worker Logic (Public) -

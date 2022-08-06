@@ -8,6 +8,7 @@
 
 import Combine
 import DNSCore
+import DNSError
 import DNSProtocols
 
 open class WKRBlankIdentityWorker: WKRBlankBaseWorker, WKRPTCLIdentity {
@@ -41,6 +42,13 @@ open class WKRBlankIdentityWorker: WKRBlankBaseWorker, WKRPTCLIdentity {
     public func runDoPub(runNext: DNSPTCLCallBlock?,
                          doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Identity.notFound = error {
+            return .notFound
+        }
+        return result
     }
 
     // MARK: - Worker Logic (Public) -

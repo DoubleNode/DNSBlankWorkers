@@ -38,6 +38,13 @@ open class WKRBlankAnalyticsWorker: WKRBlankBaseWorker, WKRPTCLAnalytics {
         let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Analytics.notFound = error {
+            return .notFound
+        }
+        return result
+    }
 
     // MARK: - Worker Logic (Public) -
     public func doAutoTrack(class: String, method: String, properties: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {

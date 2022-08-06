@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "172536f4c8fc086b425aac2d05a43e8b93e9d3b5",
-          "version": "1.9.60"
+          "revision": "f2c3847ce0305d2001d205bc64e162683e0a3cb0",
+          "version": "1.9.64"
         }
       },
       {

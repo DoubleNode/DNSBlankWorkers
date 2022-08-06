@@ -9,6 +9,7 @@
 import Combine
 import DNSCore
 import DNSDataObjects
+import DNSError
 import DNSProtocols
 
 open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
@@ -42,6 +43,13 @@ open class WKRBlankPlacesWorker: WKRBlankBaseWorker, WKRPTCLPlaces {
     public func runDoPub(runNext: DNSPTCLCallBlock?,
                          doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
+    }
+    override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
+                                            with error: Error) -> DNSPTCLWorker.Call.Result {
+        if case DNSError.Places.notFound = error {
+            return .notFound
+        }
+        return result
     }
 
     // MARK: - Worker Logic (Public) -
