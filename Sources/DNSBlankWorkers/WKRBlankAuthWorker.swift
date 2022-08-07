@@ -48,16 +48,16 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doCheckAuthentication(using parameters: DNSDataDictionary,
-                                      with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
+    public func doCheckAuth(using parameters: DNSDataDictionary,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doCheckAuthentication(using: parameters,
-                                                          with: progress, and: block)
+            return self.nextWorker?.doCheckAuth(using: parameters,
+                                                with: progress, and: block)
         },
         doWork: {
-            return self.intDoCheckAuthentication(using: parameters,
-                                                 with: progress, and: block, then: $0)
+            return self.intDoCheckAuth(using: parameters,
+                                       with: progress, and: block, then: $0)
         })
     }
     public func doSignIn(from username: String?,
@@ -100,9 +100,9 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doCheckAuthentication(using parameters: DNSDataDictionary,
-                                      with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
-        self.doCheckAuthentication(using: parameters, with: nil, and: block)
+    public func doCheckAuth(using parameters: DNSDataDictionary,
+                            with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
+        self.doCheckAuth(using: parameters, with: nil, and: block)
     }
     public func doSignIn(from username: String?,
                          and password: String?,
@@ -122,10 +122,10 @@ open class WKRBlankAuthWorker: WKRBlankBaseWorker, WKRPTCLAuth {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoCheckAuthentication(using parameters: DNSDataDictionary,
-                                       with progress: DNSPTCLProgressBlock?,
-                                       and block: WKRPTCLAuthBlkBoolBoolAccessData?,
-                                       then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoCheckAuth(using parameters: DNSDataDictionary,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLAuthBlkBoolBoolAccessData?,
+                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignIn(from username: String?,
