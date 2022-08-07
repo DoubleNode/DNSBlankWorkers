@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSError.git",
         "state": {
           "branch": null,
-          "revision": "f61b21fddfc6165cfd1cb6ed7d6596883ce17c19",
-          "version": "1.8.0"
+          "revision": "b06c277110a8834bf4f39f7d2b732ad05a48908e",
+          "version": "1.9.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "00e9a87a42d5c1ec5dc3a6689c171e370b0f9390",
-          "version": "1.9.66"
+          "revision": "87b302aca7ecd08f233a2914d0bb64847ace0d2d",
+          "version": "1.9.67"
         }
       },
       {
