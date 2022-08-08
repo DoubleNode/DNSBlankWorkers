@@ -63,7 +63,7 @@ public extension WKRBlankBaseWorker {
             switch statusCode {
             case 0, 200...299:
                 break
-            case 401:
+            case 400, 401:
                 var error = DNSError.NetworkBase
                     .unauthorized(DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
@@ -71,6 +71,10 @@ public extension WKRBlankBaseWorker {
                 if message == "accountRole mismatch" {
                     error = DNSError.NetworkBase
                         .adminRequired(DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
+                }
+                if message == "Access token was not provided" {
+                    error = DNSError.NetworkBase
+                        .unauthorized(DNSCodeLocation.blankWorkers(self, "\(#file),\(#line),\(#function)"))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
