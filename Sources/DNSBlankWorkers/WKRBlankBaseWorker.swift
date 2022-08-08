@@ -14,7 +14,8 @@ import Foundation
 
 open class WKRBlankBaseWorker: WKRBaseWorker {
     @Atomic public var retryCounts: [URL: Int] = [:]
-    public var wkrSystems: WKRPTCLSystems = WKRBlankSystemsWorker()
+    public var wkrSystems: WKRPTCLSystems? = initWkrSystems()
+    open class func initWkrSystems() -> WKRPTCLSystems? { WKRBlankSystemsWorker() }
 
     // MARK: - Utility methods
     open func utilityReportSystemSuccess(for systemId: String,
@@ -75,8 +76,8 @@ open class WKRBlankBaseWorker: WKRBaseWorker {
                                   for systemId: String,
                                   and endPointId: String) {
         guard !systemId.isEmpty && !endPointId.isEmpty else { return }
-        _ = self.wkrSystems.doReport(result: result, and: failureCode,
-                                        and: debugString, for: systemId,
-                                        and: endPointId, with: nil)
+        _ = self.wkrSystems?.doReport(result: result, and: failureCode,
+                                      and: debugString, for: systemId,
+                                      and: endPointId, with: nil)
     }
 }
