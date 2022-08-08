@@ -16,6 +16,7 @@ open class WKRBlankPermissionsWorker: WKRBlankBaseWorker, WKRPTCLPermissions {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLPermissions,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

@@ -16,6 +16,7 @@ open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLAppEvents,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

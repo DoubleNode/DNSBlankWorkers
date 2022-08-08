@@ -17,6 +17,7 @@ open class WKRBlankActivityTypesWorker: WKRBlankBaseWorker, WKRPTCLActivityTypes
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLActivityTypes,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

@@ -19,6 +19,7 @@ open class WKRBlankPassportsWorker: WKRBlankBaseWorker, WKRPTCLPassports {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLPassports,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

@@ -17,6 +17,7 @@ open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLCache,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

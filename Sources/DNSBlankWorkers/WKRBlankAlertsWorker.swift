@@ -18,6 +18,7 @@ open class WKRBlankAlertsWorker: WKRBlankBaseWorker, WKRPTCLAlerts {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLAlerts,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

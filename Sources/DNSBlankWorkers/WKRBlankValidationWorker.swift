@@ -16,6 +16,7 @@ open class WKRBlankValidationWorker: WKRBlankBaseWorker, WKRPTCLValidation {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLValidation,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

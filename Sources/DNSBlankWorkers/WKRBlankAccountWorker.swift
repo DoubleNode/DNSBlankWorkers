@@ -17,6 +17,7 @@ open class WKRBlankAccountWorker: WKRBlankBaseWorker, WKRPTCLAccount {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLAccount,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

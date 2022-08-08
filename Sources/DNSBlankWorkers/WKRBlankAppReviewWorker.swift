@@ -29,6 +29,7 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLAppReview,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

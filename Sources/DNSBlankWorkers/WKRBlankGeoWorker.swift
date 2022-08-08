@@ -16,6 +16,7 @@ open class WKRBlankGeoWorker: WKRBlankBaseWorker, WKRPTCLGeo {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLGeo,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

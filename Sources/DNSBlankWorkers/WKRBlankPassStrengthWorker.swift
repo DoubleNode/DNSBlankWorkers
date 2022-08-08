@@ -18,6 +18,7 @@ open class WKRBlankPassStrengthWorker: WKRBlankBaseWorker, WKRPTCLPassStrength {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLPassStrength,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

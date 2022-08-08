@@ -17,6 +17,7 @@ open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
 
     public required init() {
         super.init()
+        wkrSystems = WKRBlankSystemsWorker()
     }
     public func register(nextWorker: WKRPTCLBeacons,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
