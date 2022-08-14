@@ -65,12 +65,12 @@ public extension WKRBlankBaseWorker {
                 var error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
-                let message = Self.xlt.string(from: valueData["error"] as Any?) ?? "Unknown"
-                if message == "accountRole mismatch" {
-                    error = DNSError.NetworkBase.adminRequired(DNSCodeLocation.blankWorkers(self))
-                }
-                if message == "Access token was not provided" {
+                let message = self.utilityErrorMessage(from: valueData)
+                if message == "Unauthorized" {
                     error = DNSError.NetworkBase.unauthorized(DNSCodeLocation.blankWorkers(self))
+                }
+                if message == "Admin Support Required" {
+                    error = DNSError.NetworkBase.adminRequired(DNSCodeLocation.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
@@ -81,9 +81,26 @@ public extension WKRBlankBaseWorker {
                 _ = resultBlock?(.error)
                 return
             case 403:
+                var error = DNSError.NetworkBase.forbidden(DNSCodeLocation.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
-                let message = Self.xlt.string(from: valueData["error"] as Any?) ?? "Unknown"
-                let error = DNSError.NetworkBase.upgradeClient(message: message, DNSCodeLocation.blankWorkers(self))
+                let message = self.utilityErrorMessage(from: valueData)
+                if message == "Missing/Invalid accessToken" {
+                    error = DNSError.NetworkBase.forbidden(DNSCodeLocation.blankWorkers(self))
+                }
+                if message == "Outdated Client" {
+                    let details = self.utilityErrorDetails(from: valueData)
+                    error = DNSError.NetworkBase.upgradeClient(message: details, DNSCodeLocation.blankWorkers(self))
+                }
+                DNSCore.reportError(error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                errorBlk?(error, data)
+                _ = resultBlock?(.error)
+                return
+            case 422:
+                let error = DNSError.NetworkBase.dataError(DNSCodeLocation.blankWorkers(self))
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,

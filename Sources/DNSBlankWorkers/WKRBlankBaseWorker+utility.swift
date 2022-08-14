@@ -16,6 +16,45 @@ import Foundation
 
 public extension WKRBlankBaseWorker {
     // MARK: - Utility methods -
+    func utilityErrorDetails(from data: DNSDataDictionary) -> String {
+        var details = Self.xlt.string(from: data["errorDetails"] as Any?) ?? ""
+        if details.isEmpty {
+            let error = Self.xlt.dictionary(from: data["error"] as Any?)
+            if !error.isEmpty {
+                details = Self.xlt.string(from: error["details"] as Any?) ?? ""
+            }
+        }
+        if details.isEmpty {
+            let metadata = Self.xlt.dictionary(from: data["metadata"] as Any?)
+            if !metadata.isEmpty {
+                let error = Self.xlt.dictionary(from: metadata["error"] as Any?)
+                if !error.isEmpty {
+                    details = Self.xlt.string(from: error["details"] as Any?) ?? ""
+                }
+            }
+        }
+        return details
+    }
+    func utilityErrorMessage(from data: DNSDataDictionary) -> String {
+        var message = Self.xlt.string(from: data["error"] as Any?) ?? ""
+        if message.isEmpty {
+            let error = Self.xlt.dictionary(from: data["error"] as Any?)
+            if !error.isEmpty {
+                message = Self.xlt.string(from: error["message"] as Any?) ?? ""
+            }
+        }
+        if message.isEmpty {
+            let metadata = Self.xlt.dictionary(from: data["metadata"] as Any?)
+            if !metadata.isEmpty {
+                let error = Self.xlt.dictionary(from: metadata["error"] as Any?)
+                if !error.isEmpty {
+                    message = Self.xlt.string(from: error["message"] as Any?) ?? ""
+                }
+            }
+        }
+        if message.isEmpty { message = "Unknown" }
+        return message
+    }
     func utilityNewRetryCount(for url: URL) -> Int {
         let newRetryCount = (self.retryCounts[url] ?? 0) + 1
         self.retryCounts[url] = newRetryCount
