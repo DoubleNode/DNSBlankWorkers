@@ -16,6 +16,7 @@ import Foundation
 
 // Protocol Block Types
 public typealias WKRPTCLRequestBlkError = (Error, Any?) -> Void
+public typealias WKRPTCLRequestBlkPendingError = (Error, Any?) -> Error
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
 public extension WKRBlankBaseWorker {
@@ -28,6 +29,7 @@ public extension WKRBlankBaseWorker {
                                 dataRequest,
                                 with: resultBlock,
                                 onSuccess: successBlk,
+                                onPendingError: nil,
                                 onError: errorBlk,
                                 onRetry: retryBlk)
     }
@@ -35,6 +37,21 @@ public extension WKRBlankBaseWorker {
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
                             onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
+                            onError errorBlk: WKRPTCLRequestBlkError?,
+                            onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
+        self.processRequestJSON(callData,
+                                dataRequest,
+                                with: resultBlock,
+                                onSuccess: successBlk,
+                                onPendingError: nil,
+                                onError: errorBlk,
+                                onRetry: retryBlk)
+    }
+    func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
+                            _ dataRequest: NETPTCLRouterRtnDataRequest,
+                            with resultBlock: DNSPTCLResultBlock?,
+                            onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
+                            onPendingError pendingBlk: WKRPTCLRequestBlkPendingError?,
                             onError errorBlk: WKRPTCLRequestBlkError?,
                             onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseJSON(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
@@ -51,7 +68,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, nil)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             }
@@ -77,7 +95,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, data)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             case 403:
@@ -96,7 +115,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, data)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             case 422:
@@ -106,7 +126,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, data)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             case 500...599:
@@ -128,7 +149,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, data)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             }
@@ -142,7 +164,8 @@ public extension WKRBlankBaseWorker {
                                                 response: response,
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
-                errorBlk?(error, data)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
             }
