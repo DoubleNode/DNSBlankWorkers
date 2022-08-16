@@ -58,10 +58,10 @@ public extension WKRBlankBaseWorker {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                var error = DNSError.NetworkBase.networkError(error: error, DNSCodeLocation.blankWorkers(self))
+                var error = DNSError.NetworkBase.networkError(error: error, .blankWorkers(self))
                 let statusCode = response.response?.statusCode ?? 0
                 if statusCode == 401 {
-                    error = DNSError.NetworkBase.unauthorized(DNSCodeLocation.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
@@ -81,14 +81,14 @@ public extension WKRBlankBaseWorker {
                 break
             case 400, 401:
                 var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self))
+                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Unauthorized" {
-                    error = DNSError.NetworkBase.unauthorized(DNSCodeLocation.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 if message == "Admin Support Required" {
-                    error = DNSError.NetworkBase.adminRequired(DNSCodeLocation.blankWorkers(self))
+                    error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
@@ -100,15 +100,15 @@ public extension WKRBlankBaseWorker {
                 _ = resultBlock?(.error)
                 return
             case 403:
-                var error = DNSError.NetworkBase.forbidden(DNSCodeLocation.blankWorkers(self))
+                var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.forbidden(DNSCodeLocation.blankWorkers(self))
+                    error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
-                    error = DNSError.NetworkBase.upgradeClient(message: details, DNSCodeLocation.blankWorkers(self))
+                    error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
@@ -120,7 +120,7 @@ public extension WKRBlankBaseWorker {
                 _ = resultBlock?(.error)
                 return
             case 422:
-                let error = DNSError.NetworkBase.dataError(DNSCodeLocation.blankWorkers(self))
+                let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
@@ -131,7 +131,7 @@ public extension WKRBlankBaseWorker {
                 _ = resultBlock?(.error)
                 return
             case 500...599:
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self))
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
                 guard let url else { fallthrough }
                 let retryCount = self.utilityNewRetryCount(for: url)
                 let delay = self.utilityRetryDelay(for: retryCount)
@@ -143,7 +143,7 @@ public extension WKRBlankBaseWorker {
                 return
             default:
                 let error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, DNSCodeLocation.blankWorkers(self))
+                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
