@@ -84,10 +84,11 @@ public extension WKRBlankBaseWorker {
                     .serverError(statusCode: statusCode, .blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                if message == "Unauthorized" {
+                if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                }
-                if message == "Admin Support Required" {
+                } else if message == "Unauthorized" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Admin Support Required" {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
@@ -103,10 +104,11 @@ public extension WKRBlankBaseWorker {
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                if message == "Missing/Invalid accessToken" {
+                if message == "Access token was not provided" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                }
-                if message == "Outdated Client" {
+                } else if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
