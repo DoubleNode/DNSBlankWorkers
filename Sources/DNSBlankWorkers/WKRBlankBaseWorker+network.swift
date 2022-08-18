@@ -90,6 +90,8 @@ public extension WKRBlankBaseWorker {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Admin Support Required" {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
+                } else if message == "Insufficient Access" {
+                    error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
