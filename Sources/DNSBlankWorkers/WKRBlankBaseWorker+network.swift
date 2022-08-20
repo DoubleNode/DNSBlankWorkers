@@ -20,39 +20,12 @@ public typealias WKRPTCLRequestBlkPendingError = (Error, Any?) -> Error
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
 public extension WKRBlankBaseWorker {
-    func processRequestJSON(_ dataRequest: NETPTCLRouterRtnDataRequest,
-                            with resultBlock: DNSPTCLResultBlock?,
-                            onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
-                            onError errorBlk: WKRPTCLRequestBlkError?,
-                            onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
-        self.processRequestJSON(.empty,
-                                dataRequest,
-                                with: resultBlock,
-                                onSuccess: successBlk,
-                                onPendingError: nil,
-                                onError: errorBlk,
-                                onRetry: retryBlk)
-    }
     func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
-                            onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
-                            onError errorBlk: WKRPTCLRequestBlkError?,
-                            onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
-        self.processRequestJSON(callData,
-                                dataRequest,
-                                with: resultBlock,
-                                onSuccess: successBlk,
-                                onPendingError: nil,
-                                onError: errorBlk,
-                                onRetry: retryBlk)
-    }
-    func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
-                            _ dataRequest: NETPTCLRouterRtnDataRequest,
-                            with resultBlock: DNSPTCLResultBlock?,
-                            onSuccess successBlk: WKRPTCLRequestBlkSuccess?,
-                            onPendingError pendingBlk: WKRPTCLRequestBlkPendingError?,
-                            onError errorBlk: WKRPTCLRequestBlkError?,
+                            onSuccess successBlk: WKRPTCLRequestBlkSuccess? = nil,
+                            onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
+                            onError errorBlk: WKRPTCLRequestBlkError? = nil,
                             onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseJSON(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
