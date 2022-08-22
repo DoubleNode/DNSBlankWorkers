@@ -1,5 +1,5 @@
 //
-//  WKRBlankCacheWorker.swift
+//  WKRBlankCache.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,13 +11,13 @@ import DNSError
 import DNSProtocols
 import UIKit
 
-open class WKRBlankCacheWorker: WKRBlankBaseWorker, WKRPTCLCache {
+open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCache?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
     public func register(nextWorker: WKRPTCLCache,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

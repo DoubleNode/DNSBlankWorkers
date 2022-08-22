@@ -1,5 +1,5 @@
 //
-//  WKRBlankBaseWorker+utility.swift
+//  WKRBlankBase+utility.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -14,7 +14,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-public extension WKRBlankBaseWorker {
+public extension WKRBlankBase {
     // MARK: - Utility methods -
     func utilityErrorDetails(from data: DNSDataDictionary) -> String {
         var details = ""

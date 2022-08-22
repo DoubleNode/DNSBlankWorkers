@@ -1,24 +1,37 @@
 //
-//  WKRBlankCmsWorker.swift
+//  WKRBlankAppReview.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
-import DNSCore
 import DNSError
 import DNSProtocols
+import Foundation
 
-open class WKRBlankCmsWorker: WKRBlankBaseWorker, WKRPTCLCms {
+open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
+    public var launchedCount: UInt = 0
+    public var launchedFirstTime: Date = Date()
+    public var launchedLastTime: Date?
+    public var reviewRequestLastTime: Date?
+
+    public var appDidCrashLastRun: Bool = false
+    public var daysBeforeReminding: UInt = 0
+    public var daysUntilPrompt: UInt = 0
+    public var hoursSinceLastLaunch: UInt = 0
+    public var usesFrequency: UInt = 0
+    public var usesSinceFirstLaunch: UInt = 0
+    public var usesUntilPrompt: UInt = 0
+
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLCms?
+    public var nextWorker: WKRPTCLAppReview?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
-    public func register(nextWorker: WKRPTCLCms,
+    public func register(nextWorker: WKRPTCLAppReview,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -40,35 +53,25 @@ open class WKRBlankCmsWorker: WKRBlankBaseWorker, WKRPTCLCms {
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
                                             with error: Error) -> DNSPTCLWorker.Call.Result {
-        if case DNSError.Cms.notFound = error {
+        if case DNSError.AppReview.notFound = error {
             return .notFound
         }
         return result
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoad(for group: String,
-                       with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLCmsBlkAAny?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoad(for: group, with: progress, and: block)
+    public func doReview() -> WKRPTCLAppReviewResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doReview()
         },
         doWork: {
-            return self.intDoLoad(for: group, with: progress, and: block, then: $0)
-        })
-    }
-
-    // MARK: - Worker Logic (Shortcuts) -
-    public func doLoad(for group: String,
-                       with block: WKRPTCLCmsBlkAAny?) {
-        self.doLoad(for: group, with: nil, and: block)
+            return self.intDoReview(then: $0)
+        }) as! WKRPTCLAppReviewResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoad(for group: String,
-                        with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLCmsBlkAAny?,
-                        then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoReview(then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAppReviewResVoid {
         _ = resultBlock?(.unhandled)
+        return .success
     }
 }

@@ -1,24 +1,26 @@
 //
-//  WKRBlankBeaconDistWorker.swift
+//  WKRBlankPassStrength.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
-import DNSCore
 import DNSError
 import DNSProtocols
+import Foundation
 
-open class WKRBlankBeaconDistWorker: WKRBlankBaseWorker, WKRPTCLBeaconDist {
+open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLBeaconDist?
+    public var nextWorker: WKRPTCLPassStrength?
+
+    public var minimumLength: Int32 = 6
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
-    public func register(nextWorker: WKRPTCLBeaconDist,
+    public func register(nextWorker: WKRPTCLPassStrength,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -40,32 +42,26 @@ open class WKRBlankBeaconDistWorker: WKRBlankBaseWorker, WKRPTCLBeaconDist {
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
                                             with error: Error) -> DNSPTCLWorker.Call.Result {
-        if case DNSError.BeaconDist.notFound = error {
+        if case DNSError.PassStrength.notFound = error {
             return .notFound
         }
         return result
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLBeaconDistBlkABeaconDistance?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
+    public func doCheckPassStrength(for password: String) -> WKRPTCLPassStrengthResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doCheckPassStrength(for: password)
         },
         doWork: {
-            return self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
-        })
-    }
-
-    // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistBlkABeaconDistance?) {
-        self.doLoadBeaconDistances(with: nil, and: block)
+            return self.intDoCheckPassStrength(for: password, then: $0)
+        }) as! WKRPTCLPassStrengthResVoid // swiftlint:disable:this force_cast
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
-                                       and block: WKRPTCLBeaconDistBlkABeaconDistance?,
-                                       then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoCheckPassStrength(for password: String,
+                                     then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassStrengthResVoid {
         _ = resultBlock?(.unhandled)
+        return .success(WKRPTCLPassStrength.Level.weak)
     }
 }

@@ -1,26 +1,24 @@
 //
-//  WKRBlankPassStrengthWorker.swift
+//  WKRBlankCms.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSError
 import DNSProtocols
-import Foundation
 
-open class WKRBlankPassStrengthWorker: WKRBlankBaseWorker, WKRPTCLPassStrength {
+open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLPassStrength?
-
-    public var minimumLength: Int32 = 6
+    public var nextWorker: WKRPTCLCms?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
-    public func register(nextWorker: WKRPTCLPassStrength,
+    public func register(nextWorker: WKRPTCLCms,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -42,26 +40,35 @@ open class WKRBlankPassStrengthWorker: WKRBlankBaseWorker, WKRPTCLPassStrength {
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
                                             with error: Error) -> DNSPTCLWorker.Call.Result {
-        if case DNSError.PassStrength.notFound = error {
+        if case DNSError.Cms.notFound = error {
             return .notFound
         }
         return result
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doCheckPassStrength(for password: String) -> WKRPTCLPassStrengthResVoid {
-        return self.runDo(runNext: {
-            return self.nextWorker?.doCheckPassStrength(for: password)
+    public func doLoad(for group: String,
+                       with progress: DNSPTCLProgressBlock?,
+                       and block: WKRPTCLCmsBlkAAny?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoad(for: group, with: progress, and: block)
         },
         doWork: {
-            return self.intDoCheckPassStrength(for: password, then: $0)
-        }) as! WKRPTCLPassStrengthResVoid // swiftlint:disable:this force_cast
+            return self.intDoLoad(for: group, with: progress, and: block, then: $0)
+        })
+    }
+
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoad(for group: String,
+                       with block: WKRPTCLCmsBlkAAny?) {
+        self.doLoad(for: group, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
-    open func intDoCheckPassStrength(for password: String,
-                                     then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassStrengthResVoid {
+    open func intDoLoad(for group: String,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLCmsBlkAAny?,
+                        then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
-        return .success(WKRPTCLPassStrength.Level.weak)
     }
 }

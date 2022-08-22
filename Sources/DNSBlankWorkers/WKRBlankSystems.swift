@@ -1,5 +1,5 @@
 //
-//  WKRBlankSystemsStateWorker.swift
+//  WKRBlankSystems.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSError
 import DNSProtocols
 import UIKit
 
-open class WKRBlankSystemsWorker: WKRBlankBaseWorker, WKRPTCLSystems {
+open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLSystems?
 

@@ -1,37 +1,24 @@
 //
-//  WKRBlankAppReviewWorker.swift
+//  WKRBlankBeaconDist.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSError
 import DNSProtocols
-import Foundation
 
-open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
-    public var launchedCount: UInt = 0
-    public var launchedFirstTime: Date = Date()
-    public var launchedLastTime: Date?
-    public var reviewRequestLastTime: Date?
-
-    public var appDidCrashLastRun: Bool = false
-    public var daysBeforeReminding: UInt = 0
-    public var daysUntilPrompt: UInt = 0
-    public var hoursSinceLastLaunch: UInt = 0
-    public var usesFrequency: UInt = 0
-    public var usesSinceFirstLaunch: UInt = 0
-    public var usesUntilPrompt: UInt = 0
-
+open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLAppReview?
+    public var nextWorker: WKRPTCLBeaconDist?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
-    public func register(nextWorker: WKRPTCLAppReview,
+    public func register(nextWorker: WKRPTCLBeaconDist,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
         self.nextWorker = nextWorker
@@ -53,25 +40,32 @@ open class WKRBlankAppReviewWorker: WKRBlankBaseWorker, WKRPTCLAppReview {
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
                                             with error: Error) -> DNSPTCLWorker.Call.Result {
-        if case DNSError.AppReview.notFound = error {
+        if case DNSError.BeaconDist.notFound = error {
             return .notFound
         }
         return result
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doReview() -> WKRPTCLAppReviewResVoid {
-        return self.runDo(runNext: {
-            return self.nextWorker?.doReview()
+    public func doLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
+                                      and block: WKRPTCLBeaconDistBlkABeaconDistance?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
         },
         doWork: {
-            return self.intDoReview(then: $0)
-        }) as! WKRPTCLAppReviewResVoid // swiftlint:disable:this force_cast
+            return self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
+        })
+    }
+
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadBeaconDistances(with block: WKRPTCLBeaconDistBlkABeaconDistance?) {
+        self.doLoadBeaconDistances(with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
-    open func intDoReview(then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAppReviewResVoid {
+    open func intDoLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
+                                       and block: WKRPTCLBeaconDistBlkABeaconDistance?,
+                                       then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
-        return .success
     }
 }

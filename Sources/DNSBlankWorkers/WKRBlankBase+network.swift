@@ -1,5 +1,5 @@
 //
-//  WKRBlankBaseWorker+network.swift
+//  WKRBlankBase+network.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -19,7 +19,7 @@ public typealias WKRPTCLRequestBlkError = (Error, Any?) -> Void
 public typealias WKRPTCLRequestBlkPendingError = (Error, Any?) -> Error
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 
-public extension WKRBlankBaseWorker {
+public extension WKRBlankBase {
     func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,

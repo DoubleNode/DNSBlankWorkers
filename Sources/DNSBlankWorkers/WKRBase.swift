@@ -1,5 +1,5 @@
 //
-//  WKRBaseWorker.swift
+//  WKRBase.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSCrashNetwork
 import DNSProtocols
 import Foundation
 
-open class WKRBaseWorker: NSObject, WKRPTCLWorkerBase {
+open class WKRBase: NSObject, WKRPTCLWorkerBase {
     public static var xlt = DNSDataTranslation()
         
     static public var languageCode: String {

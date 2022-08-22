@@ -1,5 +1,5 @@
 //
-//  WKRBlankBeaconsWorker.swift
+//  WKRBlankBeacons.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,13 +11,13 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankBeaconsWorker: WKRBlankBaseWorker, WKRPTCLBeacons {
+open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLBeacons?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
     public func register(nextWorker: WKRPTCLBeacons,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {

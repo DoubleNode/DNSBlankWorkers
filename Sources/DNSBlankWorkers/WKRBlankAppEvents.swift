@@ -1,5 +1,5 @@
 //
-//  WKRBlankAppEventsWorker.swift
+//  WKRBlankAppEvents.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -10,13 +10,13 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAppEventsWorker: WKRBlankBaseWorker, WKRPTCLAppEvents {
+open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAppEvents?
 
     public required init() {
         super.init()
-        wkrSystems = WKRBlankSystemsWorker()
+        wkrSystems = WKRBlankSystems()
     }
     public func register(nextWorker: WKRPTCLAppEvents,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
