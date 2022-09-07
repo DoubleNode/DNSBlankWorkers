@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSCore.git",
         "state": {
           "branch": null,
-          "revision": "e57c03d06518dea638ed5d962e7bb3897437d095",
-          "version": "1.9.28"
+          "revision": "c583a5e1cff8aa3f1e01ed0568fc414b9e4e3ee8",
+          "version": "1.9.32"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSDataObjects.git",
         "state": {
           "branch": null,
-          "revision": "b6de0346a5ded63f97535f3c3b6f19ddb60e64ce",
-          "version": "1.9.36"
+          "revision": "63d0fbabce5d8f25ce7358d267cb378d1815571b",
+          "version": "1.9.39"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSError.git",
         "state": {
           "branch": null,
-          "revision": "69d99c9f46c35b65764ba7dc85c2a206e1b1e665",
-          "version": "1.9.1"
+          "revision": "db7e75d714b953dd3081f834606118521b0c31c7",
+          "version": "1.9.2"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/DoubleNode/DNSProtocols.git",
         "state": {
           "branch": null,
-          "revision": "884e360fb8624da552ec84d8a3a96abea5bba796",
-          "version": "1.9.83"
+          "revision": "0547b251112db6e3696be72b869b99a1e24d5fe1",
+          "version": "1.9.87"
         }
       },
       {

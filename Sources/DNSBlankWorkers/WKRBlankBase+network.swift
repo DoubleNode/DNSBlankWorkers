@@ -59,6 +59,8 @@ public extension WKRBlankBase {
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Unauthorized" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Admin Support Required" {
@@ -80,6 +82,8 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
@@ -189,6 +193,8 @@ public extension WKRBlankBase {
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Unauthorized" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Admin Support Required" {
@@ -210,6 +216,8 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
@@ -319,6 +327,8 @@ public extension WKRBlankBase {
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Unauthorized" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Admin Support Required" {
@@ -340,6 +350,8 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Access token was not provided" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                } else if message == "Token has been revoked." {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
