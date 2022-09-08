@@ -6,6 +6,7 @@
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSDataObjects
 import DNSError
 import DNSProtocols
@@ -86,6 +87,18 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                               with: progress, and: block, then: $0)
         })
     }
+    public func doLoadActivityType(for tag: DNSString,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLActivityTypesBlkActivityType?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadActivityType(for: tag,
+                                                       with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadActivityType(for: tag,
+                                              with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadActivityTypes(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLActivityTypesBlkAActivityType?) {
         self.runDo(runNext: {
@@ -134,6 +147,10 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                    with block: WKRPTCLActivityTypesBlkActivityType?) {
         self.doLoadActivityType(for: code, with: nil, and: block)
     }
+    public func doLoadActivityType(for tag: DNSString,
+                                   with block: WKRPTCLActivityTypesBlkActivityType?) {
+        self.doLoadActivityType(for: tag, with: nil, and: block)
+    }
     public func doLoadActivityTypes(with block: WKRPTCLActivityTypesBlkAActivityType?) {
         self.doLoadActivityTypes(with: nil, and: block)
     }
@@ -169,6 +186,12 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityType(for code: String,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLActivityTypesBlkActivityType?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadActivityType(for tag: DNSString,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLActivityTypesBlkActivityType?,
                                     then resultBlock: DNSPTCLResultBlock?) {
