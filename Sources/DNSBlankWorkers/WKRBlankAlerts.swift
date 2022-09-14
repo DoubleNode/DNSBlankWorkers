@@ -66,28 +66,16 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             return self.intDoLoadAlerts(for: place, with: progress, then: $0)
         }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
-    public func doLoadAlerts(for district: DAODistrict,
+    public func doLoadAlerts(for section: DAOSection,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
         return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return nextWorker.doLoadAlerts(for: district, with: progress)
+            return nextWorker.doLoadAlerts(for: section, with: progress)
         },
                                   doWork: {
-            return self.intDoLoadAlerts(for: district, with: progress, then: $0)
-        }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
-    }
-    public func doLoadAlerts(for region: DAORegion,
-                             with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
-        return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
-                return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
-            }
-            return nextWorker.doLoadAlerts(for: region, with: progress)
-        },
-                                  doWork: {
-            return self.intDoLoadAlerts(for: region, with: progress, then: $0)
+            return self.intDoLoadAlerts(for: section, with: progress, then: $0)
         }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
     public func doLoadAlerts(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAlertsPubAAlert {
@@ -106,11 +94,8 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
     public func doLoadAlerts(for place: DAOPlace) -> WKRPTCLAlertsPubAAlert {
         return self.doLoadAlerts(for: place, with: nil)
     }
-    public func doLoadAlerts(for district: DAODistrict) -> WKRPTCLAlertsPubAAlert {
-        return self.doLoadAlerts(for: district, with: nil)
-    }
-    public func doLoadAlerts(for region: DAORegion) -> WKRPTCLAlertsPubAAlert {
-        return self.doLoadAlerts(for: region, with: nil)
+    public func doLoadAlerts(for section: DAOSection) -> WKRPTCLAlertsPubAAlert {
+        return self.doLoadAlerts(for: section, with: nil)
     }
     public func doLoadAlerts() -> WKRPTCLAlertsPubAAlert {
         return self.doLoadAlerts(with: nil)
@@ -123,13 +108,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! WKRPTCLAlertsPubAAlert
     }
-    open func intDoLoadAlerts(for district: DAODistrict,
-                              with progress: DNSPTCLProgressBlock?,
-                              then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAlertsPubAAlert {
-        // swiftlint:disable:next force_cast
-        return resultBlock?(.unhandled) as! WKRPTCLAlertsPubAAlert
-    }
-    open func intDoLoadAlerts(for region: DAORegion,
+    open func intDoLoadAlerts(for section: DAOSection,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAlertsPubAAlert {
         // swiftlint:disable:next force_cast

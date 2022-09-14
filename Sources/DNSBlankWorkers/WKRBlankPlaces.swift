@@ -66,8 +66,8 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         })
     }
     public func doLoadPlace(for placeCode: String,
-                             with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLPlacesBlkPlace?) {
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLPlacesBlkPlace?) {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlace(for: placeCode, with: progress, and: block)
         },
@@ -76,12 +76,22 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         })
     }
     public func doLoadPlaces(with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLPlacesBlkAPlace?) {
+                            and block: WKRPTCLPlacesBlkAPlace?) {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlaces(with: progress, and: block)
         },
         doWork: {
             return self.intDoLoadPlaces(with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadPlaces(for section: DAOSection,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLPlacesBlkAPlace?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPlaces(for: section, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPlaces(for: section, with: progress, and: block, then: $0)
         })
     }
     public func doLoadHolidays(for place: DAOPlace,
@@ -117,8 +127,8 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         }) as! WKRPTCLPlacesPubAlertEventStatus // swiftlint:disable:this force_cast
     }
     public func doSearchPlace(for geohash: String,
-                               with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLPlacesBlkPlace?) {
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLPlacesBlkPlace?) {
         self.runDo(runNext: {
             return self.nextWorker?.doSearchPlace(for: geohash, with: progress, and: block)
         },
@@ -160,6 +170,10 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     }
     public func doLoadPlaces(with block: WKRPTCLPlacesBlkAPlace?) {
         self.doLoadPlaces(with: nil, and: block)
+    }
+    public func doLoadPlaces(for section: DAOSection,
+                             with block: WKRPTCLPlacesBlkAPlace?) {
+        self.doLoadPlaces(for: section, with: nil, and: block)
     }
     public func doLoadHolidays(for place: DAOPlace,
                                with block: WKRPTCLPlacesBlkAPlaceHoliday?) {
@@ -203,6 +217,12 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     open func intDoLoadPlaces(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLPlacesBlkAPlace?,
                                then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadPlaces(for section: DAOSection,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLPlacesBlkAPlace?,
+                              then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHolidays(for place: DAOPlace,
