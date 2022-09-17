@@ -84,22 +84,22 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return (WKRPTCLCachePubAny)(nextWorker.doReadObject(for: id, with: progress))
+            return nextWorker.doReadObject(for: id, with: progress)
         },
                                   doWork: {
-            return (WKRPTCLCachePubAny)(self.intDoReadObject(for: id, with: progress, then: $0))
+            return self.intDoReadObject(for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubAny
     }
-    public func doReadObject(for id: String,
+    public func doReadString(for id: String,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubString {
         return self.runDoPub(runNext: {
             guard let nextWorker = self.nextWorker else {
                 return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
             }
-            return (WKRPTCLCachePubString)(nextWorker.doReadObject(for: id, with: progress))
+            return nextWorker.doReadString(for: id, with: progress)
         },
                                   doWork: {
-            return (WKRPTCLCachePubString)(self.intDoReadObject(for: id, with: progress, then: $0))
+            return self.intDoReadString(for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubString
     }
     public func doUpdate(object: Any,
@@ -125,10 +125,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
         return self.doLoadImage(from: url, for: id, with: nil)
     }
     public func doReadObject(for id: String) -> WKRPTCLCachePubAny {
-        return (AnyPublisher<Any, Error>)(self.doReadObject(for: id, with: nil))
+        return self.doReadObject(for: id, with: nil)
     }
-    public func doReadObject(for id: String) -> WKRPTCLCachePubString {
-        return (AnyPublisher<String, Error>)(self.doReadObject(for: id, with: nil))
+    public func doReadString(for id: String) -> WKRPTCLCachePubString {
+        return self.doReadString(for: id, with: nil)
     }
     public func doUpdate(object: Any,
                          for id: String) -> WKRPTCLCachePubAny {
@@ -152,7 +152,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubAny {
         return resultBlock?(.unhandled) as! WKRPTCLCachePubAny
     }
-    open func intDoReadObject(for id: String,
+    open func intDoReadString(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubString {
         return resultBlock?(.unhandled) as! WKRPTCLCachePubString
