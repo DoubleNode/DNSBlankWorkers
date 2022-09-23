@@ -87,6 +87,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
+                } else if message == "Expired accessToken" {
+                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
                 } else if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
@@ -221,6 +223,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
+                } else if message == "Expired accessToken" {
+                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
                 } else if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
@@ -355,6 +359,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Missing/Invalid accessToken" {
                     error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
+                } else if message == "Expired accessToken" {
+                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
                 } else if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))

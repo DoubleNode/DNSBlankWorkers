@@ -61,6 +61,18 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                        with: progress, and: block, then: $0)
         })
     }
+    public func doRefreshAuth(using parameters: DNSDataDictionary,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRefreshAuth(using: parameters,
+                                                  with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoRefreshAuth(using: parameters,
+                                         with: progress, and: block, then: $0)
+        })
+    }
     public func doSignIn(from username: String?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
@@ -105,6 +117,10 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
         self.doCheckAuth(using: parameters, with: nil, and: block)
     }
+    public func doRefreshAuth(using parameters: DNSDataDictionary,
+                              with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
+        self.doRefreshAuth(using: parameters, with: nil, and: block)
+    }
     public func doSignIn(from username: String?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
@@ -127,6 +143,12 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAuthBlkBoolBoolAccessData?,
                              then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoRefreshAuth(using parameters: DNSDataDictionary,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLAuthBlkBoolBoolAccessData?,
+                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignIn(from username: String?,
