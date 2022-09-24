@@ -61,16 +61,21 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                        with: progress, and: block, then: $0)
         })
     }
-    public func doRefreshAuth(using parameters: DNSDataDictionary,
-                              with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
+    public func doLinkAuth(from username: String,
+                           and password: String,
+                           using parameters: DNSDataDictionary,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRefreshAuth(using: parameters,
-                                                  with: progress, and: block)
+            return self.nextWorker?.doLinkAuth(from: username,
+                                               and: password,
+                                               using: parameters,
+                                               with: progress, and: block)
         },
         doWork: {
-            return self.intDoRefreshAuth(using: parameters,
-                                         with: progress, and: block, then: $0)
+            return self.intDoLinkAuth(from: username, and: password,
+                                      using: parameters,
+                                      with: progress, and: block, then: $0)
         })
     }
     public func doSignIn(from username: String?,
@@ -117,9 +122,12 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
         self.doCheckAuth(using: parameters, with: nil, and: block)
     }
-    public func doRefreshAuth(using parameters: DNSDataDictionary,
-                              with block: WKRPTCLAuthBlkBoolBoolAccessData?) {
-        self.doRefreshAuth(using: parameters, with: nil, and: block)
+    public func doLinkAuth(from username: String,
+                           and password: String,
+                           using parameters: DNSDataDictionary,
+                           and block: WKRPTCLAuthBlkBoolAccessData?) {
+        self.doLinkAuth(from: username, and: password, using: parameters,
+                        with: nil, and: block)
     }
     public func doSignIn(from username: String?,
                          and password: String?,
@@ -145,10 +153,12 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                              then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoRefreshAuth(using parameters: DNSDataDictionary,
-                               with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLAuthBlkBoolBoolAccessData?,
-                               then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoLinkAuth(from username: String,
+                            and password: String,
+                            using parameters: DNSDataDictionary,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLAuthBlkBoolAccessData?,
+                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignIn(from username: String?,
