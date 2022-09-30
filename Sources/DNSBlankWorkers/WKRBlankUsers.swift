@@ -48,6 +48,16 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     }
 
     // MARK: - Worker Logic (Public) -
+    public func doActivate(_ user: DAOUser,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLUsersBlkBool?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doActivate(user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoActivate(user, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLUsersBlkUser?) {
         self.runDo(runNext: {
@@ -108,6 +118,10 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
+    public func doActivate(_ user: DAOUser,
+                           with block: WKRPTCLUsersBlkBool?) {
+        self.doActivate(user, with: nil, and: block)
+    }
     public func doLoadCurrentUser(with block: WKRPTCLUsersBlkUser?) {
         self.doLoadCurrentUser(with: nil, and: block)
     }
@@ -132,6 +146,12 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     }
 
     // MARK: - Internal Work Methods
+    open func intDoActivate(_ user: DAOUser,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLUsersBlkBool?,
+                            then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkUser?,
                                    then resultBlock: DNSPTCLResultBlock?) {
