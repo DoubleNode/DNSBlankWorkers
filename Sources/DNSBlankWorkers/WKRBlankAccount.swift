@@ -88,13 +88,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadAccounts(for: user, with: progress, and: block, then: $0)
         })
     }
-    public func doLoadCurrentAccount(with progress: DNSPTCLProgressBlock?,
-                                     and block: WKRPTCLAccountBlkAccount?) {
+    public func doLoadCurrentAccounts(with progress: DNSPTCLProgressBlock?,
+                                      and block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCurrentAccount(with: progress, and: block)
+            return self.nextWorker?.doLoadCurrentAccounts(with: progress, and: block)
         },
         doWork: {
-            return self.intDoLoadCurrentAccount(with: progress, and: block, then: $0)
+            return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(account: DAOAccount,
@@ -145,12 +145,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadAccounts(for: user, with: nil, and: block, then: $0)
         })
     }
-    public func doLoadCurrentAccount(with block: WKRPTCLAccountBlkAccount?) {
+    public func doLoadCurrentAccounts(with block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCurrentAccount(with: nil, and: block)
+            return self.nextWorker?.doLoadCurrentAccounts(with: nil, and: block)
         },
         doWork: {
-            return self.intDoLoadCurrentAccount(with: nil, and: block, then: $0)
+            return self.intDoLoadCurrentAccounts(with: nil, and: block, then: $0)
         })
     }
     public func doUpdate(account: DAOAccount,
@@ -183,9 +183,9 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoLoadCurrentAccount(with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLAccountBlkAccount?,
-                                      then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoLoadCurrentAccounts(with progress: DNSPTCLProgressBlock?,
+                                       and block: WKRPTCLAccountBlkAAccount?,
+                                       then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(account: DAOAccount,
