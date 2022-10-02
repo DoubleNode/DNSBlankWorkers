@@ -87,15 +87,6 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
             return self.intDoLoadUsers(for: account, with: progress, and: block, then: $0)
         })
     }
-    public func doRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLUsersBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doRemoveCurrentUser(with: progress, and: block)
-        },
-                       doWork: {
-            return self.intDoRemoveCurrentUser(with: progress, and: block, then: $0)
-        })
-    }
     public func doRemove(_ user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlkVoid?) {
@@ -133,9 +124,6 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                             with block: WKRPTCLUsersBlkAUser?) {
         self.doLoadUsers(for: account, with: nil, and: block)
     }
-    public func doRemoveCurrentUser(with block: WKRPTCLUsersBlkVoid?) {
-        self.doRemoveCurrentUser(with: nil, and: block)
-    }
     public func doRemove(_ user: DAOUser,
                          with block: WKRPTCLUsersBlkVoid?) {
         self.doRemove(user, with: nil, and: block)
@@ -169,11 +157,6 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                              then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoRemoveCurrentUser(with progress: DNSPTCLProgressBlock?,
-                                     and block: WKRPTCLUsersBlkVoid?,
-                                     then resultBlock: DNSPTCLResultBlock?) {
-         _ = resultBlock?(.unhandled)
-     }
     open func intDoRemove(_ user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkVoid?,
