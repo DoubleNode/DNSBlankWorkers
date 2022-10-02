@@ -78,6 +78,19 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                       with: progress, and: block, then: $0)
         })
     }
+    public func doPasswordResetStart(from username: String?,
+                                     using parameters: DNSDataDictionary,
+                                     with progress: DNSPTCLProgressBlock?,
+                                     and block: WKRPTCLAuthBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doPasswordResetStart(from: username, using: parameters,
+                                                         with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoPasswordResetStart(from: username, using: parameters,
+                                                with: progress, and: block, then: $0)
+        })
+    }
     public func doSignIn(from username: String?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
@@ -129,6 +142,11 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
         self.doLinkAuth(from: username, and: password, using: parameters,
                         with: nil, and: block)
     }
+    public func doPasswordResetStart(from username: String?,
+                                     using parameters: DNSDataDictionary,
+                                     with block: WKRPTCLAuthBlkVoid?) {
+        self.doPasswordResetStart(from: username, using: parameters, with: nil, and: block)
+    }
     public func doSignIn(from username: String?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
@@ -159,6 +177,13 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLAuthBlkBoolAccessData?,
                             then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoPasswordResetStart(from username: String?,
+                                      using parameters: DNSDataDictionary,
+                                      with progress: DNSPTCLProgressBlock?,
+                                      and block: WKRPTCLAuthBlkVoid?,
+                                      then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSignIn(from username: String?,
