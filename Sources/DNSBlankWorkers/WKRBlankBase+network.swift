@@ -18,6 +18,7 @@ import Foundation
 public typealias WKRPTCLRequestBlkError = (Error, Any?) -> Void
 public typealias WKRPTCLRequestBlkPendingError = (Error, Any?) -> Error
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
+public typealias WKRPTCLRequestBlkSuccessData = (Data) -> Result<Void, Error>
 
 public extension WKRBlankBase {
     func processRequestJSON(_ callData: WKRPTCLSystemsStateData = .empty,
@@ -295,7 +296,7 @@ public extension WKRBlankBase {
     func processRequestData(_ callData: WKRPTCLSystemsStateData = .empty,
                             _ dataRequest: NETPTCLRouterRtnDataRequest,
                             with resultBlock: DNSPTCLResultBlock?,
-                            onSuccess successBlk: WKRPTCLRequestBlkSuccess? = nil,
+                            onSuccess successBlk: WKRPTCLRequestBlkSuccessData? = nil,
                             onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
                             onError errorBlk: WKRPTCLRequestBlkError? = nil,
                             onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
