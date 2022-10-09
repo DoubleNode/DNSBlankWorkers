@@ -78,6 +78,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoDelete(account: account, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadAccount(for id: String,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLAccountBlkAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadAccount(for: id, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadAccount(for: id, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadAccounts(for user: DAOUser,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAAccount?) {
@@ -136,6 +146,15 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoDelete(account: account, with: nil, and: block, then: $0)
         })
     }
+    public func doLoadAccount(for id: String,
+                              with block: WKRPTCLAccountBlkAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadAccount(for: id, with: nil, and: block)
+        },
+        doWork: {
+            return self.intDoLoadAccount(for: id, with: nil, and: block, then: $0)
+        })
+    }
     public func doLoadAccounts(for user: DAOUser,
                                with block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
@@ -175,6 +194,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadAccount(for id: String,
+                               with progress: DNSProtocols.DNSPTCLProgressBlock?,
+                               and block: WKRPTCLAccountBlkAccount?,
+                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadAccounts(for user: DAOUser,
