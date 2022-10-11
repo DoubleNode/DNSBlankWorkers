@@ -12,10 +12,10 @@ import PackageDescription
 let package = Package(
     name: "DNSBlankWorkers",
     platforms: [
-        .iOS(.v13),
-        .tvOS(.v13),
+        .iOS(.v15),
+        .tvOS(.v15),
         .macOS(.v10_15),
-        .watchOS(.v6),
+        .watchOS(.v9),
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
@@ -27,11 +27,11 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.2"),
-        .package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.9.48"),
-        .package(url: "https://github.com/DoubleNode/DNSCrashNetwork.git", from: "1.9.13"),
-        .package(url: "https://github.com/DoubleNode/DNSDataObjects.git", from: "1.9.50"),
-        .package(url: "https://github.com/DoubleNode/DNSError.git", from: "1.9.2"),
-        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.9.105"),
+        .package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.10.0"),
+        .package(url: "https://github.com/DoubleNode/DNSCrashNetwork.git", from: "1.10.0"),
+        .package(url: "https://github.com/DoubleNode/DNSDataObjects.git", from: "1.10.0"),
+        .package(url: "https://github.com/DoubleNode/DNSError.git", from: "1.10.0"),
+        .package(url: "https://github.com/DoubleNode/DNSProtocols.git", from: "1.10.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
