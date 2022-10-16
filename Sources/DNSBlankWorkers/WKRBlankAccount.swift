@@ -6,6 +6,7 @@
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSDataObjects
 import DNSError
 import DNSProtocols
@@ -107,6 +108,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
         })
     }
+    public func doSearchAccount(using parameters: DNSDataDictionary,
+                                with progress: DNSPTCLProgressBlock?,
+                                and block: WKRPTCLAccountBlkAAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doSearchAccount(using: parameters, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoSearchAccount(using: parameters, with: progress, and: block, then: $0)
+        })
+    }
     public func doUpdate(account: DAOAccount,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
@@ -172,6 +183,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadCurrentAccounts(with: nil, and: block, then: $0)
         })
     }
+    public func doSearchAccount(using parameters: DNSDataDictionary,
+                                with block: WKRPTCLAccountBlkAAccount?) {
+        self.doSearchAccount(using: parameters, with: nil, and: block)
+    }
     public func doUpdate(account: DAOAccount,
                          with block: WKRPTCLAccountBlkVoid?) {
         self.doUpdate(account: account, with: nil, and: block)
@@ -211,6 +226,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     open func intDoLoadCurrentAccounts(with progress: DNSPTCLProgressBlock?,
                                        and block: WKRPTCLAccountBlkAAccount?,
                                        then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoSearchAccount(using parameters: DNSDataDictionary,
+                                 with progress: DNSPTCLProgressBlock?,
+                                 and block: WKRPTCLAccountBlkAAccount?,
+                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(account: DAOAccount,
