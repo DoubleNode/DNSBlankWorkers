@@ -103,6 +103,17 @@ public extension WKRBlankBase {
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
+            case 404:
+                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                DNSCore.reportError(error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
@@ -239,6 +250,17 @@ public extension WKRBlankBase {
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
                 return
+            case 404:
+                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                DNSCore.reportError(error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
@@ -366,6 +388,17 @@ public extension WKRBlankBase {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
+                DNSCore.reportError(error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                let finalError = pendingBlk?(error, nil) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                return
+            case 404:
+                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
