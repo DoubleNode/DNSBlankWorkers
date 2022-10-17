@@ -104,7 +104,12 @@ public extension WKRBlankBase {
                 _ = resultBlock?(.error)
                 return
             case 404:
-                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                if message == "Already Linked" {
+                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
@@ -251,7 +256,12 @@ public extension WKRBlankBase {
                 _ = resultBlock?(.error)
                 return
             case 404:
-                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                if message == "Already Linked" {
+                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
@@ -398,7 +408,12 @@ public extension WKRBlankBase {
                 _ = resultBlock?(.error)
                 return
             case 404:
-                let error = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                if message == "Already Linked" {
+                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                }
                 DNSCore.reportError(error)
                 self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
                                                 response: response,
