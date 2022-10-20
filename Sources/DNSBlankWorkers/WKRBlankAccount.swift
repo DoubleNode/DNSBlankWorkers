@@ -79,6 +79,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoDelete(account: account, with: progress, and: block, then: $0)
         })
     }
+    public func doLink(account: DAOAccount,
+                       to user: DAOUser,
+                       with progress: DNSPTCLProgressBlock?,
+                       and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLink(account: account, to: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLink(account: account, to: user, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadAccount(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlkAccount?) {
@@ -118,6 +129,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoSearchAccounts(using: parameters, with: progress, and: block, then: $0)
         })
     }
+    public func doUnlink(account: DAOAccount,
+                         from user: DAOUser,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnlink(account: account, from: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUnlink(account: account, from: user, with: progress, and: block, then: $0)
+        })
+    }
     public func doUpdate(account: DAOAccount,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
@@ -132,60 +154,40 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     // MARK: - Worker Logic (Shortcuts) -
     public func doActivate(account: DAOAccount,
                            and block: WKRPTCLAccountBlkBool?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doActivate(account: account, with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoActivate(account: account, with: nil, and: block, then: $0)
-        })
+        self.doActivate(account: account, with: nil, and: block)
     }
     public func doDeactivate(account: DAOAccount,
                              and block: WKRPTCLAccountBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doDeactivate(account: account, with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoDeactivate(account: account, with: nil, and: block, then: $0)
-        })
+        self.doDeactivate(account: account, with: nil, and: block)
     }
     public func doDelete(account: DAOAccount,
                          and block: WKRPTCLAccountBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doDelete(account: account, with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoDelete(account: account, with: nil, and: block, then: $0)
-        })
+        self.doDelete(account: account, with: nil, and: block)
+    }
+    public func doLink(account: DAOAccount,
+                       to user: DAOUser,
+                       with block: WKRPTCLAccountBlkVoid?) {
+        self.doLink(account: account, to: user, with: nil, and: block)
     }
     public func doLoadAccount(for id: String,
                               with block: WKRPTCLAccountBlkAccount?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadAccount(for: id, with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoLoadAccount(for: id, with: nil, and: block, then: $0)
-        })
+        self.doLoadAccount(for: id, with: nil, and: block)
     }
     public func doLoadAccounts(for user: DAOUser,
                                with block: WKRPTCLAccountBlkAAccount?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadAccounts(for: user, with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoLoadAccounts(for: user, with: nil, and: block, then: $0)
-        })
+        self.doLoadAccounts(for: user, with: nil, and: block)
     }
     public func doLoadCurrentAccounts(with block: WKRPTCLAccountBlkAAccount?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadCurrentAccounts(with: nil, and: block)
-        },
-        doWork: {
-            return self.intDoLoadCurrentAccounts(with: nil, and: block, then: $0)
-        })
+        self.doLoadCurrentAccounts(with: nil, and: block)
     }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with block: WKRPTCLAccountBlkAAccount?) {
         self.doSearchAccounts(using: parameters, with: nil, and: block)
+    }
+    public func doUnlink(account: DAOAccount,
+                         from user: DAOUser,
+                         with block: WKRPTCLAccountBlkVoid?) {
+        self.doUnlink(account: account, from: user, with: nil, and: block)
     }
     public func doUpdate(account: DAOAccount,
                          with block: WKRPTCLAccountBlkVoid?) {
@@ -211,6 +213,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLink(account: DAOAccount,
+                        to user: DAOUser,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLAccountBlkVoid?,
+                        then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadAccount(for id: String,
                                with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAccount?,
@@ -232,6 +241,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLAccountBlkAAccount?,
                                   then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnlink(account: DAOAccount,
+                          from user: DAOUser,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(account: DAOAccount,
