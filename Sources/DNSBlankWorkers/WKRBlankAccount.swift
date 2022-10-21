@@ -59,6 +59,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoActivate(account: account, with: progress, and: block, then: $0)
         })
     }
+    public func doApprove(linkRequest: DAOAccountLinkRequest,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doApprove(linkRequest: linkRequest, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoApprove(linkRequest: linkRequest, with: progress, and: block, then: $0)
+        })
+    }
     public func doDeactivate(account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkVoid?) {
@@ -67,6 +77,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         },
         doWork: {
             return self.intDoDeactivate(account: account, with: progress, and: block, then: $0)
+        })
+    }
+    public func doDecline(linkRequest: DAOAccountLinkRequest,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doDecline(linkRequest: linkRequest, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoDecline(linkRequest: linkRequest, with: progress, and: block, then: $0)
         })
     }
     public func doDelete(account: DAOAccount,
@@ -119,6 +139,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
         })
     }
+    public func doLoadLinkRequests(for user: DAOUser,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLAccountBlkAAccountLinkRequest?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadLinkRequests(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
+        })
+    }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAccountBlkAAccount?) {
@@ -156,9 +186,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                            and block: WKRPTCLAccountBlkBool?) {
         self.doActivate(account: account, with: nil, and: block)
     }
+    public func doApprove(linkRequest: DAOAccountLinkRequest,
+                          with block: WKRPTCLAccountBlkVoid?) {
+        self.doApprove(linkRequest: linkRequest, with: nil, and: block)
+    }
     public func doDeactivate(account: DAOAccount,
                              and block: WKRPTCLAccountBlkVoid?) {
         self.doDeactivate(account: account, with: nil, and: block)
+    }
+    public func doDecline(linkRequest: DAOAccountLinkRequest,
+                          with block: WKRPTCLAccountBlkVoid?) {
+        self.doDecline(linkRequest: linkRequest, with: nil, and: block)
     }
     public func doDelete(account: DAOAccount,
                          and block: WKRPTCLAccountBlkVoid?) {
@@ -179,6 +217,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     }
     public func doLoadCurrentAccounts(with block: WKRPTCLAccountBlkAAccount?) {
         self.doLoadCurrentAccounts(with: nil, and: block)
+    }
+    public func doLoadLinkRequests(for user: DAOUser,
+                                   with block: WKRPTCLAccountBlkAAccountLinkRequest?) {
+        self.doLoadLinkRequests(for: user, with: nil, and: block)
     }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with block: WKRPTCLAccountBlkAAccount?) {
@@ -201,10 +243,22 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoApprove(linkRequest: DAOAccountLinkRequest,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAccountBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoDeactivate(account: DAOAccount,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlkVoid?,
                               then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoDecline(linkRequest: DAOAccountLinkRequest,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAccountBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoDelete(account: DAOAccount,
@@ -235,6 +289,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     open func intDoLoadCurrentAccounts(with progress: DNSPTCLProgressBlock?,
                                        and block: WKRPTCLAccountBlkAAccount?,
                                        then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadLinkRequests(for user: DAOUser,
+                                    with progress: DNSProtocols.DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLAccountBlkAAccountLinkRequest?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSearchAccounts(using parameters: DNSDataDictionary,
