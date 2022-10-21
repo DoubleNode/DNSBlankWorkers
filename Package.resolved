@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSDataObjects.git",
       "state" : {
-        "revision" : "9d83a288489f9950dfcb76565a5c32afa743fc8f",
-        "version" : "1.10.8"
+        "revision" : "79c0c186a66480cb090f25307775c28eac81346e",
+        "version" : "1.10.9"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSProtocols.git",
       "state" : {
-        "revision" : "d2f64b44bc9edbec0643e44e44f9fed902634702",
-        "version" : "1.10.12"
+        "revision" : "8ae0d7004b4ec15f68a908845bcc82e30f785c6d",
+        "version" : "1.10.14"
       }
     },
     {
