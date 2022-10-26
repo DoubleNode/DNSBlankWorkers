@@ -149,6 +149,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadUnverifiedAccounts(for user: DAOUser,
+                                         with progress: DNSPTCLProgressBlock?,
+                                         and block: WKRPTCLAccountBlkAAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadUnverifiedAccounts(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadUnverifiedAccounts(for: user, with: progress, and: block, then: $0)
+        })
+    }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAccountBlkAAccount?) {
@@ -178,6 +188,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         },
         doWork: {
             return self.intDoUpdate(account: account, with: progress, and: block, then: $0)
+        })
+    }
+    public func doVerify(account: DAOAccount,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doVerify(account: account, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoVerify(account: account, with: progress, and: block, then: $0)
         })
     }
 
@@ -222,6 +242,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                    with block: WKRPTCLAccountBlkAAccountLinkRequest?) {
         self.doLoadLinkRequests(for: user, with: nil, and: block)
     }
+    public func doLoadUnverifiedAccounts(for user: DAOUser,
+                                         with block: WKRPTCLAccountBlkAAccount?){
+        self.doLoadUnverifiedAccounts(for: user, with: nil, and: block)
+    }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with block: WKRPTCLAccountBlkAAccount?) {
         self.doSearchAccounts(using: parameters, with: nil, and: block)
@@ -234,6 +258,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     public func doUpdate(account: DAOAccount,
                          with block: WKRPTCLAccountBlkVoid?) {
         self.doUpdate(account: account, with: nil, and: block)
+    }
+    public func doVerify(account: DAOAccount,
+                         with block: WKRPTCLAccountBlkVoid?) {
+        self.doVerify(account: account, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -297,6 +325,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLoadUnverifiedAccounts(for user: DAOUser,
+                                          with progress: DNSPTCLProgressBlock?,
+                                          and block: WKRPTCLAccountBlkAAccount?,
+                                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoSearchAccounts(using parameters: DNSDataDictionary,
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLAccountBlkAAccount?,
@@ -311,6 +345,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(account: DAOAccount,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoVerify(account: DAOAccount,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
