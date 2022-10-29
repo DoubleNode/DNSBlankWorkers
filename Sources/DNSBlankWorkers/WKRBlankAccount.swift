@@ -110,6 +110,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLink(account: account, to: user, with: progress, and: block, then: $0)
         })
     }
+    public func doLink(account: DAOAccount,
+                       to place: DAOPlace,
+                       with progress: DNSPTCLProgressBlock?,
+                       and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLink(account: account, to: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLink(account: account, to: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadAccount(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlkAccount?) {
@@ -149,6 +160,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadPlaces(for account: DAOAccount,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLAccountBlkAPlace?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPlaces(for: account, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadUnverifiedAccounts(for user: DAOUser,
                                          with progress: DNSPTCLProgressBlock?,
                                          and block: WKRPTCLAccountBlkAAccount?) {
@@ -178,6 +199,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         },
         doWork: {
             return self.intDoUnlink(account: account, from: user, with: progress, and: block, then: $0)
+        })
+    }
+    public func doUnlink(account: DAOAccount,
+                         from place: DAOPlace,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnlink(account: account, from: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUnlink(account: account, from: place, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(account: DAOAccount,
@@ -227,6 +259,11 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                        with block: WKRPTCLAccountBlkVoid?) {
         self.doLink(account: account, to: user, with: nil, and: block)
     }
+    public func doLink(account: DAOAccount,
+                       to place: DAOPlace,
+                       with block: WKRPTCLAccountBlkVoid?) {
+        self.doLink(account: account, to: place, with: nil, and: block)
+    }
     public func doLoadAccount(for id: String,
                               with block: WKRPTCLAccountBlkAccount?) {
         self.doLoadAccount(for: id, with: nil, and: block)
@@ -242,6 +279,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                    with block: WKRPTCLAccountBlkAAccountLinkRequest?) {
         self.doLoadLinkRequests(for: user, with: nil, and: block)
     }
+    public func doLoadPlaces(for account: DAOAccount,
+                             with block: WKRPTCLAccountBlkAPlace?) {
+        self.doLoadPlaces(for: account, with: nil, and: block)
+    }
     public func doLoadUnverifiedAccounts(for user: DAOUser,
                                          with block: WKRPTCLAccountBlkAAccount?){
         self.doLoadUnverifiedAccounts(for: user, with: nil, and: block)
@@ -254,6 +295,11 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          from user: DAOUser,
                          with block: WKRPTCLAccountBlkVoid?) {
         self.doUnlink(account: account, from: user, with: nil, and: block)
+    }
+    public func doUnlink(account: DAOAccount,
+                         from place: DAOPlace,
+                         with block: WKRPTCLAccountBlkVoid?) {
+        self.doUnlink(account: account, from: place, with: nil, and: block)
     }
     public func doUpdate(account: DAOAccount,
                          with block: WKRPTCLAccountBlkVoid?) {
@@ -302,6 +348,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                         then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLink(account: DAOAccount,
+                        to place: DAOPlace,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLAccountBlkVoid?,
+                        then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadAccount(for id: String,
                                with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAccount?,
@@ -325,6 +378,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLoadPlaces(for account: DAOAccount,
+                              with progress: DNSProtocols.DNSPTCLProgressBlock?,
+                              and block: WKRPTCLAccountBlkAPlace?,
+                              then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadUnverifiedAccounts(for user: DAOUser,
                                           with progress: DNSPTCLProgressBlock?,
                                           and block: WKRPTCLAccountBlkAAccount?,
@@ -339,6 +398,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     }
     open func intDoUnlink(account: DAOAccount,
                           from user: DAOUser,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnlink(account: DAOAccount,
+                          from place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
