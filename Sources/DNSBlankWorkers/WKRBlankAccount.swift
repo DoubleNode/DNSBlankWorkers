@@ -180,6 +180,17 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadUnverifiedAccounts(for: user, with: progress, and: block, then: $0)
         })
     }
+    public func doRename(accountId: String,
+                         to newAccountId: String,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRename(accountId: accountId, to: newAccountId, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoRename(accountId: accountId, to: newAccountId, with: progress, and: block, then: $0)
+        })
+    }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAccountBlkAAccount?) {
@@ -287,6 +298,11 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                          with block: WKRPTCLAccountBlkAAccount?){
         self.doLoadUnverifiedAccounts(for: user, with: nil, and: block)
     }
+    public func doRename(accountId: String,
+                         to newAccountId: String,
+                         with block: WKRPTCLAccountBlkVoid?) {
+        self.doRename(accountId: accountId, to: newAccountId, with: nil, and: block)
+    }
     public func doSearchAccounts(using parameters: DNSDataDictionary,
                                  with block: WKRPTCLAccountBlkAAccount?) {
         self.doSearchAccounts(using: parameters, with: nil, and: block)
@@ -388,6 +404,13 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                           with progress: DNSPTCLProgressBlock?,
                                           and block: WKRPTCLAccountBlkAAccount?,
                                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoRename(accountId: String,
+                          to newAccountId: String,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoSearchAccounts(using parameters: DNSDataDictionary,
