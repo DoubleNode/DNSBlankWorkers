@@ -160,6 +160,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadPendingUsers(for user: DAOUser,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLAccountBlkAUser?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPendingUsers(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPendingUsers(for: user, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadPlaces(for account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkAPlace?) {
@@ -290,6 +300,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                    with block: WKRPTCLAccountBlkAAccountLinkRequest?) {
         self.doLoadLinkRequests(for: user, with: nil, and: block)
     }
+    public func doLoadPendingUsers(for user: DAOUser,
+                                   with block: WKRPTCLAccountBlkAUser?){
+        self.doLoadPendingUsers(for: user, with: nil, and: block)
+    }
     public func doLoadPlaces(for account: DAOAccount,
                              with block: WKRPTCLAccountBlkAPlace?) {
         self.doLoadPlaces(for: account, with: nil, and: block)
@@ -391,6 +405,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     open func intDoLoadLinkRequests(for user: DAOUser,
                                     with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                     and block: WKRPTCLAccountBlkAAccountLinkRequest?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadPendingUsers(for user: DAOUser,
+                                    with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLAccountBlkAUser?,
                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
