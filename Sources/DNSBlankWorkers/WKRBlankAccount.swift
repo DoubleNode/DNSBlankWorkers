@@ -69,6 +69,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoApprove(linkRequest: linkRequest, with: progress, and: block, then: $0)
         })
     }
+    public func doConfirm(pendingUser: DAOUser,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAccountBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doConfirm(pendingUser: pendingUser, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoConfirm(pendingUser: pendingUser, with: progress, and: block, then: $0)
+        })
+    }
     public func doDeactivate(account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkVoid?) {
@@ -263,6 +273,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           with block: WKRPTCLAccountBlkVoid?) {
         self.doApprove(linkRequest: linkRequest, with: nil, and: block)
     }
+    public func doConfirm(pendingUser: DAOUser,
+                          with block: WKRPTCLAccountBlkVoid?) {
+        self.doConfirm(pendingUser: pendingUser, with: nil, and: block)
+    }
     public func doDeactivate(account: DAOAccount,
                              and block: WKRPTCLAccountBlkVoid?) {
         self.doDeactivate(account: account, with: nil, and: block)
@@ -348,6 +362,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         _ = resultBlock?(.unhandled)
     }
     open func intDoApprove(linkRequest: DAOAccountLinkRequest,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAccountBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoConfirm(pendingUser: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAccountBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) {
