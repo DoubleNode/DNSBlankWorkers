@@ -58,6 +58,26 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
             return self.intDoActivate(user, with: progress, and: block, then: $0)
         })
     }
+    public func doConfirm(pendingUser: DAOUser,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLUsersBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doConfirm(pendingUser: pendingUser, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoConfirm(pendingUser: pendingUser, with: progress, and: block, then: $0)
+        })
+    }
+    public func doConsent(childUser: DAOUser,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLUsersBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doConsent(childUser: childUser, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoConsent(childUser: childUser, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLUsersBlkUser?) {
         self.runDo(runNext: {
@@ -65,6 +85,46 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
         },
                        doWork: {
             return self.intDoLoadCurrentUser(with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadChildUsers(for user: DAOUser,
+                                 with progress: DNSPTCLProgressBlock?,
+                                 and block: WKRPTCLUsersBlkAUser?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadChildUsers(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadChildUsers(for: user, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadLinkRequests(for user: DAOUser,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLUsersBlkAAccountLinkRequest?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadLinkRequests(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadPendingUsers(for user: DAOUser,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLUsersBlkAUser?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPendingUsers(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPendingUsers(for: user, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadUnverifiedAccounts(for user: DAOUser,
+                                         with progress: DNSPTCLProgressBlock?,
+                                         and block: WKRPTCLUsersBlkAAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadUnverifiedAccounts(for: user, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadUnverifiedAccounts(for: user, with: progress, and: block, then: $0)
         })
     }
     public func doLoadUser(for id: String,
@@ -113,8 +173,32 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                            with block: WKRPTCLUsersBlkBool?) {
         self.doActivate(user, with: nil, and: block)
     }
+    public func doConfirm(pendingUser: DAOUser,
+                          with block: WKRPTCLUsersBlkVoid?) {
+        self.doConfirm(pendingUser: pendingUser, with: nil, and: block)
+    }
+    public func doConsent(childUser: DAOUser,
+                          with block: WKRPTCLUsersBlkVoid?) {
+        self.doConsent(childUser: childUser, with: nil, and: block)
+    }
     public func doLoadCurrentUser(with block: WKRPTCLUsersBlkUser?) {
         self.doLoadCurrentUser(with: nil, and: block)
+    }
+    public func doLoadChildUsers(for user: DAOUser,
+                                 with block: WKRPTCLUsersBlkAUser?) {
+        self.doLoadChildUsers(for: user, with: nil, and: block)
+    }
+    public func doLoadLinkRequests(for user: DAOUser,
+                                   with block: WKRPTCLUsersBlkAAccountLinkRequest?) {
+        self.doLoadLinkRequests(for: user, with: nil, and: block)
+    }
+    public func doLoadPendingUsers(for user: DAOUser,
+                                   with block: WKRPTCLUsersBlkAUser?) {
+        self.doLoadPendingUsers(for: user, with: nil, and: block)
+    }
+    public func doLoadUnverifiedAccounts(for user: DAOUser,
+                                         with block: WKRPTCLUsersBlkAAccount?) {
+        self.doLoadUnverifiedAccounts(for: user, with: nil, and: block)
     }
     public func doLoadUser(for id: String,
                            with block: WKRPTCLUsersBlkUser?) {
@@ -140,9 +224,45 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoConfirm(pendingUser: DAOUser,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLUsersBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoConsent(childUser: DAOUser,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLUsersBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkUser?,
                                    then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadChildUsers(for user: DAOUser,
+                                  with progress: DNSPTCLProgressBlock?,
+                                  and block: WKRPTCLUsersBlkAUser?,
+                                  then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadLinkRequests(for user: DAOUser,
+                                    with progress: DNSProtocols.DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLUsersBlkAAccountLinkRequest?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadPendingUsers(for user: DAOUser,
+                                    with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLUsersBlkAUser?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadUnverifiedAccounts(for user: DAOUser,
+                                          with progress: DNSPTCLProgressBlock?,
+                                          and block: WKRPTCLUsersBlkAAccount?,
+                                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadUser(for id: String,

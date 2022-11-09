@@ -69,16 +69,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoApprove(linkRequest: linkRequest, with: progress, and: block, then: $0)
         })
     }
-    public func doConfirm(pendingUser: DAOUser,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAccountBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doConfirm(pendingUser: pendingUser, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoConfirm(pendingUser: pendingUser, with: progress, and: block, then: $0)
-        })
-    }
     public func doDeactivate(account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkVoid?) {
@@ -160,26 +150,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
         })
     }
-    public func doLoadLinkRequests(for user: DAOUser,
-                                   with progress: DNSPTCLProgressBlock?,
-                                   and block: WKRPTCLAccountBlkAAccountLinkRequest?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadLinkRequests(for: user, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
-        })
-    }
-    public func doLoadPendingUsers(for user: DAOUser,
-                                   with progress: DNSPTCLProgressBlock?,
-                                   and block: WKRPTCLAccountBlkAUser?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadPendingUsers(for: user, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadPendingUsers(for: user, with: progress, and: block, then: $0)
-        })
-    }
     public func doLoadPlaces(for account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkAPlace?) {
@@ -188,16 +158,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         },
         doWork: {
             return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
-        })
-    }
-    public func doLoadUnverifiedAccounts(for user: DAOUser,
-                                         with progress: DNSPTCLProgressBlock?,
-                                         and block: WKRPTCLAccountBlkAAccount?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadUnverifiedAccounts(for: user, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadUnverifiedAccounts(for: user, with: progress, and: block, then: $0)
         })
     }
     public func doRename(accountId: String,
@@ -273,10 +233,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           with block: WKRPTCLAccountBlkVoid?) {
         self.doApprove(linkRequest: linkRequest, with: nil, and: block)
     }
-    public func doConfirm(pendingUser: DAOUser,
-                          with block: WKRPTCLAccountBlkVoid?) {
-        self.doConfirm(pendingUser: pendingUser, with: nil, and: block)
-    }
     public func doDeactivate(account: DAOAccount,
                              and block: WKRPTCLAccountBlkVoid?) {
         self.doDeactivate(account: account, with: nil, and: block)
@@ -310,21 +266,9 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     public func doLoadCurrentAccounts(with block: WKRPTCLAccountBlkAAccount?) {
         self.doLoadCurrentAccounts(with: nil, and: block)
     }
-    public func doLoadLinkRequests(for user: DAOUser,
-                                   with block: WKRPTCLAccountBlkAAccountLinkRequest?) {
-        self.doLoadLinkRequests(for: user, with: nil, and: block)
-    }
-    public func doLoadPendingUsers(for user: DAOUser,
-                                   with block: WKRPTCLAccountBlkAUser?){
-        self.doLoadPendingUsers(for: user, with: nil, and: block)
-    }
     public func doLoadPlaces(for account: DAOAccount,
                              with block: WKRPTCLAccountBlkAPlace?) {
         self.doLoadPlaces(for: account, with: nil, and: block)
-    }
-    public func doLoadUnverifiedAccounts(for user: DAOUser,
-                                         with block: WKRPTCLAccountBlkAAccount?){
-        self.doLoadUnverifiedAccounts(for: user, with: nil, and: block)
     }
     public func doRename(accountId: String,
                          to newAccountId: String,
@@ -362,12 +306,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         _ = resultBlock?(.unhandled)
     }
     open func intDoApprove(linkRequest: DAOAccountLinkRequest,
-                           with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLAccountBlkVoid?,
-                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoConfirm(pendingUser: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAccountBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) {
@@ -422,28 +360,10 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                        then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoLoadLinkRequests(for user: DAOUser,
-                                    with progress: DNSProtocols.DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLAccountBlkAAccountLinkRequest?,
-                                    then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoLoadPendingUsers(for user: DAOUser,
-                                    with progress: DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLAccountBlkAUser?,
-                                    then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
     open func intDoLoadPlaces(for account: DAOAccount,
                               with progress: DNSProtocols.DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlkAPlace?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoLoadUnverifiedAccounts(for user: DAOUser,
-                                          with progress: DNSPTCLProgressBlock?,
-                                          and block: WKRPTCLAccountBlkAAccount?,
-                                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRename(accountId: String,
