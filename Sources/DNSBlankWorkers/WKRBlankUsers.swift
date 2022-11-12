@@ -98,13 +98,14 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
         })
     }
     public func doLoadLinkRequests(for user: DAOUser,
+                                   using parameters: DNSDataDictionary,
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkAAccountLinkRequest?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadLinkRequests(for: user, with: progress, and: block)
+            return self.nextWorker?.doLoadLinkRequests(for: user, using: parameters, with: progress, and: block)
         },
         doWork: {
-            return self.intDoLoadLinkRequests(for: user, with: progress, and: block, then: $0)
+            return self.intDoLoadLinkRequests(for: user, using: parameters, with: progress, and: block, then: $0)
         })
     }
     public func doLoadPendingUsers(for user: DAOUser,
@@ -189,8 +190,13 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
         self.doLoadChildUsers(for: user, with: nil, and: block)
     }
     public func doLoadLinkRequests(for user: DAOUser,
+                                   using parameters: DNSDataDictionary,
                                    with block: WKRPTCLUsersBlkAAccountLinkRequest?) {
-        self.doLoadLinkRequests(for: user, with: nil, and: block)
+        self.doLoadLinkRequests(for: user, using: parameters, with: nil, and: block)
+    }
+    public func doLoadLinkRequests(for user: DAOUser,
+                                   with block: WKRPTCLUsersBlkAAccountLinkRequest?) {
+        self.doLoadLinkRequests(for: user, using: .empty, with: nil, and: block)
     }
     public func doLoadPendingUsers(for user: DAOUser,
                                    with block: WKRPTCLUsersBlkAUser?) {
@@ -248,6 +254,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadLinkRequests(for user: DAOUser,
+                                    using parameters: DNSDataDictionary,
                                     with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                     and block: WKRPTCLUsersBlkAAccountLinkRequest?,
                                     then resultBlock: DNSPTCLResultBlock?) {
