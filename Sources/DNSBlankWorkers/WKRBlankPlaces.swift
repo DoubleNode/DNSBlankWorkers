@@ -65,6 +65,26 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
             return self.intDoFilterPlaces(for: activity, using: places, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadHolidays(for place: DAOPlace,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLPlacesBlkAPlaceHoliday?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadHolidays(for: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadHolidays(for: place, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadHours(for place: DAOPlace,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLPlacesBlkPlaceHours?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadHours(for: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadHours(for: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadPlace(for placeCode: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPlacesBlkPlace?) {
@@ -84,6 +104,16 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
             return self.intDoLoadPlaces(with: progress, and: block, then: $0)
         })
     }
+    public func doLoadPlaces(for account: DAOAccount,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLPlacesBlkAPlace?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPlaces(for: account, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadPlaces(for section: DAOSection,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLPlacesBlkAPlace?) {
@@ -92,26 +122,6 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         },
         doWork: {
             return self.intDoLoadPlaces(for: section, with: progress, and: block, then: $0)
-        })
-    }
-    public func doLoadHolidays(for place: DAOPlace,
-                               with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLPlacesBlkAPlaceHoliday?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadHolidays(for: place, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadHolidays(for: place, with: progress, and: block, then: $0)
-        })
-    }
-    public func doLoadHours(for place: DAOPlace,
-                            with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLPlacesBlkPlaceHours?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadHours(for: place, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadHours(for: place, with: progress, and: block, then: $0)
         })
     }
     public func doLoadState(for place: DAOPlace,
@@ -164,17 +174,6 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                                 with block: WKRPTCLPlacesBlkAPlace?) {
         self.doFilterPlaces(for: activity, using: places, with: nil, and: block)
     }
-    public func doLoadPlace(for placeCode: String,
-                             with block: WKRPTCLPlacesBlkPlace?) {
-        self.doLoadPlace(for: placeCode, with: nil, and: block)
-    }
-    public func doLoadPlaces(with block: WKRPTCLPlacesBlkAPlace?) {
-        self.doLoadPlaces(with: nil, and: block)
-    }
-    public func doLoadPlaces(for section: DAOSection,
-                             with block: WKRPTCLPlacesBlkAPlace?) {
-        self.doLoadPlaces(for: section, with: nil, and: block)
-    }
     public func doLoadHolidays(for place: DAOPlace,
                                with block: WKRPTCLPlacesBlkAPlaceHoliday?) {
         self.doLoadHolidays(for: place, with: nil, and: block)
@@ -182,6 +181,21 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     public func doLoadHours(for place: DAOPlace,
                             with block: WKRPTCLPlacesBlkPlaceHours?) {
         self.doLoadHours(for: place, with: nil, and: block)
+    }
+    public func doLoadPlace(for placeCode: String,
+                             with block: WKRPTCLPlacesBlkPlace?) {
+        self.doLoadPlace(for: placeCode, with: nil, and: block)
+    }
+    public func doLoadPlaces(with block: WKRPTCLPlacesBlkAPlace?) {
+        self.doLoadPlaces(with: nil, and: block)
+    }
+    public func doLoadPlaces(for account: DAOAccount,
+                             with block: WKRPTCLPlacesBlkAPlace?) {
+        self.doLoadPlaces(for: account, with: nil, and: block)
+    }
+    public func doLoadPlaces(for section: DAOSection,
+                             with block: WKRPTCLPlacesBlkAPlace?) {
+        self.doLoadPlaces(for: section, with: nil, and: block)
     }
     public func doLoadState(for place: DAOPlace) -> WKRPTCLPlacesPubAlertEventStatus {
         return self.doLoadState(for: place, with: nil)
@@ -208,6 +222,18 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                                  then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLoadHolidays(for place: DAOPlace,
+                                with progress: DNSPTCLProgressBlock?,
+                                and block: WKRPTCLPlacesBlkAPlaceHoliday?,
+                                then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadHours(for place: DAOPlace,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLPlacesBlkPlaceHours?,
+                             then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadPlace(for placeCode: String,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLPlacesBlkPlace?,
@@ -219,22 +245,16 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoLoadPlaces(for section: DAOSection,
+    open func intDoLoadPlaces(for account: DAOAccount,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLPlacesBlkAPlace?,
                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoLoadHolidays(for place: DAOPlace,
-                                with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLPlacesBlkAPlaceHoliday?,
-                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoLoadHours(for place: DAOPlace,
-                             with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLPlacesBlkPlaceHours?,
-                             then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoLoadPlaces(for section: DAOSection,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLPlacesBlkAPlace?,
+                              then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadState(for place: DAOPlace,

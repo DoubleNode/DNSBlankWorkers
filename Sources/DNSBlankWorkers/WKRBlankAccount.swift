@@ -131,6 +131,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
             return self.intDoLoadAccount(for: id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadAccounts(for place: DAOPlace,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLAccountBlkAAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadAccounts(for: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadAccounts(for: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadAccounts(for user: DAOUser,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAAccount?) {
@@ -148,16 +158,6 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         },
         doWork: {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
-        })
-    }
-    public func doLoadPlaces(for account: DAOAccount,
-                             with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLAccountBlkAPlace?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLoadPlaces(for: account, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
         })
     }
     public func doRename(accountId: String,
@@ -259,16 +259,16 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                               with block: WKRPTCLAccountBlkAccount?) {
         self.doLoadAccount(for: id, with: nil, and: block)
     }
+    public func doLoadAccounts(for place: DAOPlace,
+                               with block: WKRPTCLAccountBlkAAccount?) {
+        self.doLoadAccounts(for: place, with: nil, and: block)
+    }
     public func doLoadAccounts(for user: DAOUser,
                                with block: WKRPTCLAccountBlkAAccount?) {
         self.doLoadAccounts(for: user, with: nil, and: block)
     }
     public func doLoadCurrentAccounts(with block: WKRPTCLAccountBlkAAccount?) {
         self.doLoadCurrentAccounts(with: nil, and: block)
-    }
-    public func doLoadPlaces(for account: DAOAccount,
-                             with block: WKRPTCLAccountBlkAPlace?) {
-        self.doLoadPlaces(for: account, with: nil, and: block)
     }
     public func doRename(accountId: String,
                          to newAccountId: String,
@@ -347,6 +347,12 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAccount?,
                                then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadAccounts(for place: DAOPlace,
+                                with progress: DNSPTCLProgressBlock?,
+                                and block: WKRPTCLAccountBlkAAccount?,
+                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadAccounts(for user: DAOUser,
