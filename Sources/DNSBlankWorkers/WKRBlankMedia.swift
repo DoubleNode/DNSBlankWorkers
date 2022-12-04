@@ -59,6 +59,17 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
             return self.intDoRemove(media, with: progress, and: block, then: $0)
         })
     }
+    public func doUpload(from fileUrl: URL,
+                         to path: String,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLMediaBlkMedia?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpload(from: fileUrl, to: path, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUpload(from: fileUrl, to: path, with: progress, and: block, then: $0)
+        })
+    }
     public func doUpload(_ image: UIImage,
                          to path: String,
                          with progress: DNSPTCLProgressBlock?,
@@ -98,6 +109,11 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with block: WKRPTCLMediaBlkVoid?) {
         self.doRemove(media, with: nil, and: block)
     }
+    public func doUpload(from fileUrl: URL,
+                         to path: String,
+                         with block: WKRPTCLMediaBlkMedia?) {
+        self.doUpload(from: fileUrl, to: path, with: nil, and: block)
+    }
     public func doUpload(_ image: UIImage,
                          to path: String,
                          with block: WKRPTCLMediaBlkMedia?) {
@@ -118,6 +134,13 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
     open func intDoRemove(_ media: DAOMedia,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUpload(from fileUrl: URL,
+                          to path: String,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
