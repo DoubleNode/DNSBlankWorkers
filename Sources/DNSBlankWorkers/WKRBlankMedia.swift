@@ -60,33 +60,36 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         })
     }
     public func doUpload(_ image: UIImage,
+                         to path: String,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpload(image, with: progress, and: block)
+            return self.nextWorker?.doUpload(image, to: path, with: progress, and: block)
         },
         doWork: {
-            return self.intDoUpload(image, with: progress, and: block, then: $0)
+            return self.intDoUpload(image, to: path, with: progress, and: block, then: $0)
         })
     }
     public func doUpload(_ pdfDocument: PDFDocument,
+                         to path: String,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpload(pdfDocument, with: progress, and: block)
+            return self.nextWorker?.doUpload(pdfDocument, to: path, with: progress, and: block)
         },
         doWork: {
-            return self.intDoUpload(pdfDocument, with: progress, and: block, then: $0)
+            return self.intDoUpload(pdfDocument, to: path, with: progress, and: block, then: $0)
         })
     }
     public func doUpload(_ text: String,
+                         to path: String,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpload(text, with: progress, and: block)
+            return self.nextWorker?.doUpload(text, to: path, with: progress, and: block)
         },
         doWork: {
-            return self.intDoUpload(text, with: progress, and: block, then: $0)
+            return self.intDoUpload(text, to: path, with: progress, and: block, then: $0)
         })
     }
 
@@ -96,16 +99,19 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         self.doRemove(media, with: nil, and: block)
     }
     public func doUpload(_ image: UIImage,
+                         to path: String,
                          with block: WKRPTCLMediaBlkMedia?) {
-        self.doUpload(image, with: nil, and: block)
+        self.doUpload(image, to: path, with: nil, and: block)
     }
     public func doUpload(_ pdfDocument: PDFDocument,
+                         to path: String,
                          with block: WKRPTCLMediaBlkMedia?) {
-        self.doUpload(pdfDocument, with: nil, and: block)
+        self.doUpload(pdfDocument, to: path, with: nil, and: block)
     }
     public func doUpload(_ text: String,
+                         to path: String,
                          with block: WKRPTCLMediaBlkMedia?) {
-        self.doUpload(text, with: nil, and: block)
+        self.doUpload(text, to: path, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -116,18 +122,21 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ image: UIImage,
+                          to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ pdfDocument: PDFDocument,
+                          to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ text: String,
+                          to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {

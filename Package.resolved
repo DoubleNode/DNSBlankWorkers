@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSProtocols.git",
       "state" : {
-        "revision" : "917b77ef9308f1e539818a8d968e0963f2075229",
-        "version" : "1.10.34"
+        "revision" : "322445c934ed3b2690335ee075f7626e8d35831d",
+        "version" : "1.10.35"
       }
     },
     {
