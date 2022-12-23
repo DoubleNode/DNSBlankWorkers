@@ -99,21 +99,21 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadEvents(with block: WKRPTCLEventsBlkAEvent?) {
-        self.doLoadEvents(with: block)
+        self.doLoadEvents(with: nil, and: block)
     }
     public func doLoadEvents(for place: DAOPlace,
                              with block: WKRPTCLEventsBlkAEvent?) {
-        self.doLoadEvents(for: place, with: block)
+        self.doLoadEvents(for: place, with: nil, and: block)
     }
     public func doRemove(_ event: DAOEvent,
                          for place: DAOPlace,
                          with block: WKRPTCLEventsBlkVoid?) {
-        self.doRemove(event, for: place, with: block)
+        self.doRemove(event, for: place, with: nil, and: block)
     }
     public func doUpdate(_ event: DAOEvent,
                          for place: DAOPlace,
                          with block: WKRPTCLEventsBlkVoid?) {
-        self.doUpdate(event, for: place, with: block)
+        self.doUpdate(event, for: place, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods

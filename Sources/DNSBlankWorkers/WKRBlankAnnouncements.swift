@@ -127,32 +127,32 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doLoadAnnouncements(with block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
-        self.doLoadAnnouncements(with: block)
+        self.doLoadAnnouncements(with: nil, and: block)
     }
     public func doLoadAnnouncements(for place: DAOPlace,
                                     with block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
-        self.doLoadAnnouncements(for: place, with: block)
+        self.doLoadAnnouncements(for: place, with: nil, and: block)
     }
     public func doLoadCurrentAnnouncements(with block: WKRPTCLAnnouncementsBlkAAnnouncementPlace?) {
-        self.doLoadCurrentAnnouncements(with: block)
+        self.doLoadCurrentAnnouncements(with: nil, and: block)
     }
     public func doRemove(_ announcement: DAOAnnouncement,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doRemove(announcement, with: block)
+        self.doRemove(announcement, with: nil, and: block)
     }
     public func doRemove(_ announcement: DAOAnnouncement,
                          for place: DAOPlace,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doRemove(announcement, for: place, with: block)
+        self.doRemove(announcement, for: place, with: nil, and: block)
     }
     public func doUpdate(_ announcement: DAOAnnouncement,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUpdate(announcement, with: block)
+        self.doUpdate(announcement, with: nil, and: block)
     }
     public func doUpdate(_ announcement: DAOAnnouncement,
                          for place: DAOPlace,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUpdate(announcement, for: place, with: block)
+        self.doUpdate(announcement, for: place, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
