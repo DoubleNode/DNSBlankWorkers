@@ -54,27 +54,6 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLike(_ announcement: DAOAnnouncement,
-                       with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLike(announcement, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLike(announcement, with: progress, and: block, then: $0)
-        })
-    }
-    public func doLike(_ announcement: DAOAnnouncement,
-                       for place: DAOPlace,
-                       with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doLike(announcement, for: place, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoLike(announcement, for: place, with: progress, and: block, then: $0)
-        })
-    }
     public func doLoadAnnouncements(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
         self.runDo(runNext: {
@@ -103,6 +82,29 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
             return self.intDoLoadCurrentAnnouncements(with: progress, and: block, then: $0)
         })
     }
+    public func doReact(with reaction: DNSReactionType,
+                        to announcement: DAOAnnouncement,
+                        for place: DAOPlace,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: announcement, for: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoReact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
+        })
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to announcement: DAOAnnouncement,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: announcement, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoReact(with: reaction, to: announcement, with: progress, and: block, then: $0)
+        })
+    }
     public func doRemove(_ announcement: DAOAnnouncement,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAnnouncementsBlkVoid?) {
@@ -124,46 +126,27 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
             return self.intDoRemove(announcement, for: place, with: progress, and: block, then: $0)
         })
     }
-    public func doUnlike(_ announcement: DAOAnnouncement,
-                         with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?) {
+    public func doUnreact(with reaction: DNSReactionType,
+                          to announcement: DAOAnnouncement,
+                          for place: DAOPlace,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnlike(announcement, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
         doWork: {
-            return self.intDoUnlike(announcement, with: progress, and: block, then: $0)
+            return self.intDoUnreact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
         })
     }
-    public func doUnlike(_ announcement: DAOAnnouncement,
-                         for place: DAOPlace,
-                         with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?) {
+    public func doUnreact(with reaction: DNSReactionType,
+                          to announcement: DAOAnnouncement,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnlike(announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: announcement, with: progress, and: block)
         },
         doWork: {
-            return self.intDoUnlike(announcement, for: place, with: progress, and: block, then: $0)
-        })
-    }
-    public func doUnview(_ announcement: DAOAnnouncement,
-                         with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doUnview(announcement, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoUnview(announcement, with: progress, and: block, then: $0)
-        })
-    }
-    public func doUnview(_ announcement: DAOAnnouncement,
-                         for place: DAOPlace,
-                         with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doUnview(announcement, for: place, with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoUnview(announcement, for: place, with: progress, and: block, then: $0)
+            return self.intDoUnreact(with: reaction, to: announcement, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ announcement: DAOAnnouncement,
@@ -210,15 +193,6 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLike(_ announcement: DAOAnnouncement,
-                       with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doLike(announcement, with: nil, and: block)
-    }
-    public func doLike(_ announcement: DAOAnnouncement,
-                       for place: DAOPlace,
-                       with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doLike(announcement, for: place, with: nil, and: block)
-    }
     public func doLoadAnnouncements(with block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
         self.doLoadAnnouncements(with: nil, and: block)
     }
@@ -229,6 +203,17 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doLoadCurrentAnnouncements(with block: WKRPTCLAnnouncementsBlkAAnnouncementPlace?) {
         self.doLoadCurrentAnnouncements(with: nil, and: block)
     }
+    public func doReact(with reaction: DNSReactionType,
+                        to announcement: DAOAnnouncement,
+                        for place: DAOPlace,
+                        with block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.doReact(with: reaction, to: announcement, for: place, with: nil, and: block)
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to announcement: DAOAnnouncement,
+                        with block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.doReact(with: reaction, to: announcement, with: nil, and: block)
+    }
     public func doRemove(_ announcement: DAOAnnouncement,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
         self.doRemove(announcement, with: nil, and: block)
@@ -238,23 +223,16 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
         self.doRemove(announcement, for: place, with: nil, and: block)
     }
-    public func doUnlike(_ announcement: DAOAnnouncement,
-                         with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUnlike(announcement, with: nil, and: block)
+    public func doUnreact(with reaction: DNSReactionType,
+                          to announcement: DAOAnnouncement,
+                          for place: DAOPlace,
+                          with block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.doUnreact(with: reaction, to: announcement, for: place, with: nil, and: block)
     }
-    public func doUnlike(_ announcement: DAOAnnouncement,
-                         for place: DAOPlace,
-                         with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUnlike(announcement, for: place, with: nil, and: block)
-    }
-    public func doUnview(_ announcement: DAOAnnouncement,
-                         with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUnview(announcement, with: nil, and: block)
-    }
-    public func doUnview(_ announcement: DAOAnnouncement,
-                         for place: DAOPlace,
-                         with block: WKRPTCLAnnouncementsBlkVoid?) {
-        self.doUnview(announcement, for: place, with: nil, and: block)
+    public func doUnreact(with reaction: DNSReactionType,
+                          to announcement: DAOAnnouncement,
+                          with block: WKRPTCLAnnouncementsBlkVoid?) {
+        self.doUnreact(with: reaction, to: announcement, with: nil, and: block)
     }
     public func doUpdate(_ announcement: DAOAnnouncement,
                          with block: WKRPTCLAnnouncementsBlkVoid?) {
@@ -276,19 +254,6 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLike(_ announcement: DAOAnnouncement,
-                        with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?,
-                        then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoLike(_ announcement: DAOAnnouncement,
-                        for place: DAOPlace,
-                        with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?,
-                        then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
     open func intDoLoadAnnouncements(with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLAnnouncementsBlkAAnnouncement?,
                                      then resultBlock: DNSPTCLResultBlock?) {
@@ -305,43 +270,47 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoRemove(_ announcement: DAOAnnouncement,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoReact(with reaction: DNSReactionType,
+                         to announcement: DAOAnnouncement,
+                         for place: DAOPlace,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAnnouncementsBlkVoid?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoReact(with reaction: DNSReactionType,
+                         to announcement: DAOAnnouncement,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLAnnouncementsBlkVoid?,
+                         then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ announcement: DAOAnnouncement,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLAnnouncementsBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoRemove(_ announcement: DAOAnnouncement,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAnnouncementsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoUnlike(_ announcement: DAOAnnouncement,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to announcement: DAOAnnouncement,
+                           for place: DAOPlace,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAnnouncementsBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoUnlike(_ announcement: DAOAnnouncement,
-                          for place: DAOPlace,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoUnview(_ announcement: DAOAnnouncement,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoUnview(_ announcement: DAOAnnouncement,
-                          for place: DAOPlace,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to announcement: DAOAnnouncement,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLAnnouncementsBlkVoid?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ announcement: DAOAnnouncement,
