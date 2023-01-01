@@ -86,7 +86,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                         to announcement: DAOAnnouncement,
                         for place: DAOPlace,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?) {
+                        and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
@@ -97,7 +97,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doReact(with reaction: DNSReactionType,
                         to announcement: DAOAnnouncement,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?) {
+                        and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: announcement, with: progress, and: block)
         },
@@ -130,7 +130,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                           to announcement: DAOAnnouncement,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?) {
+                          and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
@@ -141,7 +141,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doUnreact(with reaction: DNSReactionType,
                           to announcement: DAOAnnouncement,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLAnnouncementsBlkVoid?) {
+                          and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: announcement, with: progress, and: block)
         },
@@ -172,7 +172,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     }
     public func doView(_ announcement: DAOAnnouncement,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLAnnouncementsBlkVoid?) {
+                       and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doView(announcement, with: progress, and: block)
         },
@@ -183,7 +183,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doView(_ announcement: DAOAnnouncement,
                        for place: DAOPlace,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLAnnouncementsBlkVoid?) {
+                       and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doView(announcement, for: place, with: progress, and: block)
         },
@@ -206,12 +206,12 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doReact(with reaction: DNSReactionType,
                         to announcement: DAOAnnouncement,
                         for place: DAOPlace,
-                        with block: WKRPTCLAnnouncementsBlkVoid?) {
+                        with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doReact(with: reaction, to: announcement, for: place, with: nil, and: block)
     }
     public func doReact(with reaction: DNSReactionType,
                         to announcement: DAOAnnouncement,
-                        with block: WKRPTCLAnnouncementsBlkVoid?) {
+                        with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doReact(with: reaction, to: announcement, with: nil, and: block)
     }
     public func doRemove(_ announcement: DAOAnnouncement,
@@ -226,12 +226,12 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doUnreact(with reaction: DNSReactionType,
                           to announcement: DAOAnnouncement,
                           for place: DAOPlace,
-                          with block: WKRPTCLAnnouncementsBlkVoid?) {
+                          with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doUnreact(with: reaction, to: announcement, for: place, with: nil, and: block)
     }
     public func doUnreact(with reaction: DNSReactionType,
                           to announcement: DAOAnnouncement,
-                          with block: WKRPTCLAnnouncementsBlkVoid?) {
+                          with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doUnreact(with: reaction, to: announcement, with: nil, and: block)
     }
     public func doUpdate(_ announcement: DAOAnnouncement,
@@ -244,12 +244,12 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.doUpdate(announcement, for: place, with: nil, and: block)
     }
     public func doView(_ announcement: DAOAnnouncement,
-                       with block: WKRPTCLAnnouncementsBlkVoid?) {
+                       with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doView(announcement, with: nil, and: block)
     }
     public func doView(_ announcement: DAOAnnouncement,
                        for place: DAOPlace,
-                       with block: WKRPTCLAnnouncementsBlkVoid?) {
+                       with block: WKRPTCLAnnouncementsBlkMeta?) {
         self.doView(announcement, for: place, with: nil, and: block)
     }
 
@@ -274,14 +274,14 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          to announcement: DAOAnnouncement,
                          for place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?,
+                         and block: WKRPTCLAnnouncementsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to announcement: DAOAnnouncement,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLAnnouncementsBlkVoid?,
+                         and block: WKRPTCLAnnouncementsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
@@ -302,14 +302,14 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                            to announcement: DAOAnnouncement,
                            for place: DAOPlace,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLAnnouncementsBlkVoid?,
+                           and block: WKRPTCLAnnouncementsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to announcement: DAOAnnouncement,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLAnnouncementsBlkVoid?,
+                           and block: WKRPTCLAnnouncementsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
@@ -328,14 +328,14 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     }
     open func intDoView(_ announcement: DAOAnnouncement,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?,
+                        and block: WKRPTCLAnnouncementsBlkMeta?,
                         then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoView(_ announcement: DAOAnnouncement,
                         for place: DAOPlace,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLAnnouncementsBlkVoid?,
+                        and block: WKRPTCLAnnouncementsBlkMeta?,
                         then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }

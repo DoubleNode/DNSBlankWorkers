@@ -77,7 +77,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                         to event: DAOEvent,
                         for place: DAOPlace,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLEventsBlkVoid?) {
+                        and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: event, for: place, with: progress, and: block)
         },
@@ -100,7 +100,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           to event: DAOEvent,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLEventsBlkVoid?) {
+                          and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: event, for: place, with: progress, and: block)
         },
@@ -122,7 +122,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public func doView(_ event: DAOEvent,
                        for place: DAOPlace,
                        with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLEventsBlkVoid?) {
+                       and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
             return self.nextWorker?.doView(event, for: place, with: progress, and: block)
         },
@@ -143,7 +143,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public func doReact(with reaction: DNSReactionType,
                         to event: DAOEvent,
                         for place: DAOPlace,
-                        with block: WKRPTCLEventsBlkVoid?) {
+                        with block: WKRPTCLEventsBlkMeta?) {
         self.doReact(with: reaction, to: event, for: place, with: nil, and: block)
     }
     public func doRemove(_ event: DAOEvent,
@@ -154,7 +154,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public func doUnreact(with reaction: DNSReactionType,
                           to event: DAOEvent,
                           for place: DAOPlace,
-                          with block: WKRPTCLEventsBlkVoid?) {
+                          with block: WKRPTCLEventsBlkMeta?) {
         self.doUnreact(with: reaction, to: event, for: place, with: nil, and: block)
     }
     public func doUpdate(_ event: DAOEvent,
@@ -164,7 +164,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     }
     public func doView(_ event: DAOEvent,
                        for place: DAOPlace,
-                       with block: WKRPTCLEventsBlkVoid?) {
+                       with block: WKRPTCLEventsBlkMeta?) {
         self.doView(event, for: place, with: nil, and: block)
     }
 
@@ -184,7 +184,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          to event: DAOEvent,
                          for place: DAOPlace,
                          with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLEventsBlkVoid?,
+                         and block: WKRPTCLEventsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
@@ -199,7 +199,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                            to event: DAOEvent,
                            for place: DAOPlace,
                            with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLEventsBlkVoid?,
+                           and block: WKRPTCLEventsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
@@ -213,7 +213,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     open func intDoView(_ event: DAOEvent,
                         for place: DAOPlace,
                         with progress: DNSPTCLProgressBlock?,
-                        and block: WKRPTCLEventsBlkVoid?,
+                        and block: WKRPTCLEventsBlkMeta?,
                         then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
