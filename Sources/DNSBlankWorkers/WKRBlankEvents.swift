@@ -54,13 +54,13 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doLoadEvents(with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLEventsBlkAEvent?) {
+    public func doLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLEventsBlkAEvent?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadEvents(with: progress, and: block)
+            return self.nextWorker?.doLoadCurrentEvents(with: progress, and: block)
         },
         doWork: {
-            return self.intDoLoadEvents(with: progress, and: block, then: $0)
+            return self.intDoLoadCurrentEvents(with: progress, and: block, then: $0)
         })
     }
     public func doLoadEvents(for place: DAOPlace,
@@ -96,6 +96,18 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
             return self.intDoRemove(event, for: place, with: progress, and: block, then: $0)
         })
     }
+    public func doRemove(_ eventDay: DAOEventDay,
+                         for event: DAOEvent,
+                         and place: DAOPlace,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLEventsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRemove(eventDay, for: event, and: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoRemove(eventDay, for: event, and: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doUnreact(with reaction: DNSReactionType,
                           to event: DAOEvent,
                           for place: DAOPlace,
@@ -119,6 +131,18 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
             return self.intDoUpdate(event, for: place, with: progress, and: block, then: $0)
         })
     }
+    public func doUpdate(_ eventDay: DAOEventDay,
+                         for event: DAOEvent,
+                         and place: DAOPlace,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLEventsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpdate(eventDay, for: event, and: place, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUpdate(eventDay, for: event, and: place, with: progress, and: block, then: $0)
+        })
+    }
     public func doView(_ event: DAOEvent,
                        for place: DAOPlace,
                        with progress: DNSPTCLProgressBlock?,
@@ -133,8 +157,8 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
 
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadEvents(with block: WKRPTCLEventsBlkAEvent?) {
-        self.doLoadEvents(with: nil, and: block)
+    public func doLoadCurrentEvents(with block: WKRPTCLEventsBlkAEvent?) {
+        self.doLoadCurrentEvents(with: nil, and: block)
     }
     public func doLoadEvents(for place: DAOPlace,
                              with block: WKRPTCLEventsBlkAEvent?) {
@@ -151,6 +175,12 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with block: WKRPTCLEventsBlkVoid?) {
         self.doRemove(event, for: place, with: nil, and: block)
     }
+    public func doRemove(_ eventDay: DAOEventDay,
+                         for event: DAOEvent,
+                         and place: DAOPlace,
+                         with block: WKRPTCLEventsBlkVoid?) {
+        self.doRemove(eventDay, for: event, and: place, with: nil, and: block)
+    }
     public func doUnreact(with reaction: DNSReactionType,
                           to event: DAOEvent,
                           for place: DAOPlace,
@@ -162,6 +192,12 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with block: WKRPTCLEventsBlkVoid?) {
         self.doUpdate(event, for: place, with: nil, and: block)
     }
+    public func doUpdate(_ eventDay: DAOEventDay,
+                         for event: DAOEvent,
+                         and place: DAOPlace,
+                         with block: WKRPTCLEventsBlkVoid?) {
+        self.doUpdate(eventDay, for: event, and: place, with: nil, and: block)
+    }
     public func doView(_ event: DAOEvent,
                        for place: DAOPlace,
                        with block: WKRPTCLEventsBlkMeta?) {
@@ -169,9 +205,9 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadEvents(with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLEventsBlkAEvent?,
-                              then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
+                                     and block: WKRPTCLEventsBlkAEvent?,
+                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEvents(for place: DAOPlace,
@@ -195,6 +231,14 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoRemove(_ eventDay: DAOEventDay,
+                          for event: DAOEvent,
+                          and place: DAOPlace,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLEventsBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to event: DAOEvent,
                            for place: DAOPlace,
@@ -205,6 +249,14 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     }
     open func intDoUpdate(_ event: DAOEvent,
                           for place: DAOPlace,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLEventsBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUpdate(_ eventDay: DAOEventDay,
+                          for event: DAOEvent,
+                          and place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
