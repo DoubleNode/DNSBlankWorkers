@@ -55,7 +55,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
 
     // MARK: - Worker Logic (Public) -
     public func doLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
-                                    and block: WKRPTCLEventsBlkAEvent?) {
+                                    and block: WKRPTCLEventsBlkAPlace?) {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCurrentEvents(with: progress, and: block)
         },
@@ -157,7 +157,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
 
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLoadCurrentEvents(with block: WKRPTCLEventsBlkAEvent?) {
+    public func doLoadCurrentEvents(with block: WKRPTCLEventsBlkAPlace?) {
         self.doLoadCurrentEvents(with: nil, and: block)
     }
     public func doLoadEvents(for place: DAOPlace,
@@ -206,7 +206,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
 
     // MARK: - Internal Work Methods
     open func intDoLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
-                                     and block: WKRPTCLEventsBlkAEvent?,
+                                     and block: WKRPTCLEventsBlkAPlace?,
                                      then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
