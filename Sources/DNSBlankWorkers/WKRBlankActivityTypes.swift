@@ -108,6 +108,18 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
             return self.intDoLoadActivityTypes(with: progress, and: block, then: $0)
         })
     }
+    public func doLoadPricing(for activityType: DAOActivityType,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLActivityTypesBlkPricing?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPricing(for: activityType,
+                                                  with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPricing(for: activityType,
+                                         with: progress, and: block, then: $0)
+        })
+    }
     public func doUnfavorite(_ activityType: DAOActivityType,
                              for user: DAOUser,
                              with progress: DNSPTCLProgressBlock?,
@@ -154,6 +166,10 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     public func doLoadActivityTypes(with block: WKRPTCLActivityTypesBlkAActivityType?) {
         self.doLoadActivityTypes(with: nil, and: block)
     }
+    public func doLoadPricing(for activityType: DAOActivityType,
+                              with block: WKRPTCLActivityTypesBlkPricing?) {
+        self.doLoadPricing(for: activityType, with: nil, and: block)
+    }
     public func doUnfavorite(_ activityType: DAOActivityType,
                              for user: DAOUser,
                              with block: WKRPTCLActivityTypesBlkVoid?) {
@@ -172,46 +188,52 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
         _ = resultBlock?(.unhandled)
     }
     open func intDoFavorite(_ activityType: DAOActivityType,
-                    for user: DAOUser,
-                    with progress: DNSPTCLProgressBlock?,
-                    and block: WKRPTCLActivityTypesBlkVoid?,
+                            for user: DAOUser,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLActivityTypesBlkVoid?,
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoIsFavorited(_ activityType: DAOActivityType,
-                       for user: DAOUser,
-                       with progress: DNSPTCLProgressBlock?,
-                       and block: WKRPTCLActivityTypesBlkBool?,
+                               for user: DAOUser,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLActivityTypesBlkBool?,
                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityType(for code: String,
-                            with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLActivityTypesBlkActivityType?,
+                                    with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLActivityTypesBlkActivityType?,
                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityType(for tag: DNSString,
-                            with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLActivityTypesBlkActivityType?,
+                                    with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLActivityTypesBlkActivityType?,
                                     then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadActivityTypes(with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLActivityTypesBlkAActivityType?,
+                                     and block: WKRPTCLActivityTypesBlkAActivityType?,
                                      then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoLoadPricing(for activityType: DAOActivityType,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLActivityTypesBlkPricing?,
+                               then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoUnfavorite(_ activityType: DAOActivityType,
-                      for user: DAOUser,
-                      with progress: DNSPTCLProgressBlock?,
-                      and block: WKRPTCLActivityTypesBlkVoid?,
+                              for user: DAOUser,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLActivityTypesBlkVoid?,
                               then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activityType: DAOActivityType,
-                  with progress: DNSPTCLProgressBlock?,
-                  and block: WKRPTCLActivityTypesBlkVoid?,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLActivityTypesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }

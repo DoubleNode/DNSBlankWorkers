@@ -48,6 +48,16 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     }
 
     // MARK: - Worker Logic (Public) -
+    public func doLoadPricing(for product: DAOProduct,
+                              with progress: DNSPTCLProgressBlock?,
+                              and block: WKRPTCLProductsBlkPricing?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadPricing(for: product, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadPricing(for: product, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadProduct(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLProductsBlkProduct?) {
@@ -110,6 +120,10 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
+    public func doLoadPricing(for product: DAOProduct,
+                              with block: WKRPTCLProductsBlkPricing?) {
+        self.doLoadPricing(for: product, with: nil, and: block)
+    }
     public func doLoadProduct(for id: String,
                               with block: WKRPTCLProductsBlkProduct?) {
         self.doLoadProduct(for: id, with: nil, and: block)
@@ -136,6 +150,12 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     }
 
     // MARK: - Internal Work Methods
+    open func intDoLoadPricing(for product: DAOProduct,
+                               with progress: DNSPTCLProgressBlock?,
+                               and block: WKRPTCLProductsBlkPricing?,
+                               then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoLoadProduct(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
