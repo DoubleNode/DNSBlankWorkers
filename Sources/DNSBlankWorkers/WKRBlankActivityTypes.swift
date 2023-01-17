@@ -143,6 +143,21 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
             return self.intDoUpdate(activityType, with: progress, and: block, then: $0)
         })
     }
+    public func doUpdate(_ pricing: DAOPricing,
+                         for activityType: DAOActivityType,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLActivityTypesBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpdate(pricing,
+                                             for: activityType,
+                                             with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUpdate(pricing,
+                                    for: activityType,
+                                    with: progress, and: block, then: $0)
+        })
+    }
 
     // MARK: - Worker Logic (Shortcuts) -
     public func doFavorite(_ activityType: DAOActivityType,
@@ -178,6 +193,11 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     public func doUpdate(_ activityType: DAOActivityType,
                          with block: WKRPTCLActivityTypesBlkVoid?) {
         self.doUpdate(activityType, with: nil, and: block)
+    }
+    public func doUpdate(_ pricing: DAOPricing,
+                         for activityType: DAOActivityType,
+                         with block: WKRPTCLActivityTypesBlkVoid?) {
+        self.doUpdate(pricing, for: activityType, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -232,6 +252,13 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activityType: DAOActivityType,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLActivityTypesBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUpdate(_ pricing: DAOPricing,
+                          for activityType: DAOActivityType,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLActivityTypesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {

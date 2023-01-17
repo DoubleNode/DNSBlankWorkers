@@ -108,6 +108,17 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
             return self.intDoRemove(product, with: progress, and: block, then: $0)
         })
     }
+    public func doUpdate(_ pricing: DAOPricing,
+                         for product: DAOProduct,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLProductsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUpdate(pricing, for: product, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoUpdate(pricing, for: product, with: progress, and: block, then: $0)
+        })
+    }
     public func doUpdate(_ product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkVoid?) {
@@ -143,6 +154,11 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     public func doRemove(_ product: DAOProduct,
                          with block: WKRPTCLProductsBlkVoid?) {
         self.doRemove(product, with: nil, and: block)
+    }
+    public func doUpdate(_ pricing: DAOPricing,
+                         for product: DAOProduct,
+                         with block: WKRPTCLProductsBlkVoid?) {
+        self.doUpdate(pricing, for: product, with: nil, and: block)
     }
     public func doUpdate(_ product: DAOProduct,
                          with block: WKRPTCLProductsBlkVoid?) {
@@ -181,6 +197,13 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
         _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ product: DAOProduct,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLProductsBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUpdate(_ pricing: DAOPricing,
+                          for product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
