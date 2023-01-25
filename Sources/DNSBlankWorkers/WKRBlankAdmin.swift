@@ -82,6 +82,20 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubBool
     }
+    public func doCompleteDeleted(account: DAOAccount,
+                                  with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubVoid {
+        // swiftlint:disable:next force_try
+        return self.runDoPub(runNext: {
+            guard let nextWorker = self.nextWorker else {
+                return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
+            }
+            return nextWorker.doCompleteDeleted(account: account, with: progress)
+        },
+                                  doWork: {
+            return self.intDoCompleteDeleted(account: account, with: progress, then: $0)
+            // swiftlint:disable:next force_cast
+        }) as! WKRPTCLAdminPubVoid
+    }
     public func doDenyChangeRequest(for user: DAOUser,
                                     with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubVoid {
         // swiftlint:disable:next force_try
@@ -109,6 +123,25 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             return self.intDoLoadChangeRequests(with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubUserChangeRequest
+    }
+    public func doLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
+                                      with progress: DNSPTCLProgressBlock?,
+                                      and block: WKRPTCLAdminBlkAAccount?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadDeletedAccounts(thatAre: state, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadDeletedAccounts(thatAre: state, with: progress, and: block, then: $0)
+        })
+    }
+    public func doLoadDeletedStatus(with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLAdminBlkDeletedStatus?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadDeletedStatus(with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLoadDeletedStatus(with: progress, and: block, then: $0)
+        })
     }
     public func doLoadTabs(with progress: DNSPTCLProgressBlock?) -> WKRPTCLAdminPubAString {
         // swiftlint:disable:next force_try
@@ -146,11 +179,21 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     public func doCheckAdmin() -> WKRPTCLAdminPubBool {
         return self.doCheckAdmin(with: nil)
     }
+    public func doCompleteDeleted(account: DAOAccount) -> WKRPTCLAdminPubVoid {
+        return self.doCompleteDeleted(account: account, with: nil)
+    }
     public func doDenyChangeRequest(for user: DAOUser) -> WKRPTCLAdminPubVoid {
         return self.doDenyChangeRequest(for: user, with: nil)
     }
     public func doLoadChangeRequests() -> WKRPTCLAdminPubUserChangeRequest {
         return self.doLoadChangeRequests(with: nil)
+    }
+    public func doLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
+                                      with block: WKRPTCLAdminBlkAAccount?) {
+        self.doLoadDeletedAccounts(thatAre: state, with: nil, and: block)
+    }
+    public func doLoadDeletedStatus(with block: WKRPTCLAdminBlkDeletedStatus?) {
+        self.doLoadDeletedStatus(with: nil, and: block)
     }
     public func doLoadTabs() -> WKRPTCLAdminPubAString {
         return self.doLoadTabs(with: nil)
@@ -172,6 +215,12 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! WKRPTCLAdminPubBool
     }
+    open func intDoCompleteDeleted(account: DAOAccount,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAdminPubVoid {
+        // swiftlint:disable:next force_cast
+        return resultBlock?(.unhandled) as! WKRPTCLAdminPubVoid
+    }
     open func intDoDenyChangeRequest(for user: DAOUser,
                                      with progress: DNSPTCLProgressBlock?,
                                      then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAdminPubVoid {
@@ -179,10 +228,21 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
         return resultBlock?(.unhandled) as! WKRPTCLAdminPubVoid
     }
     open func intDoLoadChangeRequests(with progress: DNSPTCLProgressBlock?,
-                                      then resultBlock: DNSPTCLResultBlock?) ->
-    WKRPTCLAdminPubUserChangeRequest {
+                                      // swiftlint:disable:next line_length
+                                      then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAdminPubUserChangeRequest {
         // swiftlint:disable:next force_cast
         return resultBlock?(.unhandled) as! WKRPTCLAdminPubUserChangeRequest
+    }
+    open func intDoLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
+                                       with progress: DNSPTCLProgressBlock?,
+                                       and block: WKRPTCLAdminBlkAAccount?,
+                                       then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadDeletedStatus(with progress: DNSPTCLProgressBlock?,
+                                     and block: WKRPTCLAdminBlkDeletedStatus?,
+                                     then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadTabs(with progress: DNSPTCLProgressBlock?,
                             then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAdminPubAString {
