@@ -126,7 +126,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     }
     public func doLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
                                       with progress: DNSPTCLProgressBlock?,
-                                      and block: WKRPTCLAdminBlkAAccount?) {
+                                      and block: WKRPTCLAdminBlkADeletedAccount?) {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadDeletedAccounts(thatAre: state, with: progress, and: block)
         },
@@ -189,7 +189,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
         return self.doLoadChangeRequests(with: nil)
     }
     public func doLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
-                                      with block: WKRPTCLAdminBlkAAccount?) {
+                                      with block: WKRPTCLAdminBlkADeletedAccount?) {
         self.doLoadDeletedAccounts(thatAre: state, with: nil, and: block)
     }
     public func doLoadDeletedStatus(with block: WKRPTCLAdminBlkDeletedStatus?) {
@@ -235,7 +235,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     }
     open func intDoLoadDeletedAccounts(thatAre state: DNSPTCLDeletedStates,
                                        with progress: DNSPTCLProgressBlock?,
-                                       and block: WKRPTCLAdminBlkAAccount?,
+                                       and block: WKRPTCLAdminBlkADeletedAccount?,
                                        then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
