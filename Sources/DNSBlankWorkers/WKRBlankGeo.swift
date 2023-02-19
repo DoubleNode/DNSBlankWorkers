@@ -6,6 +6,7 @@
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSError
 import DNSProtocols
 import Foundation
@@ -48,7 +49,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
 
     // MARK: - Worker Logic (Public) -
     public func doLocate(with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLGeoBlkString?) {
+                         and block: WKRPTCLGeoBlkStringLocation?) {
         self.runDo(runNext: {
             return self.nextWorker?.doLocate(with: progress, and: block)
         },
@@ -56,9 +57,19 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
             return self.intDoLocate(with: progress, and: block, then: $0)
         })
     }
+    public func doLocate(_ address: DNSPostalAddress,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLGeoBlkStringLocation?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLocate(address, with: progress, and: block)
+        },
+        doWork: {
+            return self.intDoLocate(address, with: progress, and: block, then: $0)
+        })
+    }
     public func doTrackLocation(for processKey: String,
                                 with progress: DNSPTCLProgressBlock?,
-                                and block: WKRPTCLGeoBlkString?) {
+                                and block: WKRPTCLGeoBlkStringLocation?) {
         self.runDo(runNext: {
             return self.nextWorker?.doTrackLocation(for: processKey, with: progress, and: block)
         },
@@ -76,23 +87,33 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doLocate(with block: WKRPTCLGeoBlkString?) {
+    public func doLocate(with block: WKRPTCLGeoBlkStringLocation?) {
         self.doLocate(with: nil, and: block)
     }
+    public func doLocate(_ address: DNSPostalAddress,
+                         with block: WKRPTCLGeoBlkStringLocation?) {
+        self.doLocate(address, with: nil, and: block)
+    }
     public func doTrackLocation(for processKey: String,
-                                with block: WKRPTCLGeoBlkString?) {
+                                with block: WKRPTCLGeoBlkStringLocation?) {
         self.doTrackLocation(for: processKey, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
     open func intDoLocate(with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLGeoBlkString?,
+                          and block: WKRPTCLGeoBlkStringLocation?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLocate(_ address: DNSPostalAddress,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLGeoBlkStringLocation?,
                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoTrackLocation(for processKey: String,
                                  with progress: DNSPTCLProgressBlock?,
-                                 and block: WKRPTCLGeoBlkString?,
+                                 and block: WKRPTCLGeoBlkStringLocation?,
                                  then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
