@@ -17,54 +17,59 @@ open class WKRBlankBase: WKRBase {
     public var wkrSystems: WKRPTCLSystems?
 
     // MARK: - Utility methods
-    open func utilityReportSystemSuccess(for systemId: String,
+    open func utilityReportSystemSuccess(result: WKRPTCLSystemsData.Result = .success,
+                                         for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: "",
-                                 result: WKRPTCLSystemsData.Result.success,
+                                 result: result,
                                  and: "",
                                  for: systemId,
                                  and: endPointId)
     }
     open func utilityReportSystemFailure(sendDebug: Bool,
                                          response: DataResponse<Data, AFError>,
+                                         result: WKRPTCLSystemsData.Result = .failure,
                                          and failureCode: String,
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: WKRPTCLSystemsData.Result.failure,
+                                 result: result,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
     }
     open func utilityReportSystemFailure(sendDebug: Bool,
                                          response: DataResponse<Data?, AFError>,
+                                         result: WKRPTCLSystemsData.Result = .failure,
                                          and failureCode: String,
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: WKRPTCLSystemsData.Result.failure,
+                                 result: result,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
     }
     open func utilityReportSystemFailure(sendDebug: Bool,
                                          response: DataResponse<Any, AFError>,
+                                         result: WKRPTCLSystemsData.Result = .failure,
                                          and failureCode: String,
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
-                                 result: WKRPTCLSystemsData.Result.failure,
+                                 result:result,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)
     }
     open func utilityReportSystemFailure(sendDebug: Bool,
                                          debugString: String,
+                                         result: WKRPTCLSystemsData.Result = .failure,
                                          and failureCode: String,
                                          for systemId: String,
                                          and endPointId: String) {
         self.utilityReportSystem(debugString: sendDebug ? debugString : "",
-                                 result: WKRPTCLSystemsData.Result.failure,
+                                 result: result,
                                  and: failureCode,
                                  for: systemId,
                                  and: endPointId)

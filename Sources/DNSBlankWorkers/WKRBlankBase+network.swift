@@ -17,6 +17,7 @@ import Foundation
 // Protocol Block Types
 public typealias WKRPTCLRequestBlkError = (Error, Any?) -> Void
 public typealias WKRPTCLRequestBlkPendingError = (Error, Any?) -> Error
+public typealias WKRPTCLRequestBlkSystemResult = (Error, Any?) -> WKRPTCLSystemsData.Result
 public typealias WKRPTCLRequestBlkSuccess = (Any?) -> Result<Void, Error>
 public typealias WKRPTCLRequestBlkSuccessData = (Data) -> Result<Void, Error>
 
@@ -27,6 +28,7 @@ public extension WKRBlankBase {
                             onSuccess successBlk: WKRPTCLRequestBlkSuccess? = nil,
                             onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
                             onError errorBlk: WKRPTCLRequestBlkError? = nil,
+                            systemResult systemResultBlk: WKRPTCLRequestBlkSystemResult? = nil,
                             onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseJSON(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
@@ -38,13 +40,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             let data = try! response.result.get()
@@ -70,13 +73,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 403:
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
@@ -95,13 +99,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
@@ -111,24 +116,26 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
@@ -145,13 +152,14 @@ public extension WKRBlankBase {
                 let error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             if let url {
@@ -160,17 +168,18 @@ public extension WKRBlankBase {
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
-            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
             _ = resultBlock?(.completed)
+            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
         }
     }
     func processRequest(_ callData: WKRPTCLSystemsStateData = .empty,
@@ -179,6 +188,7 @@ public extension WKRBlankBase {
                         onSuccess successBlk: WKRPTCLRequestBlkSuccess? = nil,
                         onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
                         onError errorBlk: WKRPTCLRequestBlkError? = nil,
+                        systemResult systemResultBlk: WKRPTCLRequestBlkSystemResult? = nil,
                         onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.response(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
@@ -190,13 +200,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             let data = try! response.result.get()
@@ -222,13 +233,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 403:
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
@@ -247,13 +259,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
@@ -263,24 +276,26 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
@@ -297,13 +312,14 @@ public extension WKRBlankBase {
                 let error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             if let url {
@@ -312,17 +328,18 @@ public extension WKRBlankBase {
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
-            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
             _ = resultBlock?(.completed)
+            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
         }
     }
     func processRequestData(_ callData: WKRPTCLSystemsStateData = .empty,
@@ -331,6 +348,7 @@ public extension WKRBlankBase {
                             onSuccess successBlk: WKRPTCLRequestBlkSuccessData? = nil,
                             onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
                             onError errorBlk: WKRPTCLRequestBlkError? = nil,
+                            systemResult systemResultBlk: WKRPTCLRequestBlkSystemResult? = nil,
                             onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseData(queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
@@ -342,13 +360,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             let data = try! response.result.get()
@@ -374,13 +393,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 403:
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
@@ -399,13 +419,14 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
@@ -415,24 +436,26 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
@@ -449,13 +472,14 @@ public extension WKRBlankBase {
                 let error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
             if let url {
@@ -464,17 +488,18 @@ public extension WKRBlankBase {
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
-                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
-                                                response: response,
-                                                and: statusCode == 0 ? "" : "\(statusCode)",
-                                                for: callData.system, and: callData.endPoint)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
                 return
             }
-            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
             _ = resultBlock?(.completed)
+            self.utilityReportSystemSuccess(for: callData.system, and: callData.endPoint)
         }
     }
 }
