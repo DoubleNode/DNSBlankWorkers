@@ -10,12 +10,13 @@ import Alamofire
 import AtomicSwift
 import DNSCore
 import DNSCrashNetwork
+import DNSDataObjects
 import DNSProtocols
 import Foundation
 
 open class WKRBase: NSObject, WKRPTCLWorkerBase {
     public static var xlt = DNSDataTranslation()
-        
+    
     static public var languageCode: String {
         DNSCore.languageCode
     }
@@ -25,12 +26,12 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
     
     public var netConfig: NETPTCLConfig = NETCrashConfig()
     public var netRouter: NETPTCLRouter = NETCrashRouter()
-
+    
     override public required init() {
         super.init()
     }
     open func configure() { }
-
+    
     public func checkOption(_ option: String) -> Bool {
         return self.options.contains(option)
     }
@@ -41,7 +42,7 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
     open func disableOption(_ option: String) {
         self.options.removeAll { $0 == option }
     }
-
+    
     // MARK: - UIWindowSceneDelegate methods
     // Called when the scene has moved from an inactive state to an active state.
     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
@@ -56,7 +57,7 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
     // Use this method to save data, release shared resources, and store enough scene-specific state information
     // to restore the scene back to its current state.
     open func didEnterBackground() { }
-
+    
     open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
                                    with error: Error) -> DNSPTCLWorker.Call.Result {
         return result
@@ -83,5 +84,24 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
             return runNext?()
         }
         return doWork(resultBlock)
+    }
+    
+    // MARK: - Worker Logic (Public) -
+    open func doAnalytics(for object: DAOBaseObject,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) { }
+    
+    // MARK: - Worker Logic (Shortcuts) -
+    public func doAnalytics(for object: DAOBaseObject,
+                            and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
+        self.doAnalytics(for: object, with: nil, and: block)
+    }
+    
+    // MARK: - Internal Work Methods
+    open func intDoAnalytics(for object: DAOBaseObject,
+                             with progress: DNSPTCLProgressBlock?,
+                             and block: WKRPTCLWorkerBaseBlkAAnalyticsData?,
+                             then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
     }
 }

@@ -47,6 +47,18 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
         return result
     }
 
+    // MARK: - Base Worker Logic -
+    open func doAnalytics(for object: DAOProduct,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doAnalytics(for: object, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoAnalytics(for: object, with: progress, and: block, then: $0)
+        })
+    }
+
     // MARK: - Worker Logic (Public) -
     public func doLoadPricing(for product: DAOProduct,
                               with progress: DNSPTCLProgressBlock?,
