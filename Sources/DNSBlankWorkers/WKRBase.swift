@@ -88,17 +88,20 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
     
     // MARK: - Worker Logic (Public) -
     open func doAnalytics(for object: DAOBaseObject,
+                          using data: DNSDataDictionary,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) { }
     
     // MARK: - Worker Logic (Shortcuts) -
     public func doAnalytics(for object: DAOBaseObject,
+                            using data: DNSDataDictionary,
                             and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
-        self.doAnalytics(for: object, with: nil, and: block)
+        self.doAnalytics(for: object, using: data, with: nil, and: block)
     }
     
     // MARK: - Internal Work Methods
     open func intDoAnalytics(for object: DAOBaseObject,
+                             using data: DNSDataDictionary,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLWorkerBaseBlkAAnalyticsData?,
                              then resultBlock: DNSPTCLResultBlock?) {

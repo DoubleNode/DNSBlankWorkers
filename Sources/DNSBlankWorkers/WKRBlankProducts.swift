@@ -6,6 +6,7 @@
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSDataObjects
 import DNSError
 import DNSProtocols
@@ -49,13 +50,14 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
 
     // MARK: - Base Worker Logic -
     open func doAnalytics(for object: DAOProduct,
+                          using data: DNSDataDictionary,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doAnalytics(for: object, with: progress, and: block)
+            return self.nextWorker?.doAnalytics(for: object, using: data, with: progress, and: block)
         },
                    doWork: {
-            return self.intDoAnalytics(for: object, with: progress, and: block, then: $0)
+            return self.intDoAnalytics(for: object, using: data, with: progress, and: block, then: $0)
         })
     }
 
