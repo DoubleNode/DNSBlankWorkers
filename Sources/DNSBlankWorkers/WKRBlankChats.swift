@@ -79,6 +79,16 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
             return self.intDoReact(with: reaction, to: chat, with: progress, and: block, then: $0)
         })
     }
+    public func doRemove(_ message: DAOChatMessage,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLChatsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doRemove(message, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoRemove(message, with: progress, and: block, then: $0)
+        })
+    }
     public func doUnreact(with reaction: DNSReactionType,
                           to chat: DAOChat,
                           with progress: DNSPTCLProgressBlock?,
@@ -88,16 +98,6 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: chat, with: progress, and: block, then: $0)
-        })
-    }
-    public func doRemove(_ message: DAOChatMessage,
-                         with progress: DNSPTCLProgressBlock?,
-                         and block: WKRPTCLChatsBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doRemove(message, with: progress, and: block)
-        },
-                   doWork: {
-            return self.intDoRemove(message, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ message: DAOChatMessage,
@@ -125,14 +125,14 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                         with block: WKRPTCLChatsBlkMeta?) {
         self.doReact(with: reaction, to: chat, with: nil, and: block)
     }
+    public func doRemove(_ message: DAOChatMessage,
+                         with block: WKRPTCLChatsBlkVoid?) {
+        self.doRemove(message, with: nil, and: block)
+    }
     public func doUnreact(with reaction: DNSReactionType,
                           to chat: DAOChat,
                           with block: WKRPTCLChatsBlkMeta?) {
         self.doUnreact(with: reaction, to: chat, with: nil, and: block)
-    }
-    public func doRemove(_ message: DAOChatMessage,
-                         with block: WKRPTCLChatsBlkVoid?) {
-        self.doRemove(message, with: nil, and: block)
     }
     public func doUpdate(_ message: DAOChatMessage,
                          with block: WKRPTCLChatsBlkVoid?) {
@@ -159,17 +159,17 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoRemove(_ message: DAOChatMessage,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLChatsBlkVoid?,
+                          then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to chat: DAOChat,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLChatsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoRemove(_ message: DAOChatMessage,
-                          with progress: DNSPTCLProgressBlock?,
-                          and block: WKRPTCLChatsBlkVoid?,
-                          then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ message: DAOChatMessage,
