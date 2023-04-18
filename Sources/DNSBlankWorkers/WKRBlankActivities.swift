@@ -56,7 +56,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
             return self.nextWorker?.doLoadActivities(for: place, using: activityTypes,
                                                      with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadActivities(for: place, using: activityTypes,
                                             with: progress, and: block, then: $0)
         })
@@ -68,7 +68,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(activities, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(activities, for: place, with: progress, and: block, then: $0)
         })
     }

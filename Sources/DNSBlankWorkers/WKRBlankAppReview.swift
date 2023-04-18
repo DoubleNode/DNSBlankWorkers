@@ -64,7 +64,7 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
         return self.runDo(runNext: {
             return self.nextWorker?.doReview()
         },
-        doWork: {
+                          doWork: {
             return self.intDoReview(then: $0)
         }) as! WKRPTCLAppReviewResVoid // swiftlint:disable:this force_cast
     }

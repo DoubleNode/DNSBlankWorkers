@@ -93,7 +93,7 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
                                             attachments: attachments, properties: properties,
                                             with: progress)
         },
-                                  doWork: {
+                              doWork: {
             return self.intDoSendRequest(subject: subject, body: body, tags: tags,
                                          attachments: attachments, properties: properties,
                                          with: progress, then: $0)

@@ -62,7 +62,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             }
             return nextWorker.doLoadAlerts(for: place, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadAlerts(for: place, with: progress, then: $0)
         }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
@@ -74,7 +74,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             }
             return nextWorker.doLoadAlerts(for: section, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadAlerts(for: section, with: progress, then: $0)
         }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }
@@ -85,7 +85,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             }
             return nextWorker.doLoadAlerts(with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadAlerts(with: progress, then: $0)
         }) as! WKRPTCLAlertsPubAAlert // swiftlint:disable:this force_cast
     }

@@ -49,32 +49,6 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     }
 
     // MARK: - Worker Logic (Public) -
-    public func doFavorite(_ activityType: DAOActivityType,
-                           for user: DAOUser,
-                           with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLActivityTypesBlkVoid?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doFavorite(activityType, for: user,
-                                               with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoFavorite(activityType, for: user,
-                                      with: progress, and: block, then: $0)
-        })
-    }
-    public func doIsFavorited(_ activityType: DAOActivityType,
-                              for user: DAOUser,
-                              with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLActivityTypesBlkBool?) {
-        self.runDo(runNext: {
-            return self.nextWorker?.doIsFavorited(activityType, for: user,
-                                                  with: progress, and: block)
-        },
-        doWork: {
-            return self.intDoIsFavorited(activityType, for: user,
-                                         with: progress, and: block, then: $0)
-        })
-    }
     public func doLoadActivityType(for code: String,
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLActivityTypesBlkActivityType?) {
@@ -82,7 +56,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
             return self.nextWorker?.doLoadActivityType(for: code,
                                                        with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadActivityType(for: code,
                                               with: progress, and: block, then: $0)
         })
@@ -94,7 +68,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
             return self.nextWorker?.doLoadActivityType(for: tag,
                                                        with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadActivityType(for: tag,
                                               with: progress, and: block, then: $0)
         })
@@ -104,7 +78,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadActivityTypes(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadActivityTypes(with: progress, and: block, then: $0)
         })
     }
@@ -115,22 +89,39 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
             return self.nextWorker?.doLoadPricing(for: activityType,
                                                   with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPricing(for: activityType,
                                          with: progress, and: block, then: $0)
         })
     }
-    public func doUnfavorite(_ activityType: DAOActivityType,
-                             for user: DAOUser,
-                             with progress: DNSPTCLProgressBlock?,
-                             and block: WKRPTCLActivityTypesBlkVoid?) {
+    public func doReact(with reaction: DNSReactionType,
+                        to activityType: DAOActivityType,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLActivityTypesBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnfavorite(activityType, for: user,
-                                                 with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction,
+                                            to: activityType,
+                                            with: progress, and: block)
         },
-        doWork: {
-            return self.intDoUnfavorite(activityType, for: user,
-                                        with: progress, and: block, then: $0)
+                   doWork: {
+            return self.intDoReact(with: reaction,
+                                   to: activityType,
+                                   with: progress, and: block, then: $0)
+        })
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to activityType: DAOActivityType,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLActivityTypesBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnreact(with: reaction,
+                                              to: activityType,
+                                              with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoUnreact(with: reaction,
+                                     to: activityType,
+                                     with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ activityType: DAOActivityType,
@@ -139,7 +130,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(activityType, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(activityType, with: progress, and: block, then: $0)
         })
     }
@@ -152,7 +143,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                              for: activityType,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(pricing,
                                     for: activityType,
                                     with: progress, and: block, then: $0)
@@ -160,16 +151,6 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     }
 
     // MARK: - Worker Logic (Shortcuts) -
-    public func doFavorite(_ activityType: DAOActivityType,
-                           for user: DAOUser,
-                           with block: WKRPTCLActivityTypesBlkVoid?) {
-        self.doFavorite(activityType, for: user, with: nil, and: block)
-    }
-    public func doIsFavorited(_ activityType: DAOActivityType,
-                              for user: DAOUser,
-                              with block: WKRPTCLActivityTypesBlkBool?) {
-        self.doIsFavorited(activityType, for: user, with: nil, and: block)
-    }
     public func doLoadActivityType(for code: String,
                                    with block: WKRPTCLActivityTypesBlkActivityType?) {
         self.doLoadActivityType(for: code, with: nil, and: block)
@@ -185,10 +166,15 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                               with block: WKRPTCLActivityTypesBlkPricing?) {
         self.doLoadPricing(for: activityType, with: nil, and: block)
     }
-    public func doUnfavorite(_ activityType: DAOActivityType,
-                             for user: DAOUser,
-                             with block: WKRPTCLActivityTypesBlkVoid?) {
-        self.doUnfavorite(activityType, for: user, with: nil, and: block)
+    public func doReact(with reaction: DNSReactionType,
+                        to activityType: DAOActivityType,
+                        with block: WKRPTCLActivityTypesBlkMeta?) {
+        self.doReact(with: reaction, to: activityType, with: nil, and: block)
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to activityType: DAOActivityType,
+                          with block: WKRPTCLActivityTypesBlkMeta?) {
+        self.doUnreact(with: reaction, to: activityType, with: nil, and: block)
     }
     public func doUpdate(_ activityType: DAOActivityType,
                          with block: WKRPTCLActivityTypesBlkVoid?) {
@@ -201,26 +187,6 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     }
 
     // MARK: - Internal Work Methods
-    open func intDoLoadAccount(for user: DAOUser,
-                               with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLAccountBlkAccount?,
-                               then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoFavorite(_ activityType: DAOActivityType,
-                            for user: DAOUser,
-                            with progress: DNSPTCLProgressBlock?,
-                            and block: WKRPTCLActivityTypesBlkVoid?,
-                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
-    open func intDoIsFavorited(_ activityType: DAOActivityType,
-                               for user: DAOUser,
-                               with progress: DNSPTCLProgressBlock?,
-                               and block: WKRPTCLActivityTypesBlkBool?,
-                               then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
-    }
     open func intDoLoadActivityType(for code: String,
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLActivityTypesBlkActivityType?,
@@ -244,11 +210,18 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func intDoUnfavorite(_ activityType: DAOActivityType,
-                              for user: DAOUser,
-                              with progress: DNSPTCLProgressBlock?,
-                              and block: WKRPTCLActivityTypesBlkVoid?,
-                              then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoReact(with reaction: DNSReactionType,
+                        to activityType: DAOActivityType,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLActivityTypesBlkMeta?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnreact(with reaction: DNSReactionType,
+                          to activityType: DAOActivityType,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLActivityTypesBlkMeta?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ activityType: DAOActivityType,

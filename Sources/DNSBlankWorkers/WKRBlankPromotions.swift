@@ -96,7 +96,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
         self.runDo(runNext: {
             return self.nextWorker?.doDispense(id, with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoDispense(id, with: progress, and: block, then: $0)
         })
     }
@@ -106,7 +106,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPromotion(for: id, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPromotion(for: id, with: progress, and: block, then: $0)
         })
     }
@@ -116,7 +116,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPromotions(for: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPromotions(for: account, with: progress, and: block, then: $0)
         })
     }
@@ -126,8 +126,30 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPromotions(for: path, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPromotions(for: path, with: progress, and: block, then: $0)
+        })
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to promotion: DAOPromotion,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLPromotionsBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: promotion, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoReact(with: reaction, to: promotion, with: progress, and: block, then: $0)
+        })
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to promotion: DAOPromotion,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLPromotionsBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnreact(with: reaction, to: promotion, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoUnreact(with: reaction, to: promotion, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ promotion: DAOPromotion,
@@ -136,7 +158,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(promotion, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(promotion, with: progress, and: block, then: $0)
         })
     }
@@ -169,6 +191,16 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
     public func doLoadPromotions(for path: String,
                                  and block: WKRPTCLPromotionsBlkAPromotion?) {
         self.doLoadPromotions(for: path, with: nil, and: block)
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to promotion: DAOPromotion,
+                        with block: WKRPTCLPromotionsBlkMeta?) {
+        self.doReact(with: reaction, to: promotion, with: nil, and: block)
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to promotion: DAOPromotion,
+                          with block: WKRPTCLPromotionsBlkMeta?) {
+        self.doUnreact(with: reaction, to: promotion, with: nil, and: block)
     }
     public func doUpdate(_ promotion: DAOPromotion,
                          and block: WKRPTCLPromotionsBlkPromotion?) {
@@ -204,6 +236,20 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLPromotionsBlkAPromotion?,
                                   then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoReact(with reaction: DNSReactionType,
+                         to promotion: DAOPromotion,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLPromotionsBlkMeta?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to promotion: DAOPromotion,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLPromotionsBlkMeta?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ promotion: DAOPromotion,

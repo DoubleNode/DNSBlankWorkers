@@ -53,7 +53,7 @@ open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
         return self.runDo(runNext: {
             return self.nextWorker?.doCheckPassStrength(for: password)
         },
-        doWork: {
+                          doWork: {
             return self.intDoCheckPassStrength(for: password, then: $0)
         }) as! WKRPTCLPassStrengthResVoid // swiftlint:disable:this force_cast
     }

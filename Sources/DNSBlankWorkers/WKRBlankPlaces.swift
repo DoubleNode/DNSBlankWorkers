@@ -61,7 +61,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doFilterPlaces(for: activity, using: places, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoFilterPlaces(for: activity, using: places, with: progress, and: block, then: $0)
         })
     }
@@ -71,7 +71,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadHolidays(for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadHolidays(for: place, with: progress, and: block, then: $0)
         })
     }
@@ -81,7 +81,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadHours(for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadHours(for: place, with: progress, and: block, then: $0)
         })
     }
@@ -91,7 +91,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlace(for: placeCode, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPlace(for: placeCode, with: progress, and: block, then: $0)
         })
     }
@@ -100,7 +100,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlaces(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPlaces(with: progress, and: block, then: $0)
         })
     }
@@ -110,7 +110,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlaces(for: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
         })
     }
@@ -120,7 +120,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPlaces(for: section, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPlaces(for: section, with: progress, and: block, then: $0)
         })
     }
@@ -132,9 +132,20 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
             }
             return nextWorker.doLoadState(for: place, with: progress)
         },
-        doWork: {
+                             doWork: {
             return self.intDoLoadState(for: place, with: progress, then: $0)
         }) as! WKRPTCLPlacesPubAlertEventStatus // swiftlint:disable:this force_cast
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to place: DAOPlace,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLPlacesBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: place, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoReact(with: reaction, to: place, with: progress, and: block, then: $0)
+        })
     }
     public func doSearchPlace(for geohash: String,
                               with progress: DNSPTCLProgressBlock?,
@@ -142,8 +153,19 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doSearchPlace(for: geohash, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoSearchPlace(for: geohash, with: progress, and: block, then: $0)
+        })
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to place: DAOPlace,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLPlacesBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnreact(with: reaction, to: place, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoUnreact(with: reaction, to: place, with: progress, and: block, then: $0)
         })
     }
     public func doUpdate(_ place: DAOPlace,
@@ -152,7 +174,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(place, with: progress, and: block, then: $0)
         })
     }
@@ -163,7 +185,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(hours, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(hours, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -200,9 +222,19 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     public func doLoadState(for place: DAOPlace) -> WKRPTCLPlacesPubAlertEventStatus {
         return self.doLoadState(for: place, with: nil)
     }
+    public func doReact(with reaction: DNSReactionType,
+                        to place: DAOPlace,
+                        with block: WKRPTCLPlacesBlkMeta?) {
+        self.doReact(with: reaction, to: place, with: nil, and: block)
+    }
     public func doSearchPlace(for geohash: String,
                                with block: WKRPTCLPlacesBlkPlace?) {
         self.doSearchPlace(for: geohash, with: nil, and: block)
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to place: DAOPlace,
+                          with block: WKRPTCLPlacesBlkMeta?) {
+        self.doUnreact(with: reaction, to: place, with: nil, and: block)
     }
     public func doUpdate(_ place: DAOPlace,
                          with block: WKRPTCLPlacesBlkVoid?)  {
@@ -262,10 +294,24 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                              then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPlacesPubAlertEventStatus {
         return resultBlock?(.unhandled) as! WKRPTCLPlacesPubAlertEventStatus // swiftlint:disable:this force_cast
     }
+    open func intDoReact(with reaction: DNSReactionType,
+                         to place: DAOPlace,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLPlacesBlkMeta?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoSearchPlace(for geohash: String,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLPlacesBlkPlace?,
                                 then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to place: DAOPlace,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLPlacesBlkMeta?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ place: DAOPlace,

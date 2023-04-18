@@ -56,7 +56,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
             return self.nextWorker?.doLoadPricingItems(for: pricingTier, and: pricingSeason,
                                                        with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPricingItems(for: pricingTier, and: pricingSeason,
                                               with: progress, and: block, then: $0)
         })
@@ -67,7 +67,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPricingSeasons(for: pricingTier, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPricingSeasons(for: pricingTier, with: progress, and: block, then: $0)
         })
     }
@@ -76,7 +76,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadPricingTiers(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPricingTiers(with: progress, and: block, then: $0)
         })
     }
@@ -86,7 +86,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(pricingTier, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(pricingTier, with: progress, and: block, then: $0)
         })
     }
@@ -98,7 +98,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
             return self.nextWorker?.doRemove(pricingSeason, for: pricingTier,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(pricingSeason, for: pricingTier,
                                     with: progress, and: block, then: $0)
         })
@@ -112,7 +112,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
             return self.nextWorker?.doRemove(pricingItem, for: pricingTier, and: pricingSeason,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(pricingItem, for: pricingTier, and: pricingSeason,
                                      with: progress, and: block, then: $0)
         })
@@ -123,7 +123,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(pricingTier, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(pricingTier, with: progress, and: block, then: $0)
         })
     }
@@ -135,7 +135,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
             return self.nextWorker?.doUpdate(pricingSeason, for: pricingTier,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(pricingSeason, for: pricingTier,
                                     with: progress, and: block, then: $0)
         })
@@ -149,7 +149,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
             return self.nextWorker?.doUpdate(pricingItem, for: pricingTier, and: pricingSeason,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(pricingItem, for: pricingTier, and: pricingSeason,
                                     with: progress, and: block, then: $0)
         })

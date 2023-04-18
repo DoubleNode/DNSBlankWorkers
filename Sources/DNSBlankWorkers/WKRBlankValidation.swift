@@ -52,7 +52,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateBirthdate(for: birthdate, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateBirthdate(for: birthdate, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -61,7 +61,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateCalendarDate(for: date, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateCalendarDate(for: date, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -70,7 +70,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateEmail(for: email, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateEmail(for: email, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -79,7 +79,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateHandle(for: handle, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateHandle(for: handle, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -88,7 +88,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateName(for: name, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateName(for: name, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -97,7 +97,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateNumber(for: number, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateNumber(for: number, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -106,7 +106,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidatePassword(for: password, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidatePassword(for: password, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -115,7 +115,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidatePercentage(for: percentage, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidatePercentage(for: percentage, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -124,7 +124,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidatePhone(for: phone, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidatePhone(for: phone, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -133,7 +133,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateSearch(for: search, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateSearch(for: search, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -142,7 +142,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateState(for: state, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateState(for: state, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }
@@ -151,7 +151,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
         return self.runDo(runNext: {
             return self.nextWorker?.doValidateUnsignedNumber(for: number, with: config)
         },
-        doWork: {
+                          doWork: {
             return self.intDoValidateUnsignedNumber(for: number, with: config, then: $0)
         }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
     }

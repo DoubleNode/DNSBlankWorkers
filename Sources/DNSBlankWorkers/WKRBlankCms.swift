@@ -53,7 +53,7 @@ open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
         self.runDo(runNext: {
             return self.nextWorker?.doLoad(for: group, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoad(for: group, with: progress, and: block, then: $0)
         })
     }

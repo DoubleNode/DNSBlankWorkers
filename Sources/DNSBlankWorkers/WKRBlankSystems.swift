@@ -55,7 +55,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadSystem(for: id, with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
         })
     }
@@ -65,7 +65,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadEndPoints(for: system, with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoLoadEndPoints(for: system, with: progress, and: block, then: $0)
         })
     }
@@ -77,7 +77,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
             return self.nextWorker?.doLoadHistory(for: system, since: time,
                                                       with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoLoadHistory(for: system, since: time,
                                              with: progress, and: block, then: $0)
         })
@@ -91,7 +91,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
             return self.nextWorker?.doLoadHistory(for: endPoint, since: time, include: failureCodes,
                                                       with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoLoadHistory(for: endPoint, since: time, include: failureCodes,
                                              with: progress, and: block, then: $0)
         })
@@ -101,7 +101,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadSystems(with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoLoadSystems(with: progress, and: block, then: $0)
         })
     }
@@ -113,8 +113,19 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
             return self.nextWorker?.doOverride(system: system, with: state,
                                                    with: progress, and: block)
         },
-                       doWork: {
+                   doWork: {
             return self.intDoOverride(system: system, with: state, with: progress, and: block, then: $0)
+        })
+    }
+    public func doReact(with reaction: DNSReactionType,
+                        to system: DAOSystem,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLSystemsBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: system, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoReact(with: reaction, to: system, with: progress, and: block, then: $0)
         })
     }
     public func doReport(result: WKRPTCLSystemsData.Result,
@@ -145,11 +156,22 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
             return nextWorker.doReport(result: result, and: failureCode, and: debugString,
                                        for: systemId, and: endPointId, with: progress)
         },
-                               doWork: {
+                           doWork: {
             return self.intDoReport(result: result, and: failureCode, and: debugString,
                                     for: systemId, and: endPointId,
                                     with: progress, then: $0)
         }) as! WKRPTCLSystemsPubVoid // swiftlint:disable:this force_cast
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to system: DAOSystem,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLSystemsBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnreact(with: reaction, to: system, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoUnreact(with: reaction, to: system, with: progress, and: block, then: $0)
+        })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
@@ -180,6 +202,11 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                            with block: WKRPTCLSystemsBlkSystem?) {
         self.doOverride(system: system, with: state, with: nil, and: block)
     }
+    public func doReact(with reaction: DNSReactionType,
+                        to system: DAOSystem,
+                        with block: WKRPTCLSystemsBlkMeta?) {
+        self.doReact(with: reaction, to: system, with: nil, and: block)
+    }
     public func doReport(result: WKRPTCLSystemsData.Result,
                          for systemId: String,
                          and endPointId: String) -> WKRPTCLSystemsPubVoid {
@@ -200,6 +227,11 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                          and endPointId: String) -> WKRPTCLSystemsPubVoid {
         return self.doReport(result: result, and: failureCode, and: debugString,
                              for: systemId, and: endPointId, with: nil)
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to system: DAOSystem,
+                          with block: WKRPTCLSystemsBlkMeta?) {
+        self.doUnreact(with: reaction, to: system, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -242,6 +274,13 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
+    open func intDoReact(with reaction: DNSReactionType,
+                         to system: DAOSystem,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLSystemsBlkMeta?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoReport(result: WKRPTCLSystemsData.Result,
                           and failureCode: String,
                           and debugString: String,
@@ -250,5 +289,12 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                           with progress: DNSPTCLProgressBlock?,
                           then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSystemsPubVoid {
         return resultBlock?(.unhandled) as! WKRPTCLSystemsPubVoid // swiftlint:disable:this force_cast
+    }
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to system: DAOSystem,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLSystemsBlkMeta?,
+                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
     }
 }

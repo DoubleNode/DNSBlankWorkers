@@ -59,7 +59,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCurrentEvents(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCurrentEvents(with: progress, and: block, then: $0)
         })
     }
@@ -69,7 +69,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadEvents(for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadEvents(for: place, with: progress, and: block, then: $0)
         })
     }
@@ -82,7 +82,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                                                   and: place,
                                                   with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadPricing(for: event, and: place,
                                          with: progress, and: block, then: $0)
         })
@@ -95,7 +95,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: event, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoReact(with: reaction, to: event, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -106,7 +106,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(event, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(event, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -118,7 +118,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(eventDay, for: event, and: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(eventDay, for: event, and: place, with: progress, and: block, then: $0)
         })
     }
@@ -130,7 +130,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: event, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUnreact(with: reaction, to: event, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -141,7 +141,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(event, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(event, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -153,7 +153,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(eventDay, for: event, and: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(eventDay, for: event, and: place, with: progress, and: block, then: $0)
         })
     }
@@ -165,7 +165,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(pricing, for: event, and: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(pricing, for: event, and: place, with: progress, and: block, then: $0)
         })
     }
@@ -176,7 +176,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doView(event, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoView(event, for: place, with: progress, and: block, then: $0)
         })
     }

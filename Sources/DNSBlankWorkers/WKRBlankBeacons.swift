@@ -54,7 +54,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadBeacons(in: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadBeacons(in: place, with: progress, and: block, then: $0)
         })
     }
@@ -66,7 +66,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
             return self.nextWorker?.doLoadBeacons(in: place, for: activity,
                                                   with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadBeacons(in: place, for: activity,
                                          with: progress, and: block, then: $0)
         })
@@ -79,7 +79,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
             return self.nextWorker?.doRangeBeacons(named: uuids, for: processKey,
                                                    with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRangeBeacons(named: uuids, for: processKey,
                                           with: progress, and: block, then: $0)
         })
@@ -88,7 +88,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
         return self.runDo(runNext: {
             return self.nextWorker?.doStopRangeBeacons(for: processKey)
         },
-        doWork: {
+                          doWork: {
             return self.intDoStopRangeBeacons(for: processKey, then: $0)
         }) as! WKRPTCLBeaconsResVoid // swiftlint:disable:this force_cast
     }

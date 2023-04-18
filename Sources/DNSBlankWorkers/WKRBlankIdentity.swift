@@ -60,7 +60,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             }
             return nextWorker.doClearIdentity(with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoClearIdentity(with: progress, then: $0)
         }) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
@@ -72,7 +72,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             }
             return nextWorker.doJoin(group: group, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoJoin(group: group, with: progress, then: $0)
         }) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
@@ -84,7 +84,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             }
             return nextWorker.doLeave(group: group, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLeave(group: group, with: progress, then: $0)
         }) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
@@ -96,7 +96,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             }
             return nextWorker.doSetIdentity(using: data, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoSetIdentity(using: data, with: progress, then: $0)
         }) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }

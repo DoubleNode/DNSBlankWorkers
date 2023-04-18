@@ -52,7 +52,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
         return self.runDo(runNext: {
             return self.nextWorker?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
         },
-        doWork: {
+                          doWork: {
             return self.intDoAutoTrack(class: `class`, method: method, properties: properties, options: options, then: $0)
         }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
@@ -60,7 +60,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
         return self.runDo(runNext: {
             return self.nextWorker?.doGroup(groupId: groupId, traits: traits, options: options)
         },
-        doWork: {
+                          doWork: {
             return self.intDoGroup(groupId: groupId, traits: traits, options: options, then: $0)
         }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
@@ -68,7 +68,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
         return self.runDo(runNext: {
             return self.nextWorker?.doIdentify(userId: userId, traits: traits, options: options)
         },
-        doWork: {
+                          doWork: {
             return self.intDoIdentify(userId: userId, traits: traits, options: options, then: $0)
         }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
@@ -76,7 +76,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
         return self.runDo(runNext: {
             return self.nextWorker?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
         },
-        doWork: {
+                          doWork: {
             return self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
         }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }
@@ -84,7 +84,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
         return self.runDo(runNext: {
             return self.nextWorker?.doTrack(event: event, properties: properties, options: options)
         },
-        doWork: {
+                          doWork: {
             return self.intDoTrack(event: event, properties: properties, options: options, then: $0)
         }) as! WKRPTCLAnalyticsResVoid // swiftlint:disable:this force_cast
     }

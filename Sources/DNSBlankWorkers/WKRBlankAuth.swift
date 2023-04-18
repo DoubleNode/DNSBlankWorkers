@@ -56,7 +56,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
             return self.nextWorker?.doCheckAuth(using: parameters,
                                                 with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoCheckAuth(using: parameters,
                                        with: progress, and: block, then: $0)
         })
@@ -72,7 +72,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                                using: parameters,
                                                with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLinkAuth(from: username, and: password,
                                       using: parameters,
                                       with: progress, and: block, then: $0)
@@ -86,7 +86,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
             return self.nextWorker?.doPasswordResetStart(from: username, using: parameters,
                                                          with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoPasswordResetStart(from: username, using: parameters,
                                                 with: progress, and: block, then: $0)
         })
@@ -100,7 +100,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
             return self.nextWorker?.doSignIn(from: username, and: password, using: parameters,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoSignIn(from: username, and: password, using: parameters,
                                     with: progress, and: block, then: $0)
         })
@@ -111,7 +111,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
         self.runDo(runNext: {
             return self.nextWorker?.doSignOut(using: parameters, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoSignOut(using: parameters, with: progress, and: block, then: $0)
         })
     }
@@ -124,7 +124,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
             return self.nextWorker?.doSignUp(from: user, and: password, using: parameters,
                                              with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoSignUp(from: user, and: password, using: parameters,
                                     with: progress, and: block, then: $0)
         })

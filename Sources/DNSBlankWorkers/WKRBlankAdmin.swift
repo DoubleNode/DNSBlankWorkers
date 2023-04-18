@@ -64,7 +64,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doChange(user, to: role, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoChange(user, to: role, with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubVoid
@@ -77,7 +77,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doCheckAdmin(with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoCheckAdmin(with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubBool
@@ -91,7 +91,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doCompleteDeleted(account: account, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoCompleteDeleted(account: account, with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubVoid
@@ -105,7 +105,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doDenyChangeRequest(for: user, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoDenyChangeRequest(for: user, with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubVoid
@@ -119,7 +119,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doLoadChangeRequests(with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadChangeRequests(with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubUserChangeRequest
@@ -130,7 +130,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadDeletedAccounts(thatAre: state, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadDeletedAccounts(thatAre: state, with: progress, and: block, then: $0)
         })
     }
@@ -139,7 +139,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadDeletedStatus(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadDeletedStatus(with: progress, and: block, then: $0)
         })
     }
@@ -151,7 +151,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doLoadTabs(with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadTabs(with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubAString
@@ -165,7 +165,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             }
             return nextWorker.doRequestChange(to: role, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoRequestChange(to: role, with: progress, then: $0)
             // swiftlint:disable:next force_cast
         }) as! WKRPTCLAdminPubVoid

@@ -55,7 +55,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoAdd(card, to: user, with: progress, and: block, then: $0)
         })
     }
@@ -65,7 +65,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCard(for: id, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCard(for: id, with: progress, and: block, then: $0)
         })
     }
@@ -75,7 +75,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCard(for: transaction, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCard(for: transaction, with: progress, and: block, then: $0)
         })
     }
@@ -85,7 +85,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCards(for: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCards(for: user, with: progress, and: block, then: $0)
         })
     }
@@ -95,7 +95,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadTransactions(for: card, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadTransactions(for: card, with: progress, and: block, then: $0)
         })
     }
@@ -106,7 +106,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(card, from: user, with: progress, and: block, then: $0)
         })
     }
@@ -116,7 +116,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(card, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(card, with: progress, and: block, then: $0)
         })
     }

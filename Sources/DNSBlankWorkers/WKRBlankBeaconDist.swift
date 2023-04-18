@@ -52,7 +52,7 @@ open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
         })
     }

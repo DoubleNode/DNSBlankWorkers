@@ -52,7 +52,7 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAppEvents(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAppEvents(with: progress, and: block, then: $0)
         })
     }

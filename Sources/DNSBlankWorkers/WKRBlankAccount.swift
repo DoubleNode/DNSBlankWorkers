@@ -55,7 +55,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doActivate(account: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoActivate(account: account, with: progress, and: block, then: $0)
         })
     }
@@ -65,7 +65,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doApprove(linkRequest: linkRequest, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoApprove(linkRequest: linkRequest, with: progress, and: block, then: $0)
         })
     }
@@ -75,7 +75,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doDeactivate(account: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoDeactivate(account: account, with: progress, and: block, then: $0)
         })
     }
@@ -85,7 +85,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doDecline(linkRequest: linkRequest, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoDecline(linkRequest: linkRequest, with: progress, and: block, then: $0)
         })
     }
@@ -95,7 +95,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doDelete(account: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoDelete(account: account, with: progress, and: block, then: $0)
         })
     }
@@ -106,7 +106,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLink(account: account, to: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLink(account: account, to: user, with: progress, and: block, then: $0)
         })
     }
@@ -117,7 +117,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLink(account: account, to: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLink(account: account, to: place, with: progress, and: block, then: $0)
         })
     }
@@ -127,7 +127,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAccount(for: id, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAccount(for: id, with: progress, and: block, then: $0)
         })
     }
@@ -137,7 +137,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAccounts(for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAccounts(for: place, with: progress, and: block, then: $0)
         })
     }
@@ -147,7 +147,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAccounts(for: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAccounts(for: user, with: progress, and: block, then: $0)
         })
     }
@@ -156,7 +156,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCurrentAccounts(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
         })
     }
@@ -167,7 +167,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doRename(accountId: accountId, to: newAccountId, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRename(accountId: accountId, to: newAccountId, with: progress, and: block, then: $0)
         })
     }
@@ -177,7 +177,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doSearchAccounts(using: parameters, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoSearchAccounts(using: parameters, with: progress, and: block, then: $0)
         })
     }
@@ -188,7 +188,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doUnlink(account: account, from: user, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUnlink(account: account, from: user, with: progress, and: block, then: $0)
         })
     }
@@ -199,7 +199,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doUnlink(account: account, from: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUnlink(account: account, from: place, with: progress, and: block, then: $0)
         })
     }
@@ -209,7 +209,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(account: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(account: account, with: progress, and: block, then: $0)
         })
     }
@@ -219,7 +219,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
         self.runDo(runNext: {
             return self.nextWorker?.doVerify(account: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoVerify(account: account, with: progress, and: block, then: $0)
         })
     }

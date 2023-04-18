@@ -59,7 +59,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAnnouncements(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAnnouncements(with: progress, and: block, then: $0)
         })
     }
@@ -69,7 +69,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadAnnouncements(for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadAnnouncements(for: place, with: progress, and: block, then: $0)
         })
     }
@@ -78,7 +78,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadCurrentAnnouncements(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadCurrentAnnouncements(with: progress, and: block, then: $0)
         })
     }
@@ -90,7 +90,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoReact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -101,7 +101,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doReact(with: reaction, to: announcement, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoReact(with: reaction, to: announcement, with: progress, and: block, then: $0)
         })
     }
@@ -111,7 +111,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(announcement, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(announcement, with: progress, and: block, then: $0)
         })
     }
@@ -122,7 +122,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(announcement, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(announcement, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -134,7 +134,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUnreact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -145,7 +145,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doUnreact(with: reaction, to: announcement, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUnreact(with: reaction, to: announcement, with: progress, and: block, then: $0)
         })
     }
@@ -155,7 +155,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(announcement, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(announcement, with: progress, and: block, then: $0)
         })
     }
@@ -166,7 +166,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(announcement, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(announcement, for: place, with: progress, and: block, then: $0)
         })
     }
@@ -176,7 +176,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doView(announcement, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoView(announcement, with: progress, and: block, then: $0)
         })
     }
@@ -187,7 +187,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
         self.runDo(runNext: {
             return self.nextWorker?.doView(announcement, for: place, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoView(announcement, for: place, with: progress, and: block, then: $0)
         })
     }

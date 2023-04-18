@@ -61,7 +61,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             }
             return nextWorker.doDeleteObject(for: id, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoDeleteObject(for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubVoid
     }
@@ -74,7 +74,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             }
             return nextWorker.doLoadImage(from: url, for: id, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoLoadImage(from: url, for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubImage
     }
@@ -86,7 +86,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             }
             return nextWorker.doReadObject(for: id, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoReadObject(for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubAny
     }
@@ -98,7 +98,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             }
             return nextWorker.doReadString(for: id, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoReadString(for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubString
     }
@@ -111,7 +111,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             }
             return nextWorker.doUpdate(object: object, for: id, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoUpdate(object: object, for: id, with: progress, then: $0)
         }) as! WKRPTCLCachePubAny
     }

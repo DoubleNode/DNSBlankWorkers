@@ -65,7 +65,7 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
             }
             return nextWorker.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)
         }) as! WKRPTCLPassportsPubData // swiftlint:disable:this force_cast
     }

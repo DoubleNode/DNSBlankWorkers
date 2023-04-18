@@ -54,7 +54,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
         self.runDo(runNext: {
             return self.nextWorker?.doRequest(desire, permission, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
         })
     }
@@ -65,7 +65,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
         self.runDo(runNext: {
             return self.nextWorker?.doRequest(desire, permissions, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
         })
     }
@@ -75,7 +75,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
         self.runDo(runNext: {
             return self.nextWorker?.doStatus(of: permissions, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
         })
     }
@@ -85,7 +85,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
         self.runDo(runNext: {
             return self.nextWorker?.doWait(for: permission, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoWait(for: permission, with: progress, and: block, then: $0)
         })
     }

@@ -49,14 +49,36 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
     }
 
     // MARK: - Worker Logic (Public) -
+    public func doReact(with reaction: DNSReactionType,
+                        to media: DAOMedia,
+                        with progress: DNSPTCLProgressBlock?,
+                        and block: WKRPTCLMediaBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doReact(with: reaction, to: media, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoReact(with: reaction, to: media, with: progress, and: block, then: $0)
+        })
+    }
     public func doRemove(_ media: DAOMedia,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkVoid?) {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(media, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(media, with: progress, and: block, then: $0)
+        })
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to media: DAOMedia,
+                          with progress: DNSPTCLProgressBlock?,
+                          and block: WKRPTCLMediaBlkMeta?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doUnreact(with: reaction, to: media, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoUnreact(with: reaction, to: media, with: progress, and: block, then: $0)
         })
     }
     public func doUpload(from fileUrl: URL,
@@ -66,7 +88,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         self.runDo(runNext: {
             return self.nextWorker?.doUpload(from: fileUrl, to: path, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpload(from: fileUrl, to: path, with: progress, and: block, then: $0)
         })
     }
@@ -77,7 +99,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         self.runDo(runNext: {
             return self.nextWorker?.doUpload(image, to: path, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpload(image, to: path, with: progress, and: block, then: $0)
         })
     }
@@ -88,7 +110,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         self.runDo(runNext: {
             return self.nextWorker?.doUpload(pdfDocument, to: path, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpload(pdfDocument, to: path, with: progress, and: block, then: $0)
         })
     }
@@ -99,15 +121,25 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
         self.runDo(runNext: {
             return self.nextWorker?.doUpload(text, to: path, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpload(text, to: path, with: progress, and: block, then: $0)
         })
     }
 
     // MARK: - Worker Logic (Shortcuts) -
+    public func doReact(with reaction: DNSReactionType,
+                        to media: DAOMedia,
+                        with block: WKRPTCLMediaBlkMeta?) {
+        self.doReact(with: reaction, to: media, with: nil, and: block)
+    }
     public func doRemove(_ media: DAOMedia,
                          with block: WKRPTCLMediaBlkVoid?) {
         self.doRemove(media, with: nil, and: block)
+    }
+    public func doUnreact(with reaction: DNSReactionType,
+                          to media: DAOMedia,
+                          with block: WKRPTCLMediaBlkMeta?) {
+        self.doUnreact(with: reaction, to: media, with: nil, and: block)
     }
     public func doUpload(from fileUrl: URL,
                          to path: String,
@@ -131,10 +163,24 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
     }
 
     // MARK: - Internal Work Methods
+    open func intDoReact(with reaction: DNSReactionType,
+                         to media: DAOMedia,
+                         with progress: DNSPTCLProgressBlock?,
+                         and block: WKRPTCLMediaBlkMeta?,
+                         then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoRemove(_ media: DAOMedia,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoUnreact(with reaction: DNSReactionType,
+                           to media: DAOMedia,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLMediaBlkMeta?,
+                           then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(from fileUrl: URL,

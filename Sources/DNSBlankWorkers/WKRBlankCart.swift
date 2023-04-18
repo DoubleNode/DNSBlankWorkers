@@ -55,7 +55,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doAdd(basketItem, to: basket, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoAdd(basketItem, to: basket, with: progress, and: block, then: $0)
         })
     }
@@ -65,7 +65,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doCheckout(for: basket, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoCheckout(for: basket, with: progress, and: block, then: $0)
         })
     }
@@ -74,7 +74,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doCreate(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoCreate(with: progress, and: block, then: $0)
         })
     }
@@ -84,7 +84,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doCreate(and: add, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoCreate(and: add, with: progress, and: block, then: $0)
         })
     }
@@ -94,7 +94,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadOrder(for: id, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadOrder(for: id, with: progress, and: block, then: $0)
         })
     }
@@ -104,7 +104,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadOrders(for: account, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadOrders(for: account, with: progress, and: block, then: $0)
         })
     }
@@ -115,7 +115,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doLoadOrders(for: account, and: state, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLoadOrders(for: account, and: state, with: progress, and: block, then: $0)
         })
     }
@@ -125,7 +125,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(basket, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(basket, with: progress, and: block, then: $0)
         })
     }
@@ -135,7 +135,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doRemove(basketItem, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoRemove(basketItem, with: progress, and: block, then: $0)
         })
     }
@@ -145,7 +145,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(basket, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(basket, with: progress, and: block, then: $0)
         })
     }
@@ -155,7 +155,7 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.runDo(runNext: {
             return self.nextWorker?.doUpdate(basketItem, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoUpdate(basketItem, with: progress, and: block, then: $0)
         })
     }

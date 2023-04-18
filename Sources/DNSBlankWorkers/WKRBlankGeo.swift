@@ -53,7 +53,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
         self.runDo(runNext: {
             return self.nextWorker?.doLocate(with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLocate(with: progress, and: block, then: $0)
         })
     }
@@ -63,7 +63,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
         self.runDo(runNext: {
             return self.nextWorker?.doLocate(address, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoLocate(address, with: progress, and: block, then: $0)
         })
     }
@@ -73,7 +73,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
         self.runDo(runNext: {
             return self.nextWorker?.doTrackLocation(for: processKey, with: progress, and: block)
         },
-        doWork: {
+                   doWork: {
             return self.intDoTrackLocation(for: processKey, with: progress, and: block, then: $0)
         })
     }
@@ -81,7 +81,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
         return self.runDo(runNext: {
             return self.nextWorker?.doStopTrackLocation(for: processKey)
         },
-        doWork: {
+                          doWork: {
             return self.intDoStopTrackLocation(for: processKey, then: $0)
         }) as! WKRPTCLGeoResVoid // swiftlint:disable:this force_cast
     }
