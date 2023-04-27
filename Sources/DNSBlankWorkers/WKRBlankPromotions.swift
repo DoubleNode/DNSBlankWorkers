@@ -63,6 +63,25 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
 
     // MARK: - Worker Logic (Public) -
     @available(iOS 15.0.0, *)
+    public func doActivate(_ id: String,
+                           with progress: DNSPTCLProgressBlock?) async -> WKRPTCLPromotionsResVoid {
+        await withCheckedContinuation { continuation in
+            doActivate(id, with: progress) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+    public func doActivate(_ id: String,
+                           with progress: DNSPTCLProgressBlock?,
+                           and block: WKRPTCLPromotionsBlkVoid?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doActivate(id, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoActivate(id, with: progress, and: block, then: $0)
+        })
+    }
+    @available(iOS 15.0.0, *)
     public func doDelete(_ promotion: DAOPromotion,
                          with progress: DNSPTCLProgressBlock?) async -> WKRPTCLPromotionsResVoid {
         await withCheckedContinuation { continuation in
@@ -165,6 +184,14 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
 
     // MARK: - Worker Logic (Shortcuts) -
     @available(iOS 15.0.0, *)
+    public func doActivate(_ id: String) async -> WKRPTCLPromotionsResVoid {
+        return await doActivate(id, with: nil)
+    }
+    public func doActivate(_ id: String,
+                           and block: WKRPTCLPromotionsBlkVoid?) {
+        self.doActivate(id, with: nil, and: block)
+    }
+    @available(iOS 15.0.0, *)
     public func doDelete(_ promotion: DAOPromotion) async -> WKRPTCLPromotionsResVoid {
         return await doDelete(promotion, with: nil)
     }
@@ -208,6 +235,12 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
     }
 
     // MARK: - Internal Work Methods
+    open func intDoActivate(_ id: String,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLPromotionsBlkVoid?,
+                            then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
     open func intDoDelete(_ promotion: DAOPromotion,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPromotionsBlkVoid?,
