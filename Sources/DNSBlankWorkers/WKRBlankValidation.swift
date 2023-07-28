@@ -6,6 +6,7 @@
 //  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
 import DNSError
 import DNSProtocols
 import Foundation
@@ -47,6 +48,60 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     }
 
     // MARK: - Worker Logic (Public) -
+    public func doValidateAddress(for address: DNSPostalAddress?,
+                                  with config: Config.Address) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddress(for: address, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddress(for: address, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
+    public func doValidateAddressCity(for city: String?,
+                                      with config: Config.Address.City) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddressCity(for: city, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddressCity(for: city, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
+    public func doValidateAddressPostalCode(for postalCode: String?,
+                                            with config: Config.Address.PostalCode) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddressPostalCode(for: postalCode, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddressPostalCode(for: postalCode, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
+    public func doValidateAddressState(for state: String?,
+                                       with config: Config.Address.State) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddressState(for: state, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddressState(for: state, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
+    public func doValidateAddressStreet(for street: String?,
+                                        with config: Config.Address.Street) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddressStreet(for: street, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddressStreet(for: street, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
+    public func doValidateAddressStreet2(for street2: String?,
+                                         with config: Config.Address.Street2) -> WKRPTCLValidationResVoid {
+        return self.runDo(runNext: {
+            return self.nextWorker?.doValidateAddressStreet2(for: street2, with: config)
+        },
+                          doWork: {
+            return self.intDoValidateAddressStreet2(for: street2, with: config, then: $0)
+        }) as! WKRPTCLValidationResVoid // swiftlint:disable:this force_cast
+    }
     public func doValidateBirthdate(for birthdate: Date?,
                                     with config: WKRPTCLValidation.Data.Config.Birthdate) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
@@ -157,6 +212,42 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     }
 
     // MARK: - Internal Work Methods
+    open func intDoValidateAddress(for address: DNSPostalAddress?,
+                                   with config: Config.Address,
+                                   then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoValidateAddressCity(for city: String?,
+                                       with config: Config.Address.City,
+                                       then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoValidateAddressPostalCode(for postalCode: String?,
+                                             with config: Config.Address.PostalCode,
+                                             then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoValidateAddressState(for state: String?,
+                                        with config: Config.Address.State,
+                                        then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoValidateAddressStreet(for street: String?,
+                                         with config: Config.Address.Street,
+                                         then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
+    open func intDoValidateAddressStreet2(for street2: String?,
+                                          with config: Config.Address.Street2,
+                                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
+        _ = resultBlock?(.unhandled)
+        return .success
+    }
     open func intDoValidateBirthdate(for birthdate: Date?,
                                      with config: WKRPTCLValidation.Data.Config.Birthdate,
                                      then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLValidationResVoid {
