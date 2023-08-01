@@ -60,13 +60,14 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         })
     }
     public func doCheckout(for basket: DAOBasket,
+                           using card: DAOCard,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLCartBlkOrder?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doCheckout(for: basket, with: progress, and: block)
+            return self.nextWorker?.doCheckout(for: basket, using: card, with: progress, and: block)
         },
                    doWork: {
-            return self.intDoCheckout(for: basket, with: progress, and: block, then: $0)
+            return self.intDoCheckout(for: basket, using: card, with: progress, and: block, then: $0)
         })
     }
     public func doCreate(with progress: DNSPTCLProgressBlock?,
@@ -167,8 +168,9 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         self.doAdd(basketItem, to: basket, with: nil, and: block)
     }
     public func doCheckout(for basket: DAOBasket,
+                           using card: DAOCard,
                            with block: WKRPTCLCartBlkOrder?) {
-        self.doCheckout(for: basket, with: nil, and: block)
+        self.doCheckout(for: basket, using: card, with: nil, and: block)
     }
     public func doCreate(with block: WKRPTCLCartBlkBasket?) {
         self.doCreate(with: nil, and: block)
@@ -216,8 +218,9 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
         _ = resultBlock?(.unhandled)
     }
     open func intDoCheckout(for basket: DAOBasket,
-                           with progress: DNSPTCLProgressBlock?,
-                           and block: WKRPTCLCartBlkOrder?,
+                            using card: DAOCard,
+                            with progress: DNSPTCLProgressBlock?,
+                            and block: WKRPTCLCartBlkOrder?,
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
