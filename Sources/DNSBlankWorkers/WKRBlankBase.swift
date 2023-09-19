@@ -62,6 +62,18 @@ open class WKRBlankBase: WKRBase {
                                  for: systemId,
                                  and: endPointId)
     }
+    open func utilityReportSystemFailure<T: Decodable>(sendDebug: Bool,
+                                                       response: DataResponse<T, AFError>,
+                                                       result: WKRPTCLSystemsData.Result = .failure,
+                                                       and failureCode: String,
+                                                       for systemId: String,
+                                                       and endPointId: String) {
+        self.utilityReportSystem(debugString: sendDebug ? response.debugDescription : "",
+                                 result:result,
+                                 and: failureCode,
+                                 for: systemId,
+                                 and: endPointId)
+    }
     open func utilityReportSystemFailure(sendDebug: Bool,
                                          debugString: String,
                                          result: WKRPTCLSystemsData.Result = .failure,
