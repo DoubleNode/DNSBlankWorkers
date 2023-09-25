@@ -23,15 +23,15 @@ public typealias WKRPTCLRequestBlkSuccessData = (Data) -> Result<Void, Error>
 public typealias WKRPTCLRequestBlkSuccessDecodable<T: Decodable> = (T) -> Result<Void, Error>
 
 public extension WKRBlankBase {
-    func processRequestDecodable<T: Decodable>(of type: T.Type,
-                                               _ callData: WKRPTCLSystemsStateData = .empty,
-                                               _ dataRequest: NETPTCLRouterRtnDataRequest,
-                                               with resultBlock: DNSPTCLResultBlock?,
-                                               onSuccess successBlk: WKRPTCLRequestBlkSuccessDecodable<T>? = nil,
-                                               onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
-                                               onError errorBlk: WKRPTCLRequestBlkError? = nil,
-                                               systemResult systemResultBlk: WKRPTCLRequestBlkSystemResult? = nil,
-                                               onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
+    func processRequestDecodable<T: WKRPTCLBaseResponse>(of type: T.Type,
+                                                         _ callData: WKRPTCLSystemsStateData = .empty,
+                                                         _ dataRequest: NETPTCLRouterRtnDataRequest,
+                                                         with resultBlock: DNSPTCLResultBlock?,
+                                                         onSuccess successBlk: WKRPTCLRequestBlkSuccessDecodable<T>? = nil,
+                                                         onPendingError pendingBlk: WKRPTCLRequestBlkPendingError? = nil,
+                                                         onError errorBlk: WKRPTCLRequestBlkError? = nil,
+                                                         systemResult systemResultBlk: WKRPTCLRequestBlkSystemResult? = nil,
+                                                         onRetry retryBlk: WKRPTCLRequestBlkError? = nil) {
         dataRequest.responseDecodable(of: type, queue: DNSThreadingQueue.backgroundQueue.queue) { response in
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
@@ -61,8 +61,11 @@ public extension WKRBlankBase {
             case 400, 401:
                 var error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, .blankWorkers(self))
-                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
-                let message = self.utilityErrorMessage(from: valueData)
+                var message = data.error ?? ""
+                if message.isEmpty {
+                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                    message = self.utilityErrorMessage(from: valueData)
+                }
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
@@ -86,8 +89,11 @@ public extension WKRBlankBase {
                 return
             case 403:
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
-                let message = self.utilityErrorMessage(from: valueData)
+                var message = data.error ?? ""
+                if message.isEmpty {
+                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                    message = self.utilityErrorMessage(from: valueData)
+                }
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
@@ -97,6 +103,7 @@ public extension WKRBlankBase {
                 } else if message == "Expired accessToken" {
                     error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
                 } else if message == "Outdated Client" {
+                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
@@ -112,8 +119,11 @@ public extension WKRBlankBase {
                 return
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
-                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
-                let message = self.utilityErrorMessage(from: valueData)
+                var message = data.error ?? ""
+                if message.isEmpty {
+                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                    message = self.utilityErrorMessage(from: valueData)
+                }
                 if message == "Already Linked" {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }

@@ -14,6 +14,10 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
+public protocol WKRPTCLBaseResponse: Decodable {
+    var error: String? { get }
+}
+
 open class WKRBase: NSObject, WKRPTCLWorkerBase {
     public static var xlt = DNSDataTranslation()
     
