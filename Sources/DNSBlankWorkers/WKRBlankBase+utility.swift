@@ -45,6 +45,9 @@ public extension WKRBlankBase {
             message = Self.xlt.string(from: errorData["message"] as Any?) ?? ""
         } else {
             message = Self.xlt.string(from: data["error"] as Any?) ?? ""
+            if message.isEmpty {
+                message = Self.xlt.string(from: data["message"] as Any?) ?? ""
+            }
         }
         if message.isEmpty { message = "Unknown" }
         return message
