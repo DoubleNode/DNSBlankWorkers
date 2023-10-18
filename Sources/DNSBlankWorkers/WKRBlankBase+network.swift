@@ -76,6 +76,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -243,6 +245,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -403,6 +407,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -563,6 +569,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
