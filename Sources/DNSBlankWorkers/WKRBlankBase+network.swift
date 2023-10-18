@@ -61,7 +61,7 @@ public extension WKRBlankBase {
             case 400, 401:
                 var error = DNSError.NetworkBase
                     .serverError(statusCode: statusCode, .blankWorkers(self))
-                var message = data.error ?? ""
+                var message = data.error ?? (data.message ?? "")
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -76,6 +76,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -89,7 +91,7 @@ public extension WKRBlankBase {
                 return
             case 403:
                 var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                var message = data.error ?? ""
+                var message = data.error ?? (data.message ?? "")
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -119,7 +121,7 @@ public extension WKRBlankBase {
                 return
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
-                var message = data.error ?? ""
+                var message = data.error ?? (data.message ?? "")
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -243,6 +245,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -403,6 +407,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
@@ -563,6 +569,8 @@ public extension WKRBlankBase {
                     error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
                 } else if message == "Insufficient Access" {
                     error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error

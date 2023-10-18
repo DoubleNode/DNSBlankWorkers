@@ -16,6 +16,7 @@ import Foundation
 
 public protocol WKRPTCLBaseResponse: Decodable {
     var error: String? { get }
+    var message: String? { get }
 }
 
 open class WKRBase: NSObject, WKRPTCLWorkerBase {
