@@ -59,13 +59,13 @@ public extension WKRBlankBase {
             case 0, 200...299:
                 break
             case 400, 401:
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 var message = data.error ?? (data.message ?? "")
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
+                var error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
@@ -231,10 +231,10 @@ public extension WKRBlankBase {
             case 0, 200...299:
                 break
             case 400, 401:
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
+                var error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
@@ -393,10 +393,10 @@ public extension WKRBlankBase {
             case 0, 200...299:
                 break
             case 400, 401:
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
+                var error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
@@ -555,10 +555,10 @@ public extension WKRBlankBase {
             case 0, 200...299:
                 break
             case 400, 401:
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
+                var error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 if message == "Access token was not provided" {
                     error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
                 } else if message == "Token has been revoked." {
