@@ -52,6 +52,41 @@ public extension WKRBlankBase {
         if message.isEmpty { message = "Unknown" }
         return message
     }
+    func utility401Error(from message: String,
+                         and statusCode: Int,
+                         _ codeLocation: DNSCodeLocation) -> Error {
+        var error = DNSError.NetworkBase
+            .serverError(statusCode: statusCode, status: message, codeLocation)
+        if message == "Access token was not provided" {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        } else if message == "Token has been revoked." {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        } else if message == "Unauthorized" {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        } else if message == "Admin Support Required" {
+            error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
+        } else if message == "Insufficient Access" {
+            error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
+        } else if message.contains("Not authorized to access this resource") {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        }
+        return error
+    }
+    func utility403Error(from message: String,
+                         and statusCode: Int,
+                         _ codeLocation: DNSCodeLocation) -> Error {
+        var error = DNSError.NetworkBase.forbidden(codeLocation)
+        if message == "Access token was not provided" {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        } else if message == "Token has been revoked." {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        } else if message == "Missing/Invalid accessToken" {
+            error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
+        } else if message == "Expired accessToken" {
+            error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+        }
+        return error
+    }
     func utilityNewRetryCount(for url: URL) -> Int {
         let newRetryCount = (self.retryCounts[url] ?? 0) + 1
         self.retryCounts[url] = newRetryCount

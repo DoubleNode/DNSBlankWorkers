@@ -64,21 +64,7 @@ public extension WKRBlankBase {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Unauthorized" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Admin Support Required" {
-                    error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
-                } else if message == "Insufficient Access" {
-                    error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
-                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                }
+                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
@@ -90,21 +76,13 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 var message = data.error ?? (data.message ?? "")
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                } else if message == "Expired accessToken" {
-                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
-                } else if message == "Outdated Client" {
+                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Outdated Client" {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
@@ -233,21 +211,7 @@ public extension WKRBlankBase {
             case 400, 401:
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Unauthorized" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Admin Support Required" {
-                    error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
-                } else if message == "Insufficient Access" {
-                    error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
-                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                }
+                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
@@ -259,18 +223,10 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                } else if message == "Expired accessToken" {
-                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
-                } else if message == "Outdated Client" {
+                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
@@ -395,21 +351,7 @@ public extension WKRBlankBase {
             case 400, 401:
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Unauthorized" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Admin Support Required" {
-                    error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
-                } else if message == "Insufficient Access" {
-                    error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
-                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                }
+                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
@@ -421,18 +363,10 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                } else if message == "Expired accessToken" {
-                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
-                } else if message == "Outdated Client" {
+                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
@@ -557,22 +491,8 @@ public extension WKRBlankBase {
             case 400, 401:
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, status: message, .blankWorkers(self))
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Unauthorized" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Admin Support Required" {
-                    error = DNSError.NetworkBase.adminRequired(.blankWorkers(self))
-                } else if message == "Insufficient Access" {
-                    error = DNSError.NetworkBase.insufficientAccess(.blankWorkers(self))
-                } else if message == "Not authorized to access this resource due to either failed token validation or disabled account" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                }
-                DNSCore.reportError(error)
+                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
+               DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, nil) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -583,18 +503,10 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                var error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
-                if message == "Access token was not provided" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Token has been revoked." {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
-                } else if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.forbidden(.blankWorkers(self))
-                } else if message == "Expired accessToken" {
-                    error = DNSError.NetworkBase.expiredAccessToken(.blankWorkers(self))
-                } else if message == "Outdated Client" {
+                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
                 }
