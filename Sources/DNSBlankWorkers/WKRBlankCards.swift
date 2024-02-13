@@ -111,13 +111,14 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         })
     }
     public func doUpdate(_ card: DAOCard,
+                         for user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(card, with: progress, and: block)
+            return self.nextWorker?.doUpdate(card, for: user, with: progress, and: block)
         },
                    doWork: {
-            return self.intDoUpdate(card, with: progress, and: block, then: $0)
+            return self.intDoUpdate(card, for: user, with: progress, and: block, then: $0)
         })
     }
 
@@ -149,8 +150,9 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         self.doRemove(card, from: user, with: nil, and: block)
     }
     public func doUpdate(_ card: DAOCard,
+                         for user: DAOUser,
                          with block: WKRPTCLCardsBlkVoid?) {
-        self.doUpdate(card, with: nil, and: block)
+        self.doUpdate(card, for: user, with: nil, and: block)
     }
 
     // MARK: - Internal Work Methods
@@ -193,6 +195,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
         _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ card: DAOCard,
+                          for user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
