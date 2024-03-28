@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "3dc6a42c7727c49bf26508e29b0a0b35f9c7e1ad",
-        "version" : "5.8.1"
+        "revision" : "723fa5a6c65812aec4a0d7cc432ee198883b6e00",
+        "version" : "5.9.0"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSCore.git",
       "state" : {
-        "revision" : "4497b8402bc7232cb3e14b9af85074c7db3d441d",
-        "version" : "1.11.4"
+        "revision" : "69087bcc545cc924d364d6ad01217245e2443981",
+        "version" : "1.11.5"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSDataObjects.git",
       "state" : {
-        "revision" : "e898d546411a26cb2ce0552e705feeff71cae3e8",
-        "version" : "1.11.4"
+        "revision" : "842164c6e4b26bdd26cb8a084ffaffc16f6087d2",
+        "version" : "1.11.6"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSProtocols.git",
       "state" : {
-        "revision" : "de0bff31bb3b0359716d999b6c940fa4b0962560",
-        "version" : "1.11.7"
+        "revision" : "31457be20ab1c6b3a4d1925ccb2e46918f96c5b1",
+        "version" : "1.11.9"
       }
     },
     {
