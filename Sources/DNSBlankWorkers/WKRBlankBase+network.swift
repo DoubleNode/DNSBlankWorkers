@@ -120,6 +120,24 @@ public extension WKRBlankBase {
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
                 return
+            case 409:
+                let data = try! response.result.get()
+                var message = data.error ?? (data.message ?? "")
+                if message.isEmpty {
+                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                    message = self.utilityErrorMessage(from: valueData)
+                }
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                DNSCore.reportError(error)
+                let finalError = pendingBlk?(error, data) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
@@ -257,6 +275,21 @@ public extension WKRBlankBase {
                 if message == "Already Linked" {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }
+                DNSCore.reportError(error)
+                let finalError = pendingBlk?(error, data) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                return
+            case 409:
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -414,6 +447,21 @@ public extension WKRBlankBase {
                                                 and: statusCode == 0 ? "" : "\(statusCode)",
                                                 for: callData.system, and: callData.endPoint)
                 return
+            case 409:
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                DNSCore.reportError(error)
+                let finalError = pendingBlk?(error, data) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                return
             case 422:
                 let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
                 DNSCore.reportError(error)
@@ -551,6 +599,21 @@ public extension WKRBlankBase {
                 if message == "Already Linked" {
                     error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
                 }
+                DNSCore.reportError(error)
+                let finalError = pendingBlk?(error, data) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                return
+            case 409:
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let message = self.utilityErrorMessage(from: valueData)
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
