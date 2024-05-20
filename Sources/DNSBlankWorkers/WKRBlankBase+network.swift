@@ -84,6 +84,9 @@ public extension WKRBlankBase {
                     message = self.utilityErrorMessage(from: valueData)
                 }
                 var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Missing/Invalid accessToken" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                }
                 if message == "Outdated Client" {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     let details = self.utilityErrorDetails(from: valueData)
@@ -253,6 +256,9 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Missing/Invalid accessToken" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
@@ -415,6 +421,9 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Missing/Invalid accessToken" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
@@ -577,6 +586,9 @@ public extension WKRBlankBase {
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let message = self.utilityErrorMessage(from: valueData)
                 var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                if message == "Missing/Invalid accessToken" {
+                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
                     error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
