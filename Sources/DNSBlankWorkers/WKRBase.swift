@@ -14,8 +14,12 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
+public struct WKRPTCLBaseResponseError: Decodable {
+    let code: Int
+    let message: String
+}
 public protocol WKRPTCLBaseResponse: Decodable {
-    var error: String? { get }
+    var error: Any? { get }
     var message: String? { get }
 }
 
