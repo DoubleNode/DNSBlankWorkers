@@ -60,7 +60,12 @@ public extension WKRBlankBase {
                 break
             case 400, 401:
                 let data = try! response.result.get()
-                var message = data.error ?? (data.message ?? "")
+                var message = data.message ?? ""
+                if case .string(let value) = data.error {
+                    message = value
+                } else if case .struct(let value) = data.error {
+                    message = value.message
+                }
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -78,7 +83,12 @@ public extension WKRBlankBase {
                 return
             case 403:
                 let data = try! response.result.get()
-                var message = data.error ?? (data.message ?? "")
+                var message = data.message ?? ""
+                if case .string(let value) = data.error {
+                    message = value
+                } else if case .struct(let value) = data.error {
+                    message = value.message
+                }
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -105,7 +115,12 @@ public extension WKRBlankBase {
             case 404:
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 let data = try! response.result.get()
-                var message = data.error ?? (data.message ?? "")
+                var message = data.message ?? ""
+                if case .string(let value) = data.error {
+                    message = value
+                } else if case .struct(let value) = data.error {
+                    message = value.message
+                }
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
@@ -125,7 +140,12 @@ public extension WKRBlankBase {
                 return
             case 409:
                 let data = try! response.result.get()
-                var message = data.error ?? (data.message ?? "")
+                var message = data.message ?? ""
+                if case .string(let value) = data.error {
+                    message = value
+                } else if case .struct(let value) = data.error {
+                    message = value.message
+                }
                 if message.isEmpty {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)

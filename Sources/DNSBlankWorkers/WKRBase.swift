@@ -14,8 +14,56 @@ import DNSDataObjects
 import DNSProtocols
 import Foundation
 
+public typealias WKRPTCLBaseResponseErrorString = String
+
+public struct WKRPTCLBaseResponseErrorStruct: Codable {
+    let code: Int
+    let message: String
+}
+public extension WKRPTCLBaseResponseErrorStruct {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        code = try container.decode(Int.self, forKey: .code)
+        message = try container.decode(String.self, forKey: .message)
+    }
+}
+public enum WKRPTCLBaseResponseError<L, R> {
+    case string(L)
+    case `struct`(R)
+}
+// moving Codable requirement conformance to extension
+extension WKRPTCLBaseResponseError: Codable where L: Codable, R: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        do {
+            // first try to decode as left type
+            self = try .string(container.decode(L.self))
+        } catch {
+            do {
+                // if the decode fails try to decode as right type
+                self = try .struct(container.decode(R.self))
+            } catch {
+                // both of the types failed? throw type mismatch error
+                throw DecodingError.typeMismatch(WKRPTCLBaseResponseError.self,
+                                   .init(codingPath: decoder.codingPath,
+                                         debugDescription: "Expected either \(L.self) or \(R.self)",
+                                         underlyingError: error))
+            }
+        }
+    }
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case let .string(value):
+            try container.encode(value)
+        case let .struct(value):
+            try container.encode(value)
+        }
+    }
+}
+
 public protocol WKRPTCLBaseResponse: Decodable {
-    var error: String? { get }
+    var error: WKRPTCLBaseResponseError<WKRPTCLBaseResponseErrorString, WKRPTCLBaseResponseErrorStruct>? { get }
     var message: String? { get }
 }
 
