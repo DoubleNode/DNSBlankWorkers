@@ -36,13 +36,15 @@ public extension WKRBlankBase {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                var error = DNSError.NetworkBase.networkError(error: error, .blankWorkers(self))
+                let data = try? response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
                 let statusCode = response.response?.statusCode ?? 0
                 if statusCode == 401 {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: "", .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                let data = try? response.result.get()
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -60,6 +62,8 @@ public extension WKRBlankBase {
                 break
             case 400, 401:
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var message = data.message ?? ""
                 if case .string(let value) = data.error {
                     message = value
@@ -67,10 +71,9 @@ public extension WKRBlankBase {
                     message = value.message
                 }
                 if message.isEmpty {
-                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
-                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
+                let error = self.utility401Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -83,6 +86,8 @@ public extension WKRBlankBase {
                 return
             case 403:
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var message = data.message ?? ""
                 if case .string(let value) = data.error {
                     message = value
@@ -90,17 +95,16 @@ public extension WKRBlankBase {
                     message = value.message
                 }
                 if message.isEmpty {
-                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
-                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                var error = self.utility403Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 if message == "Outdated Client" {
                     let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     let details = self.utilityErrorDetails(from: valueData)
-                    error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
+                    error = DNSError.NetworkBase.upgradeClient(message: details, transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -113,8 +117,10 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
                 var message = data.message ?? ""
                 if case .string(let value) = data.error {
                     message = value
@@ -122,11 +128,10 @@ public extension WKRBlankBase {
                     message = value.message
                 }
                 if message.isEmpty {
-                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
                 if message == "Already Linked" {
-                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                    error = DNSError.NetworkBase.alreadyLinked(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -140,6 +145,8 @@ public extension WKRBlankBase {
                 return
             case 409:
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var message = data.message ?? ""
                 if case .string(let value) = data.error {
                     message = value
@@ -147,10 +154,9 @@ public extension WKRBlankBase {
                     message = value.message
                 }
                 if message.isEmpty {
-                    let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                     message = self.utilityErrorMessage(from: valueData)
                 }
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -162,9 +168,11 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -175,22 +183,26 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
                 guard let url else { fallthrough }
                 let retryCount = self.utilityNewRetryCount(for: url)
                 let delay = self.utilityRetryDelay(for: retryCount)
                 guard delay >= 0 else { fallthrough }
                 guard let retryBlk else { fallthrough }
-                let data = try! response.result.get()
                 DNSUIThread.run(after: delay) { // TODO: DNSThread
                     retryBlk(error, data)
                 }
                 return
             default:
-                let error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -234,13 +246,15 @@ public extension WKRBlankBase {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                var error = DNSError.NetworkBase.networkError(error: error, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
                 let statusCode = response.response?.statusCode ?? 0
                 if statusCode == 401 {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                let data = try? response.result.get()
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -259,8 +273,9 @@ public extension WKRBlankBase {
             case 400, 401:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
+                let error = self.utility401Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -274,14 +289,15 @@ public extension WKRBlankBase {
             case 403:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                var error = self.utility403Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
-                    error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
+                    error = DNSError.NetworkBase.upgradeClient(message: details, transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -294,12 +310,13 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Already Linked" {
-                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                    error = DNSError.NetworkBase.alreadyLinked(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -314,8 +331,9 @@ public extension WKRBlankBase {
             case 409:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -327,9 +345,11 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -340,22 +360,26 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
                 guard let url else { fallthrough }
                 let retryCount = self.utilityNewRetryCount(for: url)
                 let delay = self.utilityRetryDelay(for: retryCount)
                 guard delay >= 0 else { fallthrough }
                 guard let retryBlk else { fallthrough }
-                let data = try! response.result.get()
                 DNSUIThread.run(after: delay) { // TODO: DNSThread
                     retryBlk(error, data)
                 }
                 return
             default:
-                let error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -399,13 +423,15 @@ public extension WKRBlankBase {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                var error = DNSError.NetworkBase.networkError(error: error, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
                 let statusCode = response.response?.statusCode ?? 0
                 if statusCode == 401 {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                let data = try? response.result.get()
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -424,8 +450,9 @@ public extension WKRBlankBase {
             case 400, 401:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
+                let error = self.utility401Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -439,14 +466,15 @@ public extension WKRBlankBase {
             case 403:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                var error = self.utility403Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
-                    error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
+                    error = DNSError.NetworkBase.upgradeClient(message: details, transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -459,12 +487,13 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Already Linked" {
-                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                    error = DNSError.NetworkBase.alreadyLinked(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -479,8 +508,9 @@ public extension WKRBlankBase {
             case 409:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -492,9 +522,11 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -505,22 +537,26 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
                 guard let url else { fallthrough }
                 let retryCount = self.utilityNewRetryCount(for: url)
                 let delay = self.utilityRetryDelay(for: retryCount)
                 guard delay >= 0 else { fallthrough }
                 guard let retryBlk else { fallthrough }
-                let data = try! response.result.get()
                 DNSUIThread.run(after: delay) { // TODO: DNSThread
                     retryBlk(error, data)
                 }
                 return
             default:
-                let error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -564,13 +600,15 @@ public extension WKRBlankBase {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                var error = DNSError.NetworkBase.networkError(error: error, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
                 let statusCode = response.response?.statusCode ?? 0
                 if statusCode == 401 {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
-                let data = try? response.result.get()
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -589,8 +627,9 @@ public extension WKRBlankBase {
             case 400, 401:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = self.utility401Error(from: message, and: statusCode, .blankWorkers(self))
+                let error = self.utility401Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -604,14 +643,15 @@ public extension WKRBlankBase {
             case 403:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                var error = self.utility403Error(from: message, and: statusCode, .blankWorkers(self))
+                var error = self.utility403Error(from: message, and: statusCode, transactionId: transactionId, .blankWorkers(self))
                 if message == "Missing/Invalid accessToken" {
-                    error = DNSError.NetworkBase.unauthorized(.blankWorkers(self))
+                    error = DNSError.NetworkBase.unauthorized(transactionId: transactionId, .blankWorkers(self))
                 }
                 if message == "Outdated Client" {
                     let details = self.utilityErrorDetails(from: valueData)
-                    error = DNSError.NetworkBase.upgradeClient(message: details, .blankWorkers(self))
+                    error = DNSError.NetworkBase.upgradeClient(message: details, transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -624,12 +664,13 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", .blankWorkers(self))
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
                 let message = self.utilityErrorMessage(from: valueData)
                 if message == "Already Linked" {
-                    error = DNSError.NetworkBase.alreadyLinked(.blankWorkers(self))
+                    error = DNSError.NetworkBase.alreadyLinked(transactionId: transactionId, .blankWorkers(self))
                 }
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
@@ -644,8 +685,9 @@ public extension WKRBlankBase {
             case 409:
                 let data = try! response.result.get()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, .blankWorkers(self))
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, status: message, transactionId: transactionId, .blankWorkers(self))
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -657,9 +699,11 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let error = DNSError.NetworkBase.dataError(.blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
@@ -670,22 +714,26 @@ public extension WKRBlankBase {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, .blankWorkers(self))
+                let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
                 guard let url else { fallthrough }
                 let retryCount = self.utilityNewRetryCount(for: url)
                 let delay = self.utilityRetryDelay(for: retryCount)
                 guard delay >= 0 else { fallthrough }
                 guard let retryBlk else { fallthrough }
-                let data = try! response.result.get()
                 DNSUIThread.run(after: delay) { // TODO: DNSThread
                     retryBlk(error, data)
                 }
                 return
             default:
-                let error = DNSError.NetworkBase
-                    .serverError(statusCode: statusCode, .blankWorkers(self))
-                DNSCore.reportError(error)
                 let data = try! response.result.get()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase
+                    .serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
                 _ = resultBlock?(.error)
