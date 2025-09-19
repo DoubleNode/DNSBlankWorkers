@@ -3,18 +3,26 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
+import DNSDataContracts
 import DNSDataObjects
 import DNSError
 import DNSProtocols
 import Foundation
 
+public struct WKRBlankAuthAccessData: WKRPTCLAuth.AccessData {
+    public let accessToken: String = ""
+}
 open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLAuth?
+
+    public var nextWKRPTCLAuth: WKRPTCLAuth? {
+        get { return nextWorker as? WKRPTCLAuth }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -23,21 +31,21 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
     public func register(nextWorker: WKRPTCLAuth,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLAuth = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLAuth?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLAuth?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLAuth != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -53,7 +61,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doCheckAuth(using: parameters,
+            return self.nextWKRPTCLAuth?.doCheckAuth(using: parameters,
                                                 with: progress, and: block)
         },
                    doWork: {
@@ -67,7 +75,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLinkAuth(from: username,
+            return self.nextWKRPTCLAuth?.doLinkAuth(from: username,
                                                and: password,
                                                using: parameters,
                                                with: progress, and: block)
@@ -83,7 +91,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                      with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLAuthBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doPasswordResetStart(from: username, using: parameters,
+            return self.nextWKRPTCLAuth?.doPasswordResetStart(from: username, using: parameters,
                                                          with: progress, and: block)
         },
                    doWork: {
@@ -97,7 +105,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doSignIn(from: username, and: password, using: parameters,
+            return self.nextWKRPTCLAuth?.doSignIn(from: username, and: password, using: parameters,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -109,19 +117,19 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doSignOut(using: parameters, with: progress, and: block)
+            return self.nextWKRPTCLAuth?.doSignOut(using: parameters, with: progress, and: block)
         },
                    doWork: {
             return self.intDoSignOut(using: parameters, with: progress, and: block, then: $0)
         })
     }
-    public func doSignUp(from user: DAOUser?,
+    public func doSignUp(from user: (any DAOUserProtocol)?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doSignUp(from: user, and: password, using: parameters,
+            return self.nextWKRPTCLAuth?.doSignUp(from: user, and: password, using: parameters,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -157,7 +165,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                           with block: WKRPTCLAuthBlkVoid?) {
         self.doSignOut(using: parameters, with: nil, and: block)
     }
-    public func doSignUp(from user: DAOUser?,
+    public func doSignUp(from user: (any DAOUserProtocol)?,
                          and password: String?,
                          using parameters: DNSDataDictionary,
                          with block: WKRPTCLAuthBlkBoolAccessData?) {
@@ -169,7 +177,8 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAuthBlkBoolBoolAccessData?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success((false, false, WKRBlankAuthAccessData())))
+        _ = resultBlock?(.completed)
     }
     open func intDoLinkAuth(from username: String,
                             and password: String,
@@ -177,14 +186,16 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLAuthBlkBoolAccessData?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success((false, WKRBlankAuthAccessData())))
+        _ = resultBlock?(.completed)
     }
     open func intDoPasswordResetStart(from username: String?,
                                       using parameters: DNSDataDictionary,
                                       with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLAuthBlkVoid?,
                                       then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoSignIn(from username: String?,
                           and password: String?,
@@ -192,20 +203,23 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthBlkBoolAccessData?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success((false, WKRBlankAuthAccessData())))
+        _ = resultBlock?(.completed)
     }
     open func intDoSignOut(using parameters: DNSDataDictionary,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAuthBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
-    open func intDoSignUp(from user: DAOUser?,
+    open func intDoSignUp(from user: (any DAOUserProtocol)?,
                           and password: String?,
                           using parameters: DNSDataDictionary,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthBlkBoolAccessData?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success((false, WKRBlankAuthAccessData())))
+        _ = resultBlock?(.completed)
     }
 }

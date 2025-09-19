@@ -3,11 +3,12 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import Alamofire
 import AtomicSwift
+import DNSBlankNetwork
 import DNSCore
 import DNSCrashNetwork
 import DNSDataObjects
@@ -69,16 +70,28 @@ public protocol WKRPTCLBaseResponse: Decodable {
 
 open class WKRBase: NSObject, WKRPTCLWorkerBase {
     public static var xlt = DNSDataTranslation()
-    
+
     static public var languageCode: String {
         DNSCore.languageCode
     }
-    
+
     @Atomic
     private var options: [String] = []
-    
-    public var netConfig: NETPTCLConfig = NETCrashConfig()
-    public var netRouter: NETPTCLRouter = NETCrashRouter()
+
+    public var netConfig: NETPTCLConfig {
+        get { return NETBlankConfig() }
+        set { /* Default implementation ignores setter */ }
+    }
+    public var netRouter: NETPTCLRouter {
+        get { return NETBlankRouter() }
+        set { /* Default implementation ignores setter */ }
+    }
+
+    // MARK: - DNSPTCLWorker requirements
+    public var nextWorker: DNSPTCLWorker?
+
+    // MARK: - WKRPTCLWorkerBase requirements
+    open var wkrSystems: WKRPTCLSystems?
     
     override public required init() {
         super.init()
@@ -158,6 +171,6 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLWorkerBaseBlkAAnalyticsData?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
     }
 }

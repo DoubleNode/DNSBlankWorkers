@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSError
@@ -12,7 +12,11 @@ import Foundation
 
 open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLAppEvents?
+
+    public var nextWKRPTCLAppEvents: WKRPTCLAppEvents? {
+        get { return nextWorker as? WKRPTCLAppEvents }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -21,21 +25,21 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public func register(nextWorker: WKRPTCLAppEvents,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLAppEvents = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLAppEvents?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLAppEvents?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLAppEvents != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -50,7 +54,7 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public func doLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLAppEventsBlkAAppEvent?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadAppEvents(with: progress, and: block)
+            return self.nextWKRPTCLAppEvents?.doLoadAppEvents(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAppEvents(with: progress, and: block, then: $0)
@@ -66,6 +70,7 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     open func intDoLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAppEventsBlkAAppEvent?,
                                  then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
 }

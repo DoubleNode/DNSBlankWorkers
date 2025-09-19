@@ -3,18 +3,23 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
 import DNSDataObjects
+import DNSDataTypes
 import DNSError
 import DNSProtocols
 import Foundation
 
 open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLProducts?
+
+    public var nextWKRPTCLProducts: WKRPTCLProducts? {
+        get { return nextWorker as? WKRPTCLProducts }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -23,21 +28,21 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     public func register(nextWorker: WKRPTCLProducts,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLProducts = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLProducts?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLProducts?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLProducts != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -54,7 +59,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doAnalytics(for: object, using: data, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doAnalytics(for: object, using: data, with: progress, and: block)
         },
                    doWork: {
             return self.intDoAnalytics(for: object, using: data, with: progress, and: block, then: $0)
@@ -66,7 +71,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLProductsBlkPricing?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadPricing(for: product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doLoadPricing(for: product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPricing(for: product, with: progress, and: block, then: $0)
@@ -76,7 +81,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLProductsBlkProduct?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadProduct(for: id, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doLoadProduct(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadProduct(for: id, with: progress, and: block, then: $0)
@@ -87,7 +92,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLProductsBlkProduct?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadProduct(for: id, and: place, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doLoadProduct(for: id, and: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadProduct(for: id, and: place, with: progress, and: block, then: $0)
@@ -96,7 +101,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
     public func doLoadProducts(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkAProduct?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadProducts(with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doLoadProducts(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadProducts(with: progress, and: block, then: $0)
@@ -106,7 +111,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkAProduct?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadProducts(for: place, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doLoadProducts(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadProducts(for: place, with: progress, and: block, then: $0)
@@ -117,7 +122,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLProductsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doReact(with: reaction, to: product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doReact(with: reaction, to: product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: product, with: progress, and: block, then: $0)
@@ -127,7 +132,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doRemove(product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(product, with: progress, and: block, then: $0)
@@ -138,7 +143,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnreact(with: reaction, to: product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doUnreact(with: reaction, to: product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: product, with: progress, and: block, then: $0)
@@ -149,7 +154,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(pricing, for: product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doUpdate(pricing, for: product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(pricing, for: product, with: progress, and: block, then: $0)
@@ -159,7 +164,7 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(product, with: progress, and: block)
+            return self.nextWKRPTCLProducts?.doUpdate(product, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(product, with: progress, and: block, then: $0)
@@ -216,63 +221,73 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkPricing?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOPricing()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadProduct(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOProduct()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadProduct(for id: String,
                                and place: DAOPlace,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOProduct()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadProducts(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadProducts(for place: DAOPlace,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to product: DAOProduct,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLProductsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ pricing: DAOPricing,
                           for product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

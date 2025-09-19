@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
@@ -13,7 +13,11 @@ import Foundation
 
 open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLAnalytics?
+
+    public var nextWKRPTCLAnalytics: WKRPTCLAnalytics? {
+        get { return nextWorker as? WKRPTCLAnalytics }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +26,21 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     public func register(nextWorker: WKRPTCLAnalytics,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLAnalytics = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLAnalytics?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLAnalytics?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLAnalytics != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -50,7 +54,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     // MARK: - Worker Logic (Public) -
     public func doAutoTrack(class: String, method: String, properties: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
+            return self.nextWKRPTCLAnalytics?.doAutoTrack(class: `class`, method: method, properties: properties, options: options)
         },
                           doWork: {
             return self.intDoAutoTrack(class: `class`, method: method, properties: properties, options: options, then: $0)
@@ -58,7 +62,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     }
     public func doGroup(groupId: String, traits: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doGroup(groupId: groupId, traits: traits, options: options)
+            return self.nextWKRPTCLAnalytics?.doGroup(groupId: groupId, traits: traits, options: options)
         },
                           doWork: {
             return self.intDoGroup(groupId: groupId, traits: traits, options: options, then: $0)
@@ -66,7 +70,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     }
     public func doIdentify(userId: String, traits: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doIdentify(userId: userId, traits: traits, options: options)
+            return self.nextWKRPTCLAnalytics?.doIdentify(userId: userId, traits: traits, options: options)
         },
                           doWork: {
             return self.intDoIdentify(userId: userId, traits: traits, options: options, then: $0)
@@ -74,7 +78,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     }
     public func doScreen(screenTitle: String, properties: DNSDataDictionary, options: DNSDataDictionary) -> WKRPTCLAnalyticsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
+            return self.nextWKRPTCLAnalytics?.doScreen(screenTitle: screenTitle, properties: properties, options: options)
         },
                           doWork: {
             return self.intDoScreen(screenTitle: screenTitle, properties: properties, options: options, then: $0)
@@ -82,7 +86,7 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     }
     public func doTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary = [:], options: DNSDataDictionary = [:]) -> WKRPTCLAnalyticsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doTrack(event: event, properties: properties, options: options)
+            return self.nextWKRPTCLAnalytics?.doTrack(event: event, properties: properties, options: options)
         },
                           doWork: {
             return self.intDoTrack(event: event, properties: properties, options: options, then: $0)
@@ -124,27 +128,27 @@ open class WKRBlankAnalytics: WKRBlankBase, WKRPTCLAnalytics {
     // MARK: - Internal Work Methods
     open func intDoAutoTrack(class: String, method: String, properties: DNSDataDictionary, options: DNSDataDictionary,
                              then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
     open func intDoGroup(groupId: String, traits: DNSDataDictionary, options: DNSDataDictionary,
                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
     open func intDoIdentify(userId: String, traits: DNSDataDictionary, options: DNSDataDictionary,
                             then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
     open func intDoScreen(screenTitle: String, properties: DNSDataDictionary, options: DNSDataDictionary,
                           then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
     open func intDoTrack(event: WKRPTCLAnalyticsEvents, properties: DNSDataDictionary = [:], options: DNSDataDictionary = [:],
                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLAnalyticsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
 }

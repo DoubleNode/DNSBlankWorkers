@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSDataObjects
@@ -13,7 +13,11 @@ import Foundation
 
 open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLCards?
+
+    public var nextWKRPTCLCards: WKRPTCLCards? {
+        get { return nextWorker as? WKRPTCLCards }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +26,21 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
     public func register(nextWorker: WKRPTCLCards,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLCards = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLCards?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLCards?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLCards != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -53,7 +57,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                       with progress: DNSPTCLProgressBlock?,
                       and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doAdd(card, to: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoAdd(card, to: user, with: progress, and: block, then: $0)
@@ -63,7 +67,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLCardsBlkCard?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCard(for: id, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doLoadCard(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCard(for: id, with: progress, and: block, then: $0)
@@ -73,7 +77,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLCardsBlkCard?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCard(for: transaction, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doLoadCard(for: transaction, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCard(for: transaction, with: progress, and: block, then: $0)
@@ -83,7 +87,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkACard?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCards(for: user, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doLoadCards(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCards(for: user, with: progress, and: block, then: $0)
@@ -93,7 +97,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLCardsBlkATransaction?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadTransactions(for: card, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doLoadTransactions(for: card, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadTransactions(for: card, with: progress, and: block, then: $0)
@@ -104,7 +108,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doRemove(card, from: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(card, from: user, with: progress, and: block, then: $0)
@@ -115,7 +119,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(card, for: user, with: progress, and: block)
+            return self.nextWKRPTCLCards?.doUpdate(card, for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(card, for: user, with: progress, and: block, then: $0)
@@ -161,44 +165,51 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLCardsBlkVoid?,
                        then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadCard(for id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOCard()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadCard(for transaction: DAOTransaction,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOCard()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadCards(for user: DAOUser,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLCardsBlkACard?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadTransactions(for card: DAOCard,
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLCardsBlkATransaction?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ card: DAOCard,
                           from user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ card: DAOCard,
                           for user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

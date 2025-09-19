@@ -3,18 +3,23 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import Combine
 import DNSCore
 import DNSDataObjects
+import DNSDataTypes
 import DNSError
 import DNSProtocols
 
 open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLSections?
+
+    public var nextWKRPTCLSections: WKRPTCLSections? {
+        get { return nextWorker as? WKRPTCLSections }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -23,26 +28,26 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public func register(nextWorker: WKRPTCLSections,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLSections = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLSections?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLSections?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLSections != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -58,7 +63,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkASection?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadChildren(for: section, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doLoadChildren(for: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadChildren(for: section, with: progress, and: block, then: $0)
@@ -68,7 +73,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLSectionsBlkSection?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadParent(for: section, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doLoadParent(for: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadParent(for: section, with: progress, and: block, then: $0)
@@ -78,7 +83,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSectionsBlkSection?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadSection(for: id, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doLoadSection(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSection(for: id, with: progress, and: block, then: $0)
@@ -87,7 +92,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public func doLoadSections(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkASection?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadSections(with: progress, and: block)
+            return self.nextWKRPTCLSections?.doLoadSections(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSections(with: progress, and: block, then: $0)
@@ -98,7 +103,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLSectionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doReact(with: reaction, to: section, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doReact(with: reaction, to: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: section, with: progress, and: block, then: $0)
@@ -109,7 +114,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLSectionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnreact(with: reaction, to: section, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doUnreact(with: reaction, to: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: section, with: progress, and: block, then: $0)
@@ -119,7 +124,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLSectionsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(section, with: progress, and: block)
+            return self.nextWKRPTCLSections?.doUpdate(section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(section, with: progress, and: block, then: $0)
@@ -162,43 +167,50 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSectionsBlkASection?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadParent(for section: DAOSection,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSectionsBlkSection?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOSection()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadSection(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkSection?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOSection()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadSections(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSectionsBlkASection?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to section: DAOSection,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLSectionsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to section: DAOSection,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLSectionsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ section: DAOSection,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLSectionsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

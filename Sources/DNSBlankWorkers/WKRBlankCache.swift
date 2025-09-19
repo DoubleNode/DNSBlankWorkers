@@ -3,17 +3,23 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import Combine
 import DNSError
 import DNSProtocols
+#if canImport(UIKit)
 import UIKit
+#endif
 
 open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLCache?
+
+    public var nextWKRPTCLCache: WKRPTCLCache? {
+        get { return nextWorker as? WKRPTCLCache }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,26 +28,26 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public func register(nextWorker: WKRPTCLCache,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLCache = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLCache?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLCache?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLCache != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -56,10 +62,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public func doDeleteObject(for id: String,
                                with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubVoid {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return nextWorker.doDeleteObject(for: id, with: progress)
+            return self.nextWKRPTCLCache?.doDeleteObject(for: id, with: progress)
         },
                              doWork: {
             return self.intDoDeleteObject(for: id, with: progress, then: $0)
@@ -69,10 +75,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
                             for id: String,
                             with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubImage {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutImage { $0(.success(UIImage())) }.eraseToAnyPublisher()
             }
-            return nextWorker.doLoadImage(from: url, for: id, with: progress)
+            return self.nextWKRPTCLCache?.doLoadImage(from: url, for: id, with: progress)
         },
                              doWork: {
             return self.intDoLoadImage(from: url, for: id, with: progress, then: $0)
@@ -81,10 +87,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public func doReadObject(for id: String,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return nextWorker.doReadObject(for: id, with: progress)
+            return self.nextWKRPTCLCache?.doReadObject(for: id, with: progress)
         },
                              doWork: {
             return self.intDoReadObject(for: id, with: progress, then: $0)
@@ -93,10 +99,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public func doReadString(for id: String,
                              with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubString {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
             }
-            return nextWorker.doReadString(for: id, with: progress)
+            return self.nextWKRPTCLCache?.doReadString(for: id, with: progress)
         },
                              doWork: {
             return self.intDoReadString(for: id, with: progress, then: $0)
@@ -106,10 +112,10 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
                          for id: String,
                          with progress: DNSPTCLProgressBlock?) -> WKRPTCLCachePubAny {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutAny { $0(.success(object)) }.eraseToAnyPublisher()
             }
-            return nextWorker.doUpdate(object: object, for: id, with: progress)
+            return self.nextWKRPTCLCache?.doUpdate(object: object, for: id, with: progress)
         },
                              doWork: {
             return self.intDoUpdate(object: object, for: id, with: progress, then: $0)
@@ -139,28 +145,33 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     open func intDoDeleteObject(for id: String,
                                 with progress: DNSPTCLProgressBlock?,
                                 then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubVoid {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid
+        _ = resultBlock?(.completed)
+        return WKRPTCLCacheFutVoid { $0(.success) }.eraseToAnyPublisher()
     }
     open func intDoLoadImage(from url: NSURL,
                              for id: String,
                              with progress: DNSPTCLProgressBlock?,
                              then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubImage {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubImage
+        _ = resultBlock?(.completed)
+        return WKRPTCLCacheFutImage { $0(.success(UIImage())) }.eraseToAnyPublisher()
     }
     open func intDoReadObject(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubAny {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubAny
+        _ = resultBlock?(.completed)
+        return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
     }
     open func intDoReadString(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubString {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubString
+        _ = resultBlock?(.completed)
+        return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
     }
     open func intDoUpdate(object: Any,
                           for id: String,
                           with progress: DNSPTCLProgressBlock?,
                           then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubAny {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubAny
+        _ = resultBlock?(.completed)
+        return WKRPTCLCacheFutAny { $0(.success(object)) }.eraseToAnyPublisher()
     }
 }

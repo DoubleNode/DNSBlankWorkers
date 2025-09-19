@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSDataObjects
@@ -13,7 +13,11 @@ import Foundation
 
 open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLBeacons?
+
+    public var nextWKRPTCLBeacons: WKRPTCLBeacons? {
+        get { return nextWorker as? WKRPTCLBeacons }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +26,21 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
     public func register(nextWorker: WKRPTCLBeacons,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLBeacons = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLBeacons?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLBeacons?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLBeacons != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -52,7 +56,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLBeaconsBlkABeacon?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadBeacons(in: place, with: progress, and: block)
+            return self.nextWKRPTCLBeacons?.doLoadBeacons(in: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadBeacons(in: place, with: progress, and: block, then: $0)
@@ -63,7 +67,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLBeaconsBlkABeacon?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadBeacons(in: place, for: activity,
+            return self.nextWKRPTCLBeacons?.doLoadBeacons(in: place, for: activity,
                                                   with: progress, and: block)
         },
                    doWork: {
@@ -76,7 +80,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRangeBeacons(named: uuids, for: processKey,
+            return self.nextWKRPTCLBeacons?.doRangeBeacons(named: uuids, for: processKey,
                                                    with: progress, and: block)
         },
                    doWork: {
@@ -86,7 +90,7 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
     }
     public func doStopRangeBeacons(for processKey: String) -> WKRPTCLBeaconsResVoid {
         return self.runDo(runNext: {
-            return self.nextWorker?.doStopRangeBeacons(for: processKey)
+            return self.nextWKRPTCLBeacons?.doStopRangeBeacons(for: processKey)
         },
                           doWork: {
             return self.intDoStopRangeBeacons(for: processKey, then: $0)
@@ -114,25 +118,28 @@ open class WKRBlankBeacons: WKRBlankBase, WKRPTCLBeacons {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadBeacons(in place: DAOPlace,
                                for activity: DAOActivity,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLBeaconsBlkABeacon?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoRangeBeacons(named uuids: [UUID],
                                 for processKey: String,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLBeaconsBlkABeacon?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoStopRangeBeacons(for processKey: String,
                                     then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLBeaconsResVoid {
-        _ = resultBlock?(.unhandled)
+        _ = resultBlock?(.completed)
         return .success
     }
 }

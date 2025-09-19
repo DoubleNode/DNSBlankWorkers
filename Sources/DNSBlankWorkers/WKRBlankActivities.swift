@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSDataObjects
@@ -13,7 +13,11 @@ import Foundation
 
 open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLActivities?
+
+    public var nextWKRPTCLActivities: WKRPTCLActivities? {
+        get { return nextWorker as? WKRPTCLActivities }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +26,21 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
     public func register(nextWorker: WKRPTCLActivities,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLActivities = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLActivities?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLActivities?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLActivities != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -53,7 +57,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLActivitiesBlkAActivity?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadActivities(for: place, using: activityTypes,
+            return self.nextWKRPTCLActivities?.doLoadActivities(for: place, using: activityTypes,
                                                      with: progress, and: block)
         },
                    doWork: {
@@ -66,7 +70,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivitiesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(activities, for: place, with: progress, and: block)
+            return self.nextWKRPTCLActivities?.doUpdate(activities, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(activities, for: place, with: progress, and: block, then: $0)
@@ -91,13 +95,15 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLActivitiesBlkAActivity?,
                                   then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ activities: [DAOActivity],
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLActivitiesBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

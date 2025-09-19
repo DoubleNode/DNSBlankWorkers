@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import Alamofire
@@ -14,7 +14,6 @@ import Foundation
 
 open class WKRBlankBase: WKRBase {
     @Atomic public var retryCounts: [URL: Int] = [:]
-    public var wkrSystems: WKRPTCLSystems?
 
     // MARK: - Utility methods
     open func utilityReportSystemSuccess(result: WKRPTCLSystemsData.Result = .success,

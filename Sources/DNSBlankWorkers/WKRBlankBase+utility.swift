@@ -3,11 +3,11 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
-import Alamofire
-import AtomicSwift
+//import Alamofire
+//import AtomicSwift
 import DNSCore
 import DNSCoreThreading
 import DNSError

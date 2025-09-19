@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSDataObjects
@@ -13,7 +13,11 @@ import Foundation
 
 open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLPricing?
+
+    public var nextWKRPTCLPricing: WKRPTCLPricing? {
+        get { return nextWorker as? WKRPTCLPricing }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +26,21 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
     public func register(nextWorker: WKRPTCLPricing,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLPricing = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLPricing?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLPricing?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLPricing != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -53,7 +57,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLPricingBlkAPricingItem?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadPricingItems(for: pricingTier, and: pricingSeason,
+            return self.nextWKRPTCLPricing?.doLoadPricingItems(for: pricingTier, and: pricingSeason,
                                                        with: progress, and: block)
         },
                    doWork: {
@@ -65,7 +69,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                                      with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLPricingBlkAPricingSeason?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadPricingSeasons(for: pricingTier, with: progress, and: block)
+            return self.nextWKRPTCLPricing?.doLoadPricingSeasons(for: pricingTier, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPricingSeasons(for: pricingTier, with: progress, and: block, then: $0)
@@ -74,7 +78,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
     public func doLoadPricingTiers(with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLPricingBlkAPricingTier?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadPricingTiers(with: progress, and: block)
+            return self.nextWKRPTCLPricing?.doLoadPricingTiers(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPricingTiers(with: progress, and: block, then: $0)
@@ -84,7 +88,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(pricingTier, with: progress, and: block)
+            return self.nextWKRPTCLPricing?.doRemove(pricingTier, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(pricingTier, with: progress, and: block, then: $0)
@@ -95,7 +99,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(pricingSeason, for: pricingTier,
+            return self.nextWKRPTCLPricing?.doRemove(pricingSeason, for: pricingTier,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -109,7 +113,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(pricingItem, for: pricingTier, and: pricingSeason,
+            return self.nextWKRPTCLPricing?.doRemove(pricingItem, for: pricingTier, and: pricingSeason,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -121,7 +125,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(pricingTier, with: progress, and: block)
+            return self.nextWKRPTCLPricing?.doUpdate(pricingTier, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(pricingTier, with: progress, and: block, then: $0)
@@ -132,7 +136,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(pricingSeason, for: pricingTier,
+            return self.nextWKRPTCLPricing?.doUpdate(pricingSeason, for: pricingTier,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -146,7 +150,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPricingBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(pricingItem, for: pricingTier, and: pricingSeason,
+            return self.nextWKRPTCLPricing?.doUpdate(pricingItem, for: pricingTier, and: pricingSeason,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -206,31 +210,36 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLPricingBlkAPricingItem?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadPricingSeasons(for pricingTier: DAOPricingTier,
                                       with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLPricingBlkAPricingSeason?,
                                       then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadPricingTiers(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLPricingBlkAPricingTier?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ pricingSeason: DAOPricingSeason,
                           for pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ pricingItem: DAOPricingItem,
                           for pricingTier: DAOPricingTier,
@@ -238,20 +247,23 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ pricingSeason: DAOPricingSeason,
                           for pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ pricingItem: DAOPricingItem,
                           for pricingTier: DAOPricingTier,
@@ -259,6 +271,7 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

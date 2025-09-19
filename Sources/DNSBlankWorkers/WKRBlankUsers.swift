@@ -3,17 +3,22 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
 import DNSDataObjects
+import DNSDataTypes
 import DNSError
 import DNSProtocols
 
 open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLUsers?
+
+    public var nextWKRPTCLUsers: WKRPTCLUsers? {
+        get { return nextWorker as? WKRPTCLUsers }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -22,21 +27,21 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     public func register(nextWorker: WKRPTCLUsers,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLUsers = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLUsers?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLUsers?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLUsers != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -52,7 +57,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlkBool?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doActivate(user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doActivate(user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoActivate(user, with: progress, and: block, then: $0)
@@ -62,7 +67,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doConfirm(pendingUser: pendingUser, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doConfirm(pendingUser: pendingUser, with: progress, and: block)
         },
                    doWork: {
             return self.intDoConfirm(pendingUser: pendingUser, with: progress, and: block, then: $0)
@@ -72,7 +77,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doConsent(childUser: childUser, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doConsent(childUser: childUser, with: progress, and: block)
         },
                    doWork: {
             return self.intDoConsent(childUser: childUser, with: progress, and: block, then: $0)
@@ -81,7 +86,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
     public func doLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLUsersBlkUser?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadCurrentUser(with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadCurrentUser(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCurrentUser(with: progress, and: block, then: $0)
@@ -91,7 +96,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLUsersBlkAUser?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadChildUsers(for: user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadChildUsers(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadChildUsers(for: user, with: progress, and: block, then: $0)
@@ -102,7 +107,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkAAccountLinkRequest?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadLinkRequests(for: user, using: parameters, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadLinkRequests(for: user, using: parameters, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadLinkRequests(for: user, using: parameters, with: progress, and: block, then: $0)
@@ -112,7 +117,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkAUser?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadPendingUsers(for: user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadPendingUsers(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPendingUsers(for: user, with: progress, and: block, then: $0)
@@ -122,7 +127,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                                          with progress: DNSPTCLProgressBlock?,
                                          and block: WKRPTCLUsersBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadUnverifiedAccounts(for: user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadUnverifiedAccounts(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadUnverifiedAccounts(for: user, with: progress, and: block, then: $0)
@@ -132,7 +137,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlkUser?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadUser(for: id, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadUser(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadUser(for: id, with: progress, and: block, then: $0)
@@ -142,7 +147,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLUsersBlkAUser?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadUsers(for: account, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doLoadUsers(for: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadUsers(for: account, with: progress, and: block, then: $0)
@@ -153,7 +158,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLUsersBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doReact(with: reaction, to: user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doReact(with: reaction, to: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: user, with: progress, and: block, then: $0)
@@ -163,7 +168,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRemove(user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doRemove(user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(user, with: progress, and: block, then: $0)
@@ -174,7 +179,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUnreact(with: reaction, to: user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doUnreact(with: reaction, to: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: user, with: progress, and: block, then: $0)
@@ -184,7 +189,7 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doUpdate(user, with: progress, and: block)
+            return self.nextWKRPTCLUsers?.doUpdate(user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(user, with: progress, and: block, then: $0)
@@ -260,86 +265,100 @@ open class WKRBlankUsers: WKRBlankBase, WKRPTCLUsers {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLUsersBlkBool?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(false))
+        _ = resultBlock?(.completed)
     }
     open func intDoConfirm(pendingUser: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoConsent(childUser: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlkVoid?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadCurrentUser(with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLUsersBlkUser?,
                                    then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOUser()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadChildUsers(for user: DAOUser,
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLUsersBlkAUser?,
                                   then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadLinkRequests(for user: DAOUser,
                                     using parameters: DNSDataDictionary,
                                     with progress: DNSProtocols.DNSPTCLProgressBlock?,
                                     and block: WKRPTCLUsersBlkAAccountLinkRequest?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadPendingUsers(for user: DAOUser,
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLUsersBlkAUser?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadUnverifiedAccounts(for user: DAOUser,
                                           with progress: DNSPTCLProgressBlock?,
                                           and block: WKRPTCLUsersBlkAAccount?,
                                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadUser(for id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLUsersBlkUser?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DAOUser()))
+        _ = resultBlock?(.completed)
     }
     open func intDoLoadUsers(for account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLUsersBlkAUser?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to user: DAOUser,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLUsersBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoRemove(_ user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to user: DAOUser,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLUsersBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(DNSMetadata()))
+        _ = resultBlock?(.completed)
     }
     open func intDoUpdate(_ user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLUsersBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success)
+        _ = resultBlock?(.completed)
     }
 }

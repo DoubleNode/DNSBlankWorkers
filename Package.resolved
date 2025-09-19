@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "activelabel.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/optonaut/ActiveLabel.swift",
-      "state" : {
-        "revision" : "36949c1a69ef8b40574da20c9e24b115f387b1cf",
-        "version" : "1.1.5"
-      }
-    },
-    {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
@@ -28,30 +19,12 @@
       }
     },
     {
-      "identity" : "animatedfield",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DoubleNodeOpen/AnimatedField.git",
-      "state" : {
-        "revision" : "7dc28b141a548375327f762c6378a36e107c8a18",
-        "version" : "2.5.60"
-      }
-    },
-    {
       "identity" : "atomicswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNodeOpen/AtomicSwift.git",
       "state" : {
-        "revision" : "58fbeed795715d9c8dd7bb7ae1c36f37f2827089",
-        "version" : "1.2.2"
-      }
-    },
-    {
-      "identity" : "dnsbasetheme",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DoubleNode/DNSBaseTheme.git",
-      "state" : {
-        "revision" : "578c5a01efffa2832867edf1edf0500d60dd553c",
-        "version" : "1.11.1"
+        "revision" : "6efc4ec9370703f1e4d83ec13a9b7132f3b8ad60",
+        "version" : "1.2.3"
       }
     },
     {
@@ -59,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSBlankNetwork.git",
       "state" : {
-        "revision" : "74b8936484fc2332cbbbccc2c067c71326a27f38",
-        "version" : "1.11.3"
+        "revision" : "369cfe7fa2a4f89ff1182f83151d0baa10ce3a3b",
+        "version" : "1.12.0"
       }
     },
     {
@@ -68,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSCore.git",
       "state" : {
-        "revision" : "3e37d10f8698de371a3970ac9b694ca6d1eab4e7",
-        "version" : "1.11.10"
+        "revision" : "f3ce678397cf02195e94f759978a022acb80fc4f",
+        "version" : "1.12.0"
       }
     },
     {
@@ -77,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSCoreThreading.git",
       "state" : {
-        "revision" : "6061fa5df1a49ea51043a0760283ffc5d6ccf312",
-        "version" : "1.11.1"
+        "revision" : "cc5e2487c762059be53d28f2679bf95a887dda43",
+        "version" : "1.12.0"
       }
     },
     {
@@ -86,8 +59,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSCrashNetwork.git",
       "state" : {
-        "revision" : "700de1e63c00d035c20cc92649df16cf125d95dd",
-        "version" : "1.11.3"
+        "revision" : "5105b760bc1ab4ca4dbc3c3a6a880ff38cbb955a",
+        "version" : "1.12.0"
+      }
+    },
+    {
+      "identity" : "dnsdatacontracts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DoubleNode/DNSDataContracts.git",
+      "state" : {
+        "revision" : "5167d8a0671bd42a2913239ceb94da8cdc6aa684",
+        "version" : "1.12.0"
       }
     },
     {
@@ -95,8 +77,26 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSDataObjects.git",
       "state" : {
-        "revision" : "7feafaf5f472b0cc29020acefdbcd29c1c46edcd",
-        "version" : "1.11.11"
+        "revision" : "8d3f98cc256463d5edb6266e7d2d848cc951d843",
+        "version" : "1.12.0"
+      }
+    },
+    {
+      "identity" : "dnsdatatypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DoubleNode/DNSDataTypes.git",
+      "state" : {
+        "revision" : "a62a0f5af14ecbf936c14d71715110dfb30a37c8",
+        "version" : "1.12.0"
+      }
+    },
+    {
+      "identity" : "dnsdatauiobjects",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DoubleNode/DNSDataUIObjects.git",
+      "state" : {
+        "revision" : "1b6f9e90d5aa09d9580a03c6614f47abc23fccd4",
+        "version" : "1.12.0"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSError.git",
       "state" : {
-        "revision" : "d9040c8ced0e3f3166c0554be101342c5d9021c6",
-        "version" : "1.11.1"
+        "revision" : "80c78e038c6365b55be6e310aaae4afba231e459",
+        "version" : "1.12.0"
       }
     },
     {
@@ -113,8 +113,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSProtocols.git",
       "state" : {
-        "revision" : "7b819465f5d9ef4033918c9f8017cc3dea1b21c6",
-        "version" : "1.11.17"
+        "revision" : "2f35d9265cefeb65d4d24a8099840611412bc0db",
+        "version" : "1.12.0"
+      }
+    },
+    {
+      "identity" : "dnsthemetypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DoubleNode/DNSThemeTypes.git",
+      "state" : {
+        "revision" : "dcb365de70c827b0870d49f9c5f298551556a274",
+        "version" : "1.12.1"
       }
     },
     {
@@ -122,80 +131,35 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kaishin/Gifu.git",
       "state" : {
-        "revision" : "46434cd816f035271beb16d80f7bc91381cbd8e4",
-        "version" : "3.5.1"
-      }
-    },
-    {
-      "identity" : "keyedcodable",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dgrzeszczak/KeyedCodable.git",
-      "state" : {
-        "revision" : "7e24e26cf3a844ee0dbcdbcc8c78ed45f9570e69",
-        "version" : "3.1.2"
+        "revision" : "f19726eaf0dfa4dbce4d3f80293c9d38c2acba53",
+        "version" : "4.0.1"
       }
     },
     {
       "identity" : "phonenumberkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/marmelroy/PhoneNumberKit",
+      "location" : "https://github.com/DoubleNodeOpen/PhoneNumberKit",
       "state" : {
-        "revision" : "4eda4fe8f3cf83411ee55a08adefba21b1557c3f",
-        "version" : "4.1.3"
+        "revision" : "ce40a19644c4c1c3132c0092a70105b5c9d9fa84",
+        "version" : "4.1.5"
       }
     },
     {
       "identity" : "sfsymbol",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Nirma/SFSymbol",
+      "location" : "https://github.com/DoubleNodeOpen/SFSymbol",
       "state" : {
-        "revision" : "1b127194b976a58ea460a2cbe10f00fa994b1ece",
-        "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "skeletonview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Juanpe/SkeletonView.git",
-      "state" : {
-        "revision" : "2f5274827d310e32c09325dd3e0007120940988e",
-        "version" : "1.31.0"
-      }
-    },
-    {
-      "identity" : "swift-mask-textfield",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DoubleNodeOpen/swift-mask-textfield.git",
-      "state" : {
-        "revision" : "a5546b7ae52f8d6e0b067c25606f3455056b92a5",
-        "version" : "1.1.2"
-      }
-    },
-    {
-      "identity" : "swiftlintplugins",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SimplyDanny/SwiftLintPlugins",
-      "state" : {
-        "revision" : "8545ddf4de043e6f2051c5cf204f39ef778ebf6b",
-        "version" : "0.59.1"
+        "revision" : "b24137abd255db8a128326f73ab9c0bad1b81df2",
+        "version" : "3.0.1"
       }
     },
     {
       "identity" : "swiftybeaver",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
+      "location" : "https://github.com/DoubleNodeOpen/SwiftyBeaver.git",
       "state" : {
-        "revision" : "8cba041db09596183331d123f337d0eb2e6e8e91",
-        "version" : "2.1.1"
-      }
-    },
-    {
-      "identity" : "swipecellkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwipeCellKit/SwipeCellKit",
-      "state" : {
-        "revision" : "7219cad3098637176ace311510d11467dbfb9bb0",
-        "version" : "2.7.1"
+        "revision" : "077d7ba1389768c32d6e1c190af6bfb93fb20bc2",
+        "version" : "2.1.2"
       }
     }
   ],

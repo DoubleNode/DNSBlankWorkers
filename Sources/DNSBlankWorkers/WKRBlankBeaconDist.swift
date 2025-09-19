@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
@@ -12,7 +12,11 @@ import DNSProtocols
 
 open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLBeaconDist?
+
+    public var nextWKRPTCLBeaconDist: WKRPTCLBeaconDist? {
+        get { return nextWorker as? WKRPTCLBeaconDist }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -21,21 +25,21 @@ open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
     public func register(nextWorker: WKRPTCLBeaconDist,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLBeaconDist = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLBeaconDist?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLBeaconDist?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLBeaconDist != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -50,7 +54,7 @@ open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
     public func doLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLBeaconDistBlkABeaconDistance?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doLoadBeaconDistances(with: progress, and: block)
+            return self.nextWKRPTCLBeaconDist?.doLoadBeaconDistances(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadBeaconDistances(with: progress, and: block, then: $0)
@@ -66,6 +70,7 @@ open class WKRBlankBeaconDist: WKRBlankBase, WKRPTCLBeaconDist {
     open func intDoLoadBeaconDistances(with progress: DNSPTCLProgressBlock?,
                                        and block: WKRPTCLBeaconDistBlkABeaconDistance?,
                                        then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
 }

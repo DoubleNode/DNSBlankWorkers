@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
@@ -12,7 +12,11 @@ import DNSProtocols
 
 open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLPermissions?
+
+    public var nextWKRPTCLPermissions: WKRPTCLPermissions? {
+        get { return nextWorker as? WKRPTCLPermissions }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -21,21 +25,21 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
     public func register(nextWorker: WKRPTCLPermissions,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLPermissions = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLPermissions?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLPermissions?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLPermissions != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -52,7 +56,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAction?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRequest(desire, permission, with: progress, and: block)
+            return self.nextWKRPTCLPermissions?.doRequest(desire, permission, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
@@ -63,7 +67,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAAction?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doRequest(desire, permissions, with: progress, and: block)
+            return self.nextWKRPTCLPermissions?.doRequest(desire, permissions, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
@@ -73,7 +77,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPermissionsBlkAAction?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doStatus(of: permissions, with: progress, and: block)
+            return self.nextWKRPTCLPermissions?.doStatus(of: permissions, with: progress, and: block)
         },
                    doWork: {
             return self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
@@ -83,7 +87,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLPermissionsBlkAction?) {
         self.runDo(runNext: {
-            return self.nextWorker?.doWait(for: permission, with: progress, and: block)
+            return self.nextWKRPTCLPermissions?.doWait(for: permission, with: progress, and: block)
         },
                    doWork: {
             return self.intDoWait(for: permission, with: progress, and: block, then: $0)
@@ -116,25 +120,29 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAction?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(WKRPTCLPermissionAction(.none, .unknown)))
+        _ = resultBlock?(.completed)
     }
     open func intDoRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                            _ permissions: [WKRPTCLPermissions.Data.System],
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAAction?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoStatus(of permissions: [WKRPTCLPermissions.Data.System],
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAAction?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success([]))
+        _ = resultBlock?(.completed)
     }
     open func intDoWait(for permission: WKRPTCLPermissions.Data.System,
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLPermissionsBlkAction?,
                         then resultBlock: DNSPTCLResultBlock?) {
-        _ = resultBlock?(.unhandled)
+        block?(.success(WKRPTCLPermissionAction(.none, .unknown)))
+        _ = resultBlock?(.completed)
     }
 }

@@ -3,7 +3,7 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import Combine
@@ -15,7 +15,11 @@ import Foundation
 
 open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    public var nextWorker: WKRPTCLPassports?
+
+    public var nextWKRPTCLPassports: WKRPTCLPassports? {
+        get { return nextWorker as? WKRPTCLPassports }
+        set { nextWorker = newValue }
+    }
 
     public required init() {
         super.init()
@@ -24,26 +28,26 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
     public func register(nextWorker: WKRPTCLPassports,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWorker = nextWorker
+        self.nextWKRPTCLPassports = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWorker?.disableOption(option)
+        nextWKRPTCLPassports?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWorker?.enableOption(option)
+        nextWKRPTCLPassports?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
-                      doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
-        let runNext = (self.nextWorker != nil) ? runNext : nil
+                      doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
+        let runNext = (self.nextWKRPTCLPassports != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
     public func runDoPub(runNext: DNSPTCLCallBlock?,
-                         doWork: DNSPTCLCallResultBlock = { return $0?(.unhandled) }) -> Any? {
+                         doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -60,10 +64,10 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
                                 for account: DAOAccount,
                                 with progress: DNSPTCLProgressBlock?) -> WKRPTCLPassportsPubData {
         return self.runDoPub(runNext: {
-            guard let nextWorker = self.nextWorker else {
+            guard self.nextWorker != nil else {
                 return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return nextWorker.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
+            return self.nextWKRPTCLPassports?.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },
                              doWork: {
             return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)
@@ -83,6 +87,7 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
                                  for account: DAOAccount,
                                  with progress: DNSPTCLProgressBlock?,
                                  then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassportsPubData {
-        return resultBlock?(.unhandled) as! WKRPTCLPassportsPubData // swiftlint:disable:this force_cast
+        _ = resultBlock?(.completed)
+        return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
     }
 }
