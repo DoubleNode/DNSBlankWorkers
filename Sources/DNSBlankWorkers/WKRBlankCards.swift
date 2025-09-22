@@ -13,10 +13,9 @@ import Foundation
 
 open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLCards: WKRPTCLCards? {
-        get { return nextWorker as? WKRPTCLCards }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLCards? {
+        get { return nextBaseWorker as? WKRPTCLCards }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -26,21 +25,21 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
     public func register(nextWorker: WKRPTCLCards,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLCards = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLCards?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLCards?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLCards != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -57,7 +56,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                       with progress: DNSPTCLProgressBlock?,
                       and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doAdd(card, to: user, with: progress, and: block)
+            return self.nextWorker?.doAdd(card, to: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoAdd(card, to: user, with: progress, and: block, then: $0)
@@ -67,7 +66,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLCardsBlkCard?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doLoadCard(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadCard(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCard(for: id, with: progress, and: block, then: $0)
@@ -77,7 +76,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLCardsBlkCard?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doLoadCard(for: transaction, with: progress, and: block)
+            return self.nextWorker?.doLoadCard(for: transaction, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCard(for: transaction, with: progress, and: block, then: $0)
@@ -87,7 +86,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkACard?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doLoadCards(for: user, with: progress, and: block)
+            return self.nextWorker?.doLoadCards(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCards(for: user, with: progress, and: block, then: $0)
@@ -97,7 +96,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLCardsBlkATransaction?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doLoadTransactions(for: card, with: progress, and: block)
+            return self.nextWorker?.doLoadTransactions(for: card, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadTransactions(for: card, with: progress, and: block, then: $0)
@@ -108,7 +107,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doRemove(card, from: user, with: progress, and: block)
+            return self.nextWorker?.doRemove(card, from: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(card, from: user, with: progress, and: block, then: $0)
@@ -119,7 +118,7 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCardsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCards?.doUpdate(card, for: user, with: progress, and: block)
+            return self.nextWorker?.doUpdate(card, for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(card, for: user, with: progress, and: block, then: $0)

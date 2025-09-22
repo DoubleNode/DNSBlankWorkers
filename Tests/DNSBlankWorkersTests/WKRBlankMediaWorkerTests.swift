@@ -54,8 +54,8 @@ final class WKRBlankMediaWorkerTests: XCTestCase {
         sut.register(nextWorker: nextWorker, for: .whenUnhandled)
 
         XCTAssertEqual(sut.callNextWhen, .whenUnhandled)
-        XCTAssertNotNil(sut.nextWKRPTCLMedia)
-        XCTAssertTrue(sut.nextWKRPTCLMedia === nextWorker)
+        XCTAssertNotNil(sut.nextWorker)
+        XCTAssertTrue(sut.nextWorker === nextWorker)
     }
 
     // MARK: - Error Handling Tests

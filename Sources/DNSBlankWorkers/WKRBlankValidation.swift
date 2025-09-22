@@ -13,10 +13,9 @@ import Foundation
 
 open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLValidation: WKRPTCLValidation? {
-        get { return nextWorker as? WKRPTCLValidation }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLValidation? {
+        get { return nextBaseWorker as? WKRPTCLValidation }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -26,21 +25,21 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func register(nextWorker: WKRPTCLValidation,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLValidation = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLValidation?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLValidation?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLValidation != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -55,7 +54,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddress(for address: DNSPostalAddress?,
                                   with config: Config.Address) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddress(for: address, with: config)
+            return self.nextWorker?.doValidateAddress(for: address, with: config)
         },
                           doWork: {
             return self.intDoValidateAddress(for: address, with: config, then: $0)
@@ -64,7 +63,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddressCity(for city: String?,
                                       with config: Config.Address.City) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddressCity(for: city, with: config)
+            return self.nextWorker?.doValidateAddressCity(for: city, with: config)
         },
                           doWork: {
             return self.intDoValidateAddressCity(for: city, with: config, then: $0)
@@ -73,7 +72,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddressPostalCode(for postalCode: String?,
                                             with config: Config.Address.PostalCode) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddressPostalCode(for: postalCode, with: config)
+            return self.nextWorker?.doValidateAddressPostalCode(for: postalCode, with: config)
         },
                           doWork: {
             return self.intDoValidateAddressPostalCode(for: postalCode, with: config, then: $0)
@@ -82,7 +81,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddressState(for state: String?,
                                        with config: Config.Address.State) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddressState(for: state, with: config)
+            return self.nextWorker?.doValidateAddressState(for: state, with: config)
         },
                           doWork: {
             return self.intDoValidateAddressState(for: state, with: config, then: $0)
@@ -91,7 +90,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddressStreet(for street: String?,
                                         with config: Config.Address.Street) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddressStreet(for: street, with: config)
+            return self.nextWorker?.doValidateAddressStreet(for: street, with: config)
         },
                           doWork: {
             return self.intDoValidateAddressStreet(for: street, with: config, then: $0)
@@ -100,7 +99,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateAddressStreet2(for street2: String?,
                                          with config: Config.Address.Street2) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateAddressStreet2(for: street2, with: config)
+            return self.nextWorker?.doValidateAddressStreet2(for: street2, with: config)
         },
                           doWork: {
             return self.intDoValidateAddressStreet2(for: street2, with: config, then: $0)
@@ -109,7 +108,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateBirthdate(for birthdate: Date?,
                                     with config: WKRPTCLValidation.Data.Config.Birthdate) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateBirthdate(for: birthdate, with: config)
+            return self.nextWorker?.doValidateBirthdate(for: birthdate, with: config)
         },
                           doWork: {
             return self.intDoValidateBirthdate(for: birthdate, with: config, then: $0)
@@ -118,7 +117,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateCalendarDate(for date: Date?,
                                        with config: WKRPTCLValidation.Data.Config.CalendarDate) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateCalendarDate(for: date, with: config)
+            return self.nextWorker?.doValidateCalendarDate(for: date, with: config)
         },
                           doWork: {
             return self.intDoValidateCalendarDate(for: date, with: config, then: $0)
@@ -127,7 +126,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateEmail(for email: String?,
                                 with config: WKRPTCLValidation.Data.Config.Email) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateEmail(for: email, with: config)
+            return self.nextWorker?.doValidateEmail(for: email, with: config)
         },
                           doWork: {
             return self.intDoValidateEmail(for: email, with: config, then: $0)
@@ -136,7 +135,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateHandle(for handle: String?,
                                  with config: WKRPTCLValidation.Data.Config.Handle) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateHandle(for: handle, with: config)
+            return self.nextWorker?.doValidateHandle(for: handle, with: config)
         },
                           doWork: {
             return self.intDoValidateHandle(for: handle, with: config, then: $0)
@@ -145,7 +144,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateName(for name: String?,
                                with config: WKRPTCLValidation.Data.Config.Name) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateName(for: name, with: config)
+            return self.nextWorker?.doValidateName(for: name, with: config)
         },
                           doWork: {
             return self.intDoValidateName(for: name, with: config, then: $0)
@@ -154,7 +153,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateNumber(for number: String?,
                                  with config: WKRPTCLValidation.Data.Config.Number) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateNumber(for: number, with: config)
+            return self.nextWorker?.doValidateNumber(for: number, with: config)
         },
                           doWork: {
             return self.intDoValidateNumber(for: number, with: config, then: $0)
@@ -163,7 +162,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidatePassword(for password: String?,
                                    with config: WKRPTCLValidation.Data.Config.Password) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidatePassword(for: password, with: config)
+            return self.nextWorker?.doValidatePassword(for: password, with: config)
         },
                           doWork: {
             return self.intDoValidatePassword(for: password, with: config, then: $0)
@@ -172,7 +171,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidatePercentage(for percentage: String?,
                                      with config: WKRPTCLValidation.Data.Config.Percentage) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidatePercentage(for: percentage, with: config)
+            return self.nextWorker?.doValidatePercentage(for: percentage, with: config)
         },
                           doWork: {
             return self.intDoValidatePercentage(for: percentage, with: config, then: $0)
@@ -181,7 +180,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidatePhone(for phone: String?,
                                 with config: WKRPTCLValidation.Data.Config.Phone) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidatePhone(for: phone, with: config)
+            return self.nextWorker?.doValidatePhone(for: phone, with: config)
         },
                           doWork: {
             return self.intDoValidatePhone(for: phone, with: config, then: $0)
@@ -190,7 +189,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateSearch(for search: String?,
                                  with config: WKRPTCLValidation.Data.Config.Search) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateSearch(for: search, with: config)
+            return self.nextWorker?.doValidateSearch(for: search, with: config)
         },
                           doWork: {
             return self.intDoValidateSearch(for: search, with: config, then: $0)
@@ -199,7 +198,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateState(for state: String?,
                                 with config: WKRPTCLValidation.Data.Config.State) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateState(for: state, with: config)
+            return self.nextWorker?.doValidateState(for: state, with: config)
         },
                           doWork: {
             return self.intDoValidateState(for: state, with: config, then: $0)
@@ -208,7 +207,7 @@ open class WKRBlankValidation: WKRBlankBase, WKRPTCLValidation {
     public func doValidateUnsignedNumber(for number: String?,
                                          with config: WKRPTCLValidation.Data.Config.UnsignedNumber) -> WKRPTCLValidationResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLValidation?.doValidateUnsignedNumber(for: number, with: config)
+            return self.nextWorker?.doValidateUnsignedNumber(for: number, with: config)
         },
                           doWork: {
             return self.intDoValidateUnsignedNumber(for: number, with: config, then: $0)

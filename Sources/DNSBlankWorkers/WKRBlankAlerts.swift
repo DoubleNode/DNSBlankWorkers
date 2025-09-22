@@ -14,10 +14,9 @@ import Foundation
 
 open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAlerts: WKRPTCLAlerts? {
-        get { return nextWorker as? WKRPTCLAlerts }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAlerts? {
+        get { return nextBaseWorker as? WKRPTCLAlerts }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -27,21 +26,21 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
     public func register(nextWorker: WKRPTCLAlerts,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAlerts = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAlerts?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAlerts?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAlerts != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -64,7 +63,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             guard self.nextWorker != nil else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAlerts?.doLoadAlerts(for: place, with: progress)
+            return self.nextWorker?.doLoadAlerts(for: place, with: progress)
         },
                              doWork: {
             return self.intDoLoadAlerts(for: place, with: progress, then: $0)
@@ -76,7 +75,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             guard self.nextWorker != nil else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAlerts?.doLoadAlerts(for: section, with: progress)
+            return self.nextWorker?.doLoadAlerts(for: section, with: progress)
         },
                              doWork: {
             return self.intDoLoadAlerts(for: section, with: progress, then: $0)
@@ -87,7 +86,7 @@ open class WKRBlankAlerts: WKRBlankBase, WKRPTCLAlerts {
             guard self.nextWorker != nil else {
                 return WKRPTCLAlertsFutAAlert { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAlerts?.doLoadAlerts(with: progress)
+            return self.nextWorker?.doLoadAlerts(with: progress)
         },
                              doWork: {
             return self.intDoLoadAlerts(with: progress, then: $0)

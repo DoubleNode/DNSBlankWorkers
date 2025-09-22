@@ -15,9 +15,9 @@ import Foundation
 open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
 
-    public var nextWKRPTCLGeo: WKRPTCLGeo? {
-        get { return nextWorker as? WKRPTCLGeo }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLGeo? {
+        get { return nextBaseWorker as? WKRPTCLGeo }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -27,21 +27,21 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     public func register(nextWorker: WKRPTCLGeo,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLGeo = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLGeo?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLGeo?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLGeo != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -56,7 +56,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     public func doLocate(with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLGeoBlkStringLocation?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLGeo?.doLocate(with: progress, and: block)
+            return self.nextWorker?.doLocate(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLocate(with: progress, and: block, then: $0)
@@ -66,7 +66,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLGeoBlkStringLocation?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLGeo?.doLocate(address, with: progress, and: block)
+            return self.nextWorker?.doLocate(address, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLocate(address, with: progress, and: block, then: $0)
@@ -76,7 +76,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLGeoBlkStringLocation?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLGeo?.doTrackLocation(for: processKey, with: progress, and: block)
+            return self.nextWorker?.doTrackLocation(for: processKey, with: progress, and: block)
         },
                    doWork: {
             return self.intDoTrackLocation(for: processKey, with: progress, and: block, then: $0)
@@ -84,7 +84,7 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     }
     public func doStopTrackLocation(for processKey: String) -> WKRPTCLGeoResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLGeo?.doStopTrackLocation(for: processKey)
+            return self.nextWorker?.doStopTrackLocation(for: processKey)
         },
                           doWork: {
             return self.intDoStopTrackLocation(for: processKey, then: $0)

@@ -16,10 +16,9 @@ import Foundation
 
 open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLPromotions: WKRPTCLPromotions? {
-        get { return nextWorker as? WKRPTCLPromotions }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLPromotions? {
+        get { return nextBaseWorker as? WKRPTCLPromotions }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -29,21 +28,21 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
     public func register(nextWorker: WKRPTCLPromotions,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLPromotions = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLPromotions?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLPromotions?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLPromotions != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -60,7 +59,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLWorkerBaseBlkAAnalyticsData?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doAnalytics(for: object, using: data, with: progress, and: block)
+            return self.nextWorker?.doAnalytics(for: object, using: data, with: progress, and: block)
         },
                    doWork: {
             return self.intDoAnalytics(for: object, using: data, with: progress, and: block, then: $0)
@@ -81,7 +80,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPromotionsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doActivate(id, with: progress, and: block)
+            return self.nextWorker?.doActivate(id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoActivate(id, with: progress, and: block, then: $0)
@@ -100,7 +99,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPromotionsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doDelete(promotion, with: progress, and: block)
+            return self.nextWorker?.doDelete(promotion, with: progress, and: block)
         },
         doWork: {
             return self.intDoDelete(promotion, with: progress, and: block, then: $0)
@@ -119,7 +118,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPromotionsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doDispense(id, with: progress, and: block)
+            return self.nextWorker?.doDispense(id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoDispense(id, with: progress, and: block, then: $0)
@@ -129,7 +128,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLPromotionsBlkPromotion?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doLoadPromotion(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadPromotion(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPromotion(for: id, with: progress, and: block, then: $0)
@@ -139,7 +138,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLPromotionsBlkAPromotion?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doLoadPromotions(for: account, with: progress, and: block)
+            return self.nextWorker?.doLoadPromotions(for: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPromotions(for: account, with: progress, and: block, then: $0)
@@ -149,7 +148,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLPromotionsBlkAPromotion?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doLoadPromotions(for: path, with: progress, and: block)
+            return self.nextWorker?.doLoadPromotions(for: path, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPromotions(for: path, with: progress, and: block, then: $0)
@@ -160,7 +159,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLPromotionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doReact(with: reaction, to: promotion, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: promotion, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: promotion, with: progress, and: block, then: $0)
@@ -171,7 +170,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPromotionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doUnreact(with: reaction, to: promotion, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: promotion, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: promotion, with: progress, and: block, then: $0)
@@ -181,7 +180,7 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPromotionsBlkPromotion?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPromotions?.doUpdate(promotion, with: progress, and: block)
+            return self.nextWorker?.doUpdate(promotion, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(promotion, with: progress, and: block, then: $0)

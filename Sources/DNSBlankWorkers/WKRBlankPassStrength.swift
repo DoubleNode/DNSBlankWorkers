@@ -12,10 +12,9 @@ import Foundation
 
 open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLPassStrength: WKRPTCLPassStrength? {
-        get { return nextWorker as? WKRPTCLPassStrength }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLPassStrength? {
+        get { return nextBaseWorker as? WKRPTCLPassStrength }
+        set { nextBaseWorker = newValue }
     }
 
     public var minimumLength: Int32 = 6
@@ -27,21 +26,21 @@ open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
     public func register(nextWorker: WKRPTCLPassStrength,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLPassStrength = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLPassStrength?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLPassStrength?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLPassStrength != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -55,7 +54,7 @@ open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
     // MARK: - Worker Logic (Public) -
     public func doCheckPassStrength(for password: String) -> WKRPTCLPassStrengthResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLPassStrength?.doCheckPassStrength(for: password)
+            return self.nextWorker?.doCheckPassStrength(for: password)
         },
                           doWork: {
             return self.intDoCheckPassStrength(for: password, then: $0)

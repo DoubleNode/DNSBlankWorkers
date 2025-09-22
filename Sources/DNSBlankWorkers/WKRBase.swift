@@ -88,7 +88,7 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
     }
 
     // MARK: - DNSPTCLWorker requirements
-    public var nextWorker: DNSPTCLWorker?
+    public var nextBaseWorker: DNSPTCLWorker?
 
     // MARK: - WKRPTCLWorkerBase requirements
     open var wkrSystems: WKRPTCLSystems?

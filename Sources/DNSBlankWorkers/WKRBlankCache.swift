@@ -15,10 +15,9 @@ import UIKit
 
 open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLCache: WKRPTCLCache? {
-        get { return nextWorker as? WKRPTCLCache }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLCache? {
+        get { return nextBaseWorker as? WKRPTCLCache }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
     public func register(nextWorker: WKRPTCLCache,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLCache = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLCache?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLCache?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLCache != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -65,7 +64,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLCache?.doDeleteObject(for: id, with: progress)
+            return self.nextWorker?.doDeleteObject(for: id, with: progress)
         },
                              doWork: {
             return self.intDoDeleteObject(for: id, with: progress, then: $0)
@@ -78,7 +77,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutImage { $0(.success(UIImage())) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLCache?.doLoadImage(from: url, for: id, with: progress)
+            return self.nextWorker?.doLoadImage(from: url, for: id, with: progress)
         },
                              doWork: {
             return self.intDoLoadImage(from: url, for: id, with: progress, then: $0)
@@ -90,7 +89,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutAny { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLCache?.doReadObject(for: id, with: progress)
+            return self.nextWorker?.doReadObject(for: id, with: progress)
         },
                              doWork: {
             return self.intDoReadObject(for: id, with: progress, then: $0)
@@ -102,7 +101,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutString { $0(.success("")) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLCache?.doReadString(for: id, with: progress)
+            return self.nextWorker?.doReadString(for: id, with: progress)
         },
                              doWork: {
             return self.intDoReadString(for: id, with: progress, then: $0)
@@ -115,7 +114,7 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
             guard self.nextWorker != nil else {
                 return WKRPTCLCacheFutAny { $0(.success(object)) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLCache?.doUpdate(object: object, for: id, with: progress)
+            return self.nextWorker?.doUpdate(object: object, for: id, with: progress)
         },
                              doWork: {
             return self.intDoUpdate(object: object, for: id, with: progress, then: $0)

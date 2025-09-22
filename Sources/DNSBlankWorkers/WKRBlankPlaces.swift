@@ -15,10 +15,9 @@ import DNSProtocols
 
 open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLPlaces: WKRPTCLPlaces? {
-        get { return nextWorker as? WKRPTCLPlaces }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLPlaces? {
+        get { return nextBaseWorker as? WKRPTCLPlaces }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     public func register(nextWorker: WKRPTCLPlaces,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLPlaces = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLPlaces?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLPlaces?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLPlaces != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -64,7 +63,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLPlacesBlkAPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doFilterPlaces(for: activity, using: places, with: progress, and: block)
+            return self.nextWorker?.doFilterPlaces(for: activity, using: places, with: progress, and: block)
         },
                    doWork: {
             return self.intDoFilterPlaces(for: activity, using: places, with: progress, and: block, then: $0)
@@ -74,7 +73,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLPlacesBlkAPlaceHoliday?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadHolidays(for: place, with: progress, and: block)
+            return self.nextWorker?.doLoadHolidays(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadHolidays(for: place, with: progress, and: block, then: $0)
@@ -84,7 +83,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPlacesBlkPlaceHours?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadHours(for: place, with: progress, and: block)
+            return self.nextWorker?.doLoadHours(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadHours(for: place, with: progress, and: block, then: $0)
@@ -94,7 +93,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPlacesBlkPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadPlace(for: placeCode, with: progress, and: block)
+            return self.nextWorker?.doLoadPlace(for: placeCode, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPlace(for: placeCode, with: progress, and: block, then: $0)
@@ -103,7 +102,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
     public func doLoadPlaces(with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPlacesBlkAPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadPlaces(with: progress, and: block)
+            return self.nextWorker?.doLoadPlaces(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPlaces(with: progress, and: block, then: $0)
@@ -113,7 +112,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLPlacesBlkAPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadPlaces(for: account, with: progress, and: block)
+            return self.nextWorker?.doLoadPlaces(for: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPlaces(for: account, with: progress, and: block, then: $0)
@@ -123,7 +122,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLPlacesBlkAPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doLoadPlaces(for: section, with: progress, and: block)
+            return self.nextWorker?.doLoadPlaces(for: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadPlaces(for: section, with: progress, and: block, then: $0)
@@ -135,7 +134,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
             guard self.nextWorker != nil else {
                 return WKRPTCLPlacesFutAlertEventStatus { $0(.success(([], [], []))) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLPlaces?.doLoadState(for: place, with: progress)
+            return self.nextWorker?.doLoadState(for: place, with: progress)
         },
                              doWork: {
             return self.intDoLoadState(for: place, with: progress, then: $0)
@@ -146,7 +145,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLPlacesBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doReact(with: reaction, to: place, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: place, with: progress, and: block, then: $0)
@@ -156,7 +155,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLPlacesBlkPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doSearchPlace(for: geohash, with: progress, and: block)
+            return self.nextWorker?.doSearchPlace(for: geohash, with: progress, and: block)
         },
                    doWork: {
             return self.intDoSearchPlace(for: geohash, with: progress, and: block, then: $0)
@@ -167,7 +166,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPlacesBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doUnreact(with: reaction, to: place, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: place, with: progress, and: block, then: $0)
@@ -177,7 +176,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPlacesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doUpdate(place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(place, with: progress, and: block, then: $0)
@@ -188,7 +187,7 @@ open class WKRBlankPlaces: WKRBlankBase, WKRPTCLPlaces {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPlacesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPlaces?.doUpdate(hours, for: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(hours, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(hours, for: place, with: progress, and: block, then: $0)

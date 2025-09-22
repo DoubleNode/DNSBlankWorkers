@@ -13,10 +13,9 @@ import Foundation
 
 open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLActivities: WKRPTCLActivities? {
-        get { return nextWorker as? WKRPTCLActivities }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLActivities? {
+        get { return nextBaseWorker as? WKRPTCLActivities }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -26,21 +25,21 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
     public func register(nextWorker: WKRPTCLActivities,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLActivities = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLActivities?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLActivities?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLActivities != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -57,7 +56,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLActivitiesBlkAActivity?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivities?.doLoadActivities(for: place, using: activityTypes,
+            return self.nextWorker?.doLoadActivities(for: place, using: activityTypes,
                                                      with: progress, and: block)
         },
                    doWork: {
@@ -70,7 +69,7 @@ open class WKRBlankActivities: WKRBlankBase, WKRPTCLActivities {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivitiesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivities?.doUpdate(activities, for: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(activities, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(activities, for: place, with: progress, and: block, then: $0)

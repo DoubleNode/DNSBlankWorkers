@@ -16,9 +16,9 @@ import Foundation
 open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
 
-    public var nextWKRPTCLEvents: WKRPTCLEvents? {
-        get { return nextWorker as? WKRPTCLEvents }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLEvents? {
+        get { return nextBaseWorker as? WKRPTCLEvents }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +28,21 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public func register(nextWorker: WKRPTCLEvents,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLEvents = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLEvents?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLEvents?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLEvents != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -62,7 +62,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     public func doLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLEventsBlkAPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doLoadCurrentEvents(with: progress, and: block)
+            return self.nextWorker?.doLoadCurrentEvents(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCurrentEvents(with: progress, and: block, then: $0)
@@ -72,7 +72,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLEventsBlkAEvent?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doLoadEvents(for: place, with: progress, and: block)
+            return self.nextWorker?.doLoadEvents(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadEvents(for: place, with: progress, and: block, then: $0)
@@ -83,7 +83,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLEventsBlkPricing?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doLoadPricing(for: event,
+            return self.nextWorker?.doLoadPricing(for: event,
                                                   and: place,
                                                   with: progress, and: block)
         },
@@ -98,7 +98,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doReact(with: reaction, to: event, for: place, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: event, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: event, for: place, with: progress, and: block, then: $0)
@@ -109,7 +109,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doRemove(event, for: place, with: progress, and: block)
+            return self.nextWorker?.doRemove(event, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(event, for: place, with: progress, and: block, then: $0)
@@ -121,7 +121,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doRemove(eventDay, for: event, and: place, with: progress, and: block)
+            return self.nextWorker?.doRemove(eventDay, for: event, and: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(eventDay, for: event, and: place, with: progress, and: block, then: $0)
@@ -133,7 +133,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doUnreact(with: reaction, to: event, for: place, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: event, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: event, for: place, with: progress, and: block, then: $0)
@@ -144,7 +144,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doUpdate(event, for: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(event, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(event, for: place, with: progress, and: block, then: $0)
@@ -156,7 +156,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doUpdate(eventDay, for: event, and: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(eventDay, for: event, and: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(eventDay, for: event, and: place, with: progress, and: block, then: $0)
@@ -168,7 +168,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doUpdate(pricing, for: event, and: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(pricing, for: event, and: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(pricing, for: event, and: place, with: progress, and: block, then: $0)
@@ -179,7 +179,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLEventsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLEvents?.doView(event, for: place, with: progress, and: block)
+            return self.nextWorker?.doView(event, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoView(event, for: place, with: progress, and: block, then: $0)

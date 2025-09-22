@@ -16,10 +16,9 @@ import Foundation
 
 open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLSystems: WKRPTCLSystems? {
-        get { return nextWorker as? WKRPTCLSystems }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLSystems? {
+        get { return nextBaseWorker as? WKRPTCLSystems }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -29,21 +28,21 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     public func register(nextWorker: WKRPTCLSystems,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLSystems = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLSystems?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLSystems?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLSystems != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -58,7 +57,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     public func doConfigure(with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLSystemsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doConfigure(with: progress, and: block)
+            return self.nextWorker?.doConfigure(with: progress, and: block)
         },
                    doWork: {
             return self.intDoConfigure(with: progress, and: block, then: $0)
@@ -68,7 +67,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLSystemsBlkSystem?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doLoadSystem(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadSystem(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
@@ -78,7 +77,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSystemsBlkASystemEndPoint?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doLoadEndPoints(for: system, with: progress, and: block)
+            return self.nextWorker?.doLoadEndPoints(for: system, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadEndPoints(for: system, with: progress, and: block, then: $0)
@@ -89,7 +88,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSystemsBlkASystemState?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doLoadHistory(for: system, since: time,
+            return self.nextWorker?.doLoadHistory(for: system, since: time,
                                                       with: progress, and: block)
         },
                    doWork: {
@@ -103,7 +102,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSystemsBlkASystemState?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doLoadHistory(for: endPoint, since: time, include: failureCodes,
+            return self.nextWorker?.doLoadHistory(for: endPoint, since: time, include: failureCodes,
                                                       with: progress, and: block)
         },
                    doWork: {
@@ -114,7 +113,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     public func doLoadSystems(with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSystemsBlkASystem?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doLoadSystems(with: progress, and: block)
+            return self.nextWorker?.doLoadSystems(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSystems(with: progress, and: block, then: $0)
@@ -125,7 +124,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLSystemsBlkSystem?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doOverride(system: system, with: state,
+            return self.nextWorker?.doOverride(system: system, with: state,
                                                    with: progress, and: block)
         },
                    doWork: {
@@ -137,7 +136,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLSystemsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doReact(with: reaction, to: system, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: system, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: system, with: progress, and: block, then: $0)
@@ -168,7 +167,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
             guard self.nextWorker != nil else {
                 return WKRPTCLSystemsFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLSystems?.doReport(result: result, and: failureCode, and: debugString,
+            return self.nextWorker?.doReport(result: result, and: failureCode, and: debugString,
                                        for: systemId, and: endPointId, with: progress)
         },
                            doWork: {
@@ -182,7 +181,7 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLSystemsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSystems?.doUnreact(with: reaction, to: system, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: system, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: system, with: progress, and: block, then: $0)

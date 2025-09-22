@@ -14,10 +14,9 @@ import Foundation
 
 open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLChats: WKRPTCLChats? {
-        get { return nextWorker as? WKRPTCLChats }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLChats? {
+        get { return nextBaseWorker as? WKRPTCLChats }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -27,21 +26,21 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
     public func register(nextWorker: WKRPTCLChats,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLChats = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLChats?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLChats?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLChats != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -57,7 +56,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLChatsBlkChat?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doLoadChat(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadChat(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadChat(for: id, with: progress, and: block, then: $0)
@@ -67,7 +66,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLChatsBlkAChatMessage?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doLoadMessages(for: chat, with: progress, and: block)
+            return self.nextWorker?.doLoadMessages(for: chat, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadMessages(for: chat, with: progress, and: block, then: $0)
@@ -78,7 +77,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLChatsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doReact(with: reaction, to: chat, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: chat, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: chat, with: progress, and: block, then: $0)
@@ -88,7 +87,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLChatsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doRemove(message, with: progress, and: block)
+            return self.nextWorker?.doRemove(message, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(message, with: progress, and: block, then: $0)
@@ -99,7 +98,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLChatsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doUnreact(with: reaction, to: chat, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: chat, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: chat, with: progress, and: block, then: $0)
@@ -109,7 +108,7 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLChatsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLChats?.doUpdate(message, with: progress, and: block)
+            return self.nextWorker?.doUpdate(message, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(message, with: progress, and: block, then: $0)

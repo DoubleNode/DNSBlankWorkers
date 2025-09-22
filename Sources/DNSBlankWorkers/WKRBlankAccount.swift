@@ -14,10 +14,9 @@ import Foundation
 
 open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAccount: WKRPTCLAccount? {
-        get { return nextWorker as? WKRPTCLAccount }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAccount? {
+        get { return nextBaseWorker as? WKRPTCLAccount }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -27,21 +26,21 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     public func register(nextWorker: WKRPTCLAccount,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAccount = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAccount?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAccount?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAccount != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -57,7 +56,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAccountBlkBool?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doActivate(account: account, with: progress, and: block)
+            return self.nextWorker?.doActivate(account: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoActivate(account: account, with: progress, and: block, then: $0)
@@ -67,7 +66,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doApprove(linkRequest: linkRequest, with: progress, and: block)
+            return self.nextWorker?.doApprove(linkRequest: linkRequest, with: progress, and: block)
         },
                    doWork: {
             return self.intDoApprove(linkRequest: linkRequest, with: progress, and: block, then: $0)
@@ -77,7 +76,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doDeactivate(account: account, with: progress, and: block)
+            return self.nextWorker?.doDeactivate(account: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoDeactivate(account: account, with: progress, and: block, then: $0)
@@ -87,7 +86,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doDecline(linkRequest: linkRequest, with: progress, and: block)
+            return self.nextWorker?.doDecline(linkRequest: linkRequest, with: progress, and: block)
         },
                    doWork: {
             return self.intDoDecline(linkRequest: linkRequest, with: progress, and: block, then: $0)
@@ -97,7 +96,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doDelete(account: account, with: progress, and: block)
+            return self.nextWorker?.doDelete(account: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoDelete(account: account, with: progress, and: block, then: $0)
@@ -108,7 +107,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLink(account: account, to: user, with: progress, and: block)
+            return self.nextWorker?.doLink(account: account, to: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLink(account: account, to: user, with: progress, and: block, then: $0)
@@ -119,7 +118,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLink(account: account, to: place, with: progress, and: block)
+            return self.nextWorker?.doLink(account: account, to: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLink(account: account, to: place, with: progress, and: block, then: $0)
@@ -129,7 +128,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLAccountBlkAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLoadAccount(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadAccount(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAccount(for: id, with: progress, and: block, then: $0)
@@ -139,7 +138,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLoadAccounts(for: place, with: progress, and: block)
+            return self.nextWorker?.doLoadAccounts(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAccounts(for: place, with: progress, and: block, then: $0)
@@ -149,7 +148,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLoadAccounts(for: user, with: progress, and: block)
+            return self.nextWorker?.doLoadAccounts(for: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAccounts(for: user, with: progress, and: block, then: $0)
@@ -158,7 +157,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
     public func doLoadCurrentAccounts(with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doLoadCurrentAccounts(with: progress, and: block)
+            return self.nextWorker?.doLoadCurrentAccounts(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCurrentAccounts(with: progress, and: block, then: $0)
@@ -169,7 +168,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doRename(accountId: accountId, to: newAccountId, with: progress, and: block)
+            return self.nextWorker?.doRename(accountId: accountId, to: newAccountId, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRename(accountId: accountId, to: newAccountId, with: progress, and: block, then: $0)
@@ -179,7 +178,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLAccountBlkAAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doSearchAccounts(using: parameters, with: progress, and: block)
+            return self.nextWorker?.doSearchAccounts(using: parameters, with: progress, and: block)
         },
                    doWork: {
             return self.intDoSearchAccounts(using: parameters, with: progress, and: block, then: $0)
@@ -190,7 +189,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doUnlink(account: account, from: user, with: progress, and: block)
+            return self.nextWorker?.doUnlink(account: account, from: user, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnlink(account: account, from: user, with: progress, and: block, then: $0)
@@ -201,7 +200,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doUnlink(account: account, from: place, with: progress, and: block)
+            return self.nextWorker?.doUnlink(account: account, from: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnlink(account: account, from: place, with: progress, and: block, then: $0)
@@ -211,7 +210,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doUpdate(account: account, with: progress, and: block)
+            return self.nextWorker?.doUpdate(account: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(account: account, with: progress, and: block, then: $0)
@@ -221,7 +220,7 @@ open class WKRBlankAccount: WKRBlankBase, WKRPTCLAccount {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAccountBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAccount?.doVerify(account: account, with: progress, and: block)
+            return self.nextWorker?.doVerify(account: account, with: progress, and: block)
         },
                    doWork: {
             return self.intDoVerify(account: account, with: progress, and: block, then: $0)

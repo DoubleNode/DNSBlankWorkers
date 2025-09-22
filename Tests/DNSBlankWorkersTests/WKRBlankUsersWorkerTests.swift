@@ -225,8 +225,8 @@ final class WKRBlankUsersWorkerTests: XCTestCase {
         sut.register(nextWorker: nextWorker, for: .whenUnhandled)
 
         XCTAssertEqual(sut.callNextWhen, .whenUnhandled)
-        XCTAssertNotNil(sut.nextWKRPTCLUsers)
-        XCTAssertTrue(sut.nextWKRPTCLUsers === nextWorker)
+        XCTAssertNotNil(sut.nextWorker)
+        XCTAssertTrue(sut.nextWorker === nextWorker)
     }
 
     // MARK: - Error Handling Tests

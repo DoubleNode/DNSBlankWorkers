@@ -52,8 +52,8 @@ final class WKRBlankAdminWorkerTests: XCTestCase {
         sut.register(nextWorker: nextWorker, for: .whenUnhandled)
 
         XCTAssertEqual(sut.callNextWhen, .whenUnhandled)
-        XCTAssertNotNil(sut.nextWKRPTCLAdmin)
-        XCTAssertTrue(sut.nextWKRPTCLAdmin === nextWorker)
+        XCTAssertNotNil(sut.nextWorker)
+        XCTAssertTrue(sut.nextWorker === nextWorker)
     }
 
     // MARK: - Error Handling Tests

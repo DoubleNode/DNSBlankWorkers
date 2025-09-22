@@ -15,10 +15,9 @@ import Foundation
 
 open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAdmin: WKRPTCLAdmin? {
-        get { return nextWorker as? WKRPTCLAdmin }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAdmin? {
+        get { return nextBaseWorker as? WKRPTCLAdmin }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     public func register(nextWorker: WKRPTCLAdmin,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAdmin = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAdmin?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAdmin?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAdmin != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -67,7 +66,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doChange(user, to: role, with: progress)
+            return self.nextWorker?.doChange(user, to: role, with: progress)
         },
                              doWork: {
             return self.intDoChange(user, to: role, with: progress, then: $0)
@@ -80,7 +79,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutBool { $0(.success(true)) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doCheckAdmin(with: progress)
+            return self.nextWorker?.doCheckAdmin(with: progress)
         },
                              doWork: {
             return self.intDoCheckAdmin(with: progress, then: $0)
@@ -94,7 +93,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doCompleteDeleted(account: account, with: progress)
+            return self.nextWorker?.doCompleteDeleted(account: account, with: progress)
         },
                              doWork: {
             return self.intDoCompleteDeleted(account: account, with: progress, then: $0)
@@ -108,7 +107,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doDenyChangeRequest(for: user, with: progress)
+            return self.nextWorker?.doDenyChangeRequest(for: user, with: progress)
         },
                              doWork: {
             return self.intDoDenyChangeRequest(for: user, with: progress, then: $0)
@@ -122,7 +121,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
                 // swiftlint:disable:next line_length
                 return WKRPTCLAdminFutUserChangeRequest { $0(.success((nil, []))) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doLoadChangeRequests(with: progress)
+            return self.nextWorker?.doLoadChangeRequests(with: progress)
         },
                              doWork: {
             return self.intDoLoadChangeRequests(with: progress, then: $0)
@@ -133,7 +132,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
                                       with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLAdminBlkADeletedAccount?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAdmin?.doLoadDeletedAccounts(thatAre: state, with: progress, and: block)
+            return self.nextWorker?.doLoadDeletedAccounts(thatAre: state, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadDeletedAccounts(thatAre: state, with: progress, and: block, then: $0)
@@ -142,7 +141,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
     public func doLoadDeletedStatus(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLAdminBlkDeletedStatus?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAdmin?.doLoadDeletedStatus(with: progress, and: block)
+            return self.nextWorker?.doLoadDeletedStatus(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadDeletedStatus(with: progress, and: block, then: $0)
@@ -154,7 +153,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutAString { $0(.success([])) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doLoadTabs(with: progress)
+            return self.nextWorker?.doLoadTabs(with: progress)
         },
                              doWork: {
             return self.intDoLoadTabs(with: progress, then: $0)
@@ -168,7 +167,7 @@ open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
             guard self.nextWorker != nil else {
                 return WKRPTCLAdminFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLAdmin?.doRequestChange(to: role, with: progress)
+            return self.nextWorker?.doRequestChange(to: role, with: progress)
         },
                              doWork: {
             return self.intDoRequestChange(to: role, with: progress, then: $0)

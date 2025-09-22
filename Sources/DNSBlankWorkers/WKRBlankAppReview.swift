@@ -26,10 +26,9 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
     public var usesUntilPrompt: UInt = 0
 
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAppReview: WKRPTCLAppReview? {
-        get { return nextWorker as? WKRPTCLAppReview }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAppReview? {
+        get { return nextBaseWorker as? WKRPTCLAppReview }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -39,21 +38,21 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
     public func register(nextWorker: WKRPTCLAppReview,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAppReview = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAppReview?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAppReview?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAppReview != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -67,7 +66,7 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
     // MARK: - Worker Logic (Public) -
     public func doReview() -> WKRPTCLAppReviewResVoid {
         return self.runDo(runNext: {
-            return self.nextWKRPTCLAppReview?.doReview()
+            return self.nextWorker?.doReview()
         },
                           doWork: {
             return self.intDoReview(with: nil, and: nil, then: $0)
@@ -76,7 +75,7 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
 
     public func doReview(with progress: DNSPTCLProgressBlock?, and block: WKRPTCLAppReviewBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAppReview?.doReview(with: progress, and: block)
+            return self.nextWorker?.doReview(with: progress, and: block)
         }, doWork: {
             return self.intDoReview(with: progress, and: block, then: $0)
         })
@@ -84,7 +83,7 @@ open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
 
     public func doReview(using parameters: DNSDataDictionary, with progress: DNSPTCLProgressBlock?, and block: WKRPTCLAppReviewBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAppReview?.doReview(using: parameters, with: progress, and: block)
+            return self.nextWorker?.doReview(using: parameters, with: progress, and: block)
         }, doWork: {
             return self.intDoReview(using: parameters, with: progress, and: block, then: $0)
         })

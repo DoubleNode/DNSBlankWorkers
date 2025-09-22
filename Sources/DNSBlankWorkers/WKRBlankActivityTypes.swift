@@ -15,10 +15,9 @@ import Foundation
 
 open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLActivityTypes: WKRPTCLActivityTypes? {
-        get { return nextWorker as? WKRPTCLActivityTypes }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLActivityTypes? {
+        get { return nextBaseWorker as? WKRPTCLActivityTypes }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     public func register(nextWorker: WKRPTCLActivityTypes,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLActivityTypes = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLActivityTypes?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLActivityTypes?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLActivityTypes != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -58,7 +57,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLActivityTypesBlkActivityType?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doLoadActivityType(for: code,
+            return self.nextWorker?.doLoadActivityType(for: code,
                                                        with: progress, and: block)
         },
                    doWork: {
@@ -70,7 +69,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                                    with progress: DNSPTCLProgressBlock?,
                                    and block: WKRPTCLActivityTypesBlkActivityType?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doLoadActivityType(for: tag,
+            return self.nextWorker?.doLoadActivityType(for: tag,
                                                        with: progress, and: block)
         },
                    doWork: {
@@ -81,7 +80,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
     public func doLoadActivityTypes(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLActivityTypesBlkAActivityType?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doLoadActivityTypes(with: progress, and: block)
+            return self.nextWorker?.doLoadActivityTypes(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadActivityTypes(with: progress, and: block, then: $0)
@@ -91,7 +90,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLActivityTypesBlkPricing?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doLoadPricing(for: activityType,
+            return self.nextWorker?.doLoadPricing(for: activityType,
                                                   with: progress, and: block)
         },
                    doWork: {
@@ -104,7 +103,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLActivityTypesBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doReact(with: reaction,
+            return self.nextWorker?.doReact(with: reaction,
                                             to: activityType,
                                             with: progress, and: block)
         },
@@ -119,7 +118,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLActivityTypesBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doUnreact(with: reaction,
+            return self.nextWorker?.doUnreact(with: reaction,
                                               to: activityType,
                                               with: progress, and: block)
         },
@@ -133,7 +132,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivityTypesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doUpdate(activityType, with: progress, and: block)
+            return self.nextWorker?.doUpdate(activityType, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(activityType, with: progress, and: block, then: $0)
@@ -144,7 +143,7 @@ open class WKRBlankActivityTypes: WKRBlankBase, WKRPTCLActivityTypes {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLActivityTypesBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLActivityTypes?.doUpdate(pricing,
+            return self.nextWorker?.doUpdate(pricing,
                                              for: activityType,
                                              with: progress, and: block)
         },

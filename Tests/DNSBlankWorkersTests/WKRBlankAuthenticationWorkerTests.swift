@@ -47,24 +47,24 @@ final class WKRBlankAuthenticationWorkerTests: XCTestCase {
         sut.register(nextWorker: mockNextWorker, for: .whenUnhandled)
 
         XCTAssertEqual(sut.callNextWhen, .whenUnhandled)
-        XCTAssertIdentical(sut.nextWKRPTCLAuth, mockNextWorker)
+        XCTAssertIdentical(sut.nextWorker, mockNextWorker)
     }
 
     func test_nextWorker_getterReturnsCorrectWorker() {
         sut.nextWorker = mockNextWorker
 
-        XCTAssertIdentical(sut.nextWKRPTCLAuth, mockNextWorker)
+        XCTAssertIdentical(sut.nextWorker, mockNextWorker)
     }
 
     func test_nextWorker_setterUpdatesWorker() {
-        sut.nextWKRPTCLAuth = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         XCTAssertIdentical(sut.nextWorker as? MockAuthWorker, mockNextWorker)
     }
 
     // MARK: - Option Tests
     func test_enableOption_callsNextWorkerEnableOption() {
-        sut.nextWKRPTCLAuth = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         sut.enableOption("testOption")
 
@@ -73,7 +73,7 @@ final class WKRBlankAuthenticationWorkerTests: XCTestCase {
     }
 
     func test_disableOption_callsNextWorkerDisableOption() {
-        sut.nextWKRPTCLAuth = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         sut.disableOption("testOption")
 
@@ -307,6 +307,11 @@ final class WKRBlankAuthenticationWorkerTests: XCTestCase {
 
 // MARK: - Mock Classes
 class MockAuthWorker: WKRPTCLAuth {
+    public var nextWorker: WKRPTCLAuth? {
+        get { return nextBaseWorker as? WKRPTCLAuth }
+        set { nextBaseWorker = newValue }
+    }
+
     static var xlt: DNSDataTranslation = DNSDataTranslation()
 
     // Simplified mock - omitting network dependencies to avoid initialization issues
@@ -320,7 +325,7 @@ class MockAuthWorker: WKRPTCLAuth {
     }
 
     var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    var nextWorker: DNSPTCLWorker?
+    var nextBaseWorker: DNSPTCLWorker?
     var wkrSystems: WKRPTCLSystems?
 
     required init() {}

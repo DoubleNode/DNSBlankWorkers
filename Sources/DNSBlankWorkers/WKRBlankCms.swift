@@ -12,10 +12,9 @@ import DNSProtocols
 
 open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLCms: WKRPTCLCms? {
-        get { return nextWorker as? WKRPTCLCms }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLCms? {
+        get { return nextBaseWorker as? WKRPTCLCms }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -25,21 +24,21 @@ open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
     public func register(nextWorker: WKRPTCLCms,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLCms = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLCms?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLCms?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLCms != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -55,7 +54,7 @@ open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLCmsBlkAAny?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLCms?.doLoad(for: group, with: progress, and: block)
+            return self.nextWorker?.doLoad(for: group, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoad(for: group, with: progress, and: block, then: $0)

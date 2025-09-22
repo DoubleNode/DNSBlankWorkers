@@ -15,10 +15,9 @@ import Foundation
 
 open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLPassports: WKRPTCLPassports? {
-        get { return nextWorker as? WKRPTCLPassports }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLPassports? {
+        get { return nextBaseWorker as? WKRPTCLPassports }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
     public func register(nextWorker: WKRPTCLPassports,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLPassports = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLPassports?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLPassports?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLPassports != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -67,7 +66,7 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
             guard self.nextWorker != nil else {
                 return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLPassports?.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
+            return self.nextWorker?.doBuildPassport(ofType: passportType, using: data, for: account, with: progress)
         },
                              doWork: {
             return self.intDoBuildPassport(ofType: passportType, using: data, for: account, with: progress, then: $0)

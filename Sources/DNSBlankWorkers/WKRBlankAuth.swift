@@ -18,10 +18,9 @@ public struct WKRBlankAuthAccessData: WKRPTCLAuth.AccessData {
 }
 open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAuth: WKRPTCLAuth? {
-        get { return nextWorker as? WKRPTCLAuth }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAuth? {
+        get { return nextBaseWorker as? WKRPTCLAuth }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -31,21 +30,21 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
     public func register(nextWorker: WKRPTCLAuth,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAuth = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAuth?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAuth?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAuth != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -61,7 +60,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLAuthBlkBoolBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doCheckAuth(using: parameters,
+            return self.nextWorker?.doCheckAuth(using: parameters,
                                                 with: progress, and: block)
         },
                    doWork: {
@@ -75,7 +74,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doLinkAuth(from: username,
+            return self.nextWorker?.doLinkAuth(from: username,
                                                and: password,
                                                using: parameters,
                                                with: progress, and: block)
@@ -91,7 +90,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                                      with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLAuthBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doPasswordResetStart(from: username, using: parameters,
+            return self.nextWorker?.doPasswordResetStart(from: username, using: parameters,
                                                          with: progress, and: block)
         },
                    doWork: {
@@ -105,7 +104,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doSignIn(from: username, and: password, using: parameters,
+            return self.nextWorker?.doSignIn(from: username, and: password, using: parameters,
                                              with: progress, and: block)
         },
                    doWork: {
@@ -117,7 +116,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAuthBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doSignOut(using: parameters, with: progress, and: block)
+            return self.nextWorker?.doSignOut(using: parameters, with: progress, and: block)
         },
                    doWork: {
             return self.intDoSignOut(using: parameters, with: progress, and: block, then: $0)
@@ -129,7 +128,7 @@ open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAuthBlkBoolAccessData?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAuth?.doSignUp(from: user, and: password, using: parameters,
+            return self.nextWorker?.doSignUp(from: user, and: password, using: parameters,
                                              with: progress, and: block)
         },
                    doWork: {

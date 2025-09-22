@@ -12,10 +12,9 @@ import Foundation
 
 open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAppEvents: WKRPTCLAppEvents? {
-        get { return nextWorker as? WKRPTCLAppEvents }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAppEvents? {
+        get { return nextBaseWorker as? WKRPTCLAppEvents }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -25,21 +24,21 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public func register(nextWorker: WKRPTCLAppEvents,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAppEvents = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAppEvents?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAppEvents?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAppEvents != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -54,7 +53,7 @@ open class WKRBlankAppEvents: WKRBlankBase, WKRPTCLAppEvents {
     public func doLoadAppEvents(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLAppEventsBlkAAppEvent?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAppEvents?.doLoadAppEvents(with: progress, and: block)
+            return self.nextWorker?.doLoadAppEvents(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAppEvents(with: progress, and: block, then: $0)

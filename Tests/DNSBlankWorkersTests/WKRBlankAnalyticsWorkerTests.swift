@@ -47,24 +47,24 @@ final class WKRBlankAnalyticsWorkerTests: XCTestCase {
         sut.register(nextWorker: mockNextWorker, for: .whenUnhandled)
 
         XCTAssertEqual(sut.callNextWhen, .whenUnhandled)
-        XCTAssertIdentical(sut.nextWKRPTCLAnalytics, mockNextWorker)
+        XCTAssertIdentical(sut.nextWorker, mockNextWorker)
     }
 
     func test_nextWorker_getterReturnsCorrectWorker() {
         sut.nextWorker = mockNextWorker
 
-        XCTAssertIdentical(sut.nextWKRPTCLAnalytics, mockNextWorker)
+        XCTAssertIdentical(sut.nextWorker, mockNextWorker)
     }
 
     func test_nextWorker_setterUpdatesWorker() {
-        sut.nextWKRPTCLAnalytics = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         XCTAssertIdentical(sut.nextWorker as? MockAnalyticsWorker, mockNextWorker)
     }
 
     // MARK: - Option Tests
     func test_enableOption_callsNextWorkerEnableOption() {
-        sut.nextWKRPTCLAnalytics = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         sut.enableOption("testOption")
 
@@ -73,7 +73,7 @@ final class WKRBlankAnalyticsWorkerTests: XCTestCase {
     }
 
     func test_disableOption_callsNextWorkerDisableOption() {
-        sut.nextWKRPTCLAnalytics = mockNextWorker
+        sut.nextWorker = mockNextWorker
 
         sut.disableOption("testOption")
 
@@ -225,6 +225,11 @@ final class WKRBlankAnalyticsWorkerTests: XCTestCase {
 
 // MARK: - Mock Classes
 class MockAnalyticsWorker: WKRPTCLAnalytics {
+    public var nextWorker: WKRPTCLAnalytics? {
+        get { return nextBaseWorker as? WKRPTCLAnalytics }
+        set { nextBaseWorker = newValue }
+    }
+
     static var xlt: DNSDataTranslation = DNSDataTranslation()
 
     // Simplified mock - omitting network dependencies to avoid initialization issues
@@ -238,7 +243,7 @@ class MockAnalyticsWorker: WKRPTCLAnalytics {
     }
 
     var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-    var nextWorker: DNSPTCLWorker?
+    var nextBaseWorker: DNSPTCLWorker?
     var wkrSystems: WKRPTCLSystems?
 
     required init() {}

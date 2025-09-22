@@ -15,10 +15,9 @@ import Foundation
 
 open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLAnnouncements: WKRPTCLAnnouncements? {
-        get { return nextWorker as? WKRPTCLAnnouncements }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLAnnouncements? {
+        get { return nextBaseWorker as? WKRPTCLAnnouncements }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func register(nextWorker: WKRPTCLAnnouncements,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLAnnouncements = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLAnnouncements?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLAnnouncements?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLAnnouncements != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -62,7 +61,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doLoadAnnouncements(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doLoadAnnouncements(with: progress, and: block)
+            return self.nextWorker?.doLoadAnnouncements(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAnnouncements(with: progress, and: block, then: $0)
@@ -72,7 +71,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLAnnouncementsBlkAAnnouncement?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doLoadAnnouncements(for: place, with: progress, and: block)
+            return self.nextWorker?.doLoadAnnouncements(for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadAnnouncements(for: place, with: progress, and: block, then: $0)
@@ -81,7 +80,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
     public func doLoadCurrentAnnouncements(with progress: DNSPTCLProgressBlock?,
                                            and block: WKRPTCLAnnouncementsBlkAAnnouncementPlace?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doLoadCurrentAnnouncements(with: progress, and: block)
+            return self.nextWorker?.doLoadCurrentAnnouncements(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadCurrentAnnouncements(with: progress, and: block, then: $0)
@@ -93,7 +92,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doReact(with: reaction, to: announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
@@ -104,7 +103,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doReact(with: reaction, to: announcement, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: announcement, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: announcement, with: progress, and: block, then: $0)
@@ -114,7 +113,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doRemove(announcement, with: progress, and: block)
+            return self.nextWorker?.doRemove(announcement, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(announcement, with: progress, and: block, then: $0)
@@ -125,7 +124,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doRemove(announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doRemove(announcement, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(announcement, for: place, with: progress, and: block, then: $0)
@@ -137,7 +136,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doUnreact(with: reaction, to: announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: announcement, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: announcement, for: place, with: progress, and: block, then: $0)
@@ -148,7 +147,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doUnreact(with: reaction, to: announcement, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: announcement, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: announcement, with: progress, and: block, then: $0)
@@ -158,7 +157,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doUpdate(announcement, with: progress, and: block)
+            return self.nextWorker?.doUpdate(announcement, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(announcement, with: progress, and: block, then: $0)
@@ -169,7 +168,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLAnnouncementsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doUpdate(announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doUpdate(announcement, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(announcement, for: place, with: progress, and: block, then: $0)
@@ -179,7 +178,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doView(announcement, with: progress, and: block)
+            return self.nextWorker?.doView(announcement, with: progress, and: block)
         },
                    doWork: {
             return self.intDoView(announcement, with: progress, and: block, then: $0)
@@ -190,7 +189,7 @@ open class WKRBlankAnnouncements: WKRBlankBase, WKRPTCLAnnouncements {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLAnnouncementsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLAnnouncements?.doView(announcement, for: place, with: progress, and: block)
+            return self.nextWorker?.doView(announcement, for: place, with: progress, and: block)
         },
                    doWork: {
             return self.intDoView(announcement, for: place, with: progress, and: block, then: $0)

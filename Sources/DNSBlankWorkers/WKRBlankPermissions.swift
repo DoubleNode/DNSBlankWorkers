@@ -12,10 +12,9 @@ import DNSProtocols
 
 open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLPermissions: WKRPTCLPermissions? {
-        get { return nextWorker as? WKRPTCLPermissions }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLPermissions? {
+        get { return nextBaseWorker as? WKRPTCLPermissions }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -25,21 +24,21 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
     public func register(nextWorker: WKRPTCLPermissions,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLPermissions = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLPermissions?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLPermissions?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLPermissions != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -56,7 +55,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAction?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPermissions?.doRequest(desire, permission, with: progress, and: block)
+            return self.nextWorker?.doRequest(desire, permission, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRequest(desire, permission, with: progress, and: block, then: $0)
@@ -67,7 +66,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAAction?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPermissions?.doRequest(desire, permissions, with: progress, and: block)
+            return self.nextWorker?.doRequest(desire, permissions, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRequest(desire, permissions, with: progress, and: block, then: $0)
@@ -77,7 +76,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPermissionsBlkAAction?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPermissions?.doStatus(of: permissions, with: progress, and: block)
+            return self.nextWorker?.doStatus(of: permissions, with: progress, and: block)
         },
                    doWork: {
             return self.intDoStatus(of: permissions, with: progress, and: block, then: $0)
@@ -87,7 +86,7 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLPermissionsBlkAction?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLPermissions?.doWait(for: permission, with: progress, and: block)
+            return self.nextWorker?.doWait(for: permission, with: progress, and: block)
         },
                    doWork: {
             return self.intDoWait(for: permission, with: progress, and: block, then: $0)

@@ -16,10 +16,9 @@ import UIKit
 
 open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLSupport: WKRPTCLSupport? {
-        get { return nextWorker as? WKRPTCLSupport }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLSupport? {
+        get { return nextBaseWorker as? WKRPTCLSupport }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -29,21 +28,21 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
     public func register(nextWorker: WKRPTCLSupport,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLSupport = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLSupport?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLSupport?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLSupport != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -65,7 +64,7 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
             guard self.nextWorker != nil else {
                 return WKRPTCLSupportFutInt { $0(.success(0)) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLSupport?.doGetUpdatedCount(with: progress)
+            return self.nextWorker?.doGetUpdatedCount(with: progress)
         },
                                   doWork: {
             return self.intDoGetUpdatedCount(with: progress, then: $0)
@@ -79,9 +78,9 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
                     $0(.success(WKRPTCLSupportAttachment(image: image)))
                 }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLSupport?.doPrepare(attachment: image, with: progress)
+            return self.nextWorker?.doPrepare(attachment: image, with: progress)
         },
-                                  doWork: {
+                             doWork: {
             return self.intDoPrepare(attachment: image, with: progress, then: $0)
         }) as! WKRPTCLSupportPubAttach // swiftlint:disable:this force_cast
     }
@@ -95,9 +94,9 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
             guard self.nextWorker != nil else {
                 return WKRPTCLSupportFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLSupport?.doSendRequest(subject: subject, body: body, tags: tags,
-                                            attachments: attachments, properties: properties,
-                                            with: progress)
+            return self.nextWorker?.doSendRequest(subject: subject, body: body, tags: tags,
+                                                  attachments: attachments, properties: properties,
+                                                  with: progress)
         },
                               doWork: {
             return self.intDoSendRequest(subject: subject, body: body, tags: tags,

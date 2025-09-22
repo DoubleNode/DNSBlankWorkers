@@ -13,10 +13,9 @@ import DNSProtocols
 
 open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLIdentity: WKRPTCLIdentity? {
-        get { return nextWorker as? WKRPTCLIdentity }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLIdentity? {
+        get { return nextBaseWorker as? WKRPTCLIdentity }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -26,21 +25,21 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
     public func register(nextWorker: WKRPTCLIdentity,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLIdentity = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLIdentity?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLIdentity?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLIdentity != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -62,7 +61,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             guard self.nextWorker != nil else {
                 return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLIdentity?.doClearIdentity(with: progress)
+            return self.nextWorker?.doClearIdentity(with: progress)
         },
                              doWork: {
             return self.intDoClearIdentity(with: progress, then: $0)
@@ -74,7 +73,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             guard self.nextWorker != nil else {
                 return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLIdentity?.doJoin(group: group, with: progress)
+            return self.nextWorker?.doJoin(group: group, with: progress)
         },
                              doWork: {
             return self.intDoJoin(group: group, with: progress, then: $0)
@@ -86,7 +85,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             guard self.nextWorker != nil else {
                 return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLIdentity?.doLeave(group: group, with: progress)
+            return self.nextWorker?.doLeave(group: group, with: progress)
         },
                              doWork: {
             return self.intDoLeave(group: group, with: progress, then: $0)
@@ -98,7 +97,7 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
             guard self.nextWorker != nil else {
                 return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
             }
-            return self.nextWKRPTCLIdentity?.doSetIdentity(using: data, with: progress)
+            return self.nextWorker?.doSetIdentity(using: data, with: progress)
         },
                              doWork: {
             return self.intDoSetIdentity(using: data, with: progress, then: $0)

@@ -19,10 +19,9 @@ import UIKit
 
 open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLMedia: WKRPTCLMedia? {
-        get { return nextWorker as? WKRPTCLMedia }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLMedia? {
+        get { return nextBaseWorker as? WKRPTCLMedia }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -32,21 +31,21 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
     public func register(nextWorker: WKRPTCLMedia,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLMedia = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLMedia?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLMedia?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLMedia != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     override open func confirmFailureResult(_ result: DNSPTCLWorker.Call.Result,
@@ -63,7 +62,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLMediaBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doReact(with: reaction, to: media, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: media, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: media, with: progress, and: block, then: $0)
@@ -73,7 +72,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doRemove(media, with: progress, and: block)
+            return self.nextWorker?.doRemove(media, with: progress, and: block)
         },
                    doWork: {
             return self.intDoRemove(media, with: progress, and: block, then: $0)
@@ -84,7 +83,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doUnreact(with: reaction, to: media, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: media, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: media, with: progress, and: block, then: $0)
@@ -95,7 +94,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doUpload(from: fileUrl, to: path, with: progress, and: block)
+            return self.nextWorker?.doUpload(from: fileUrl, to: path, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpload(from: fileUrl, to: path, with: progress, and: block, then: $0)
@@ -106,7 +105,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doUpload(image, to: path, with: progress, and: block)
+            return self.nextWorker?.doUpload(image, to: path, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpload(image, to: path, with: progress, and: block, then: $0)
@@ -117,7 +116,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doUpload(pdfDocument, to: path, with: progress, and: block)
+            return self.nextWorker?.doUpload(pdfDocument, to: path, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpload(pdfDocument, to: path, with: progress, and: block, then: $0)
@@ -128,7 +127,7 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMedia?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLMedia?.doUpload(text, to: path, with: progress, and: block)
+            return self.nextWorker?.doUpload(text, to: path, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpload(text, to: path, with: progress, and: block, then: $0)

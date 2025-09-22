@@ -15,10 +15,9 @@ import DNSProtocols
 
 open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
-
-    public var nextWKRPTCLSections: WKRPTCLSections? {
-        get { return nextWorker as? WKRPTCLSections }
-        set { nextWorker = newValue }
+    public var nextWorker: WKRPTCLSections? {
+        get { return nextBaseWorker as? WKRPTCLSections }
+        set { nextBaseWorker = newValue }
     }
 
     public required init() {
@@ -28,21 +27,21 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public func register(nextWorker: WKRPTCLSections,
                          for callNextWhen: DNSPTCLWorker.Call.NextWhen) {
         self.callNextWhen = callNextWhen
-        self.nextWKRPTCLSections = nextWorker
+        self.nextWorker = nextWorker
     }
 
     override open func disableOption(_ option: String) {
         super.disableOption(option)
-        nextWKRPTCLSections?.disableOption(option)
+        nextWorker?.disableOption(option)
     }
     override open func enableOption(_ option: String) {
         super.enableOption(option)
-        nextWKRPTCLSections?.enableOption(option)
+        nextWorker?.enableOption(option)
     }
     @discardableResult
     public func runDo(runNext: DNSPTCLCallBlock?,
                       doWork: DNSPTCLCallResultBlock = { return $0?(.completed) }) -> Any? {
-        let runNext = (self.nextWKRPTCLSections != nil) ? runNext : nil
+        let runNext = (self.nextWorker != nil) ? runNext : nil
         return self.runDo(callNextWhen: self.callNextWhen, runNext: runNext, doWork: doWork)
     }
     @discardableResult
@@ -63,7 +62,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkASection?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doLoadChildren(for: section, with: progress, and: block)
+            return self.nextWorker?.doLoadChildren(for: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadChildren(for: section, with: progress, and: block, then: $0)
@@ -73,7 +72,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLSectionsBlkSection?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doLoadParent(for: section, with: progress, and: block)
+            return self.nextWorker?.doLoadParent(for: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadParent(for: section, with: progress, and: block, then: $0)
@@ -83,7 +82,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSectionsBlkSection?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doLoadSection(for: id, with: progress, and: block)
+            return self.nextWorker?.doLoadSection(for: id, with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSection(for: id, with: progress, and: block, then: $0)
@@ -92,7 +91,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
     public func doLoadSections(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkASection?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doLoadSections(with: progress, and: block)
+            return self.nextWorker?.doLoadSections(with: progress, and: block)
         },
                    doWork: {
             return self.intDoLoadSections(with: progress, and: block, then: $0)
@@ -103,7 +102,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLSectionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doReact(with: reaction, to: section, with: progress, and: block)
+            return self.nextWorker?.doReact(with: reaction, to: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoReact(with: reaction, to: section, with: progress, and: block, then: $0)
@@ -114,7 +113,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLSectionsBlkMeta?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doUnreact(with: reaction, to: section, with: progress, and: block)
+            return self.nextWorker?.doUnreact(with: reaction, to: section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUnreact(with: reaction, to: section, with: progress, and: block, then: $0)
@@ -124,7 +123,7 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLSectionsBlkVoid?) {
         self.runDo(runNext: {
-            return self.nextWKRPTCLSections?.doUpdate(section, with: progress, and: block)
+            return self.nextWorker?.doUpdate(section, with: progress, and: block)
         },
                    doWork: {
             return self.intDoUpdate(section, with: progress, and: block, then: $0)
