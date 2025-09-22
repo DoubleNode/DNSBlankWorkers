@@ -77,14 +77,18 @@ open class WKRBase: NSObject, WKRPTCLWorkerBase {
 
     @Atomic
     private var options: [String] = []
+    @Atomic
+    private var _netConfig: NETPTCLConfig = NETBlankConfig()
+    @Atomic
+    private var _netRouter: NETPTCLRouter = NETBlankRouter()
 
     public var netConfig: NETPTCLConfig {
-        get { return NETBlankConfig() }
-        set { /* Default implementation ignores setter */ }
+        get { return _netConfig }
+        set { _netConfig = newValue }
     }
     public var netRouter: NETPTCLRouter {
-        get { return NETBlankRouter() }
-        set { /* Default implementation ignores setter */ }
+        get { return _netRouter }
+        set { _netRouter = newValue }
     }
 
     // MARK: - DNSPTCLWorker requirements
