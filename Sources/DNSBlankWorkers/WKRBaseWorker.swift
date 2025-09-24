@@ -1,5 +1,5 @@
 //
-//  WKRBlankBase.swift
+//  WKRBaseWorker.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -12,7 +12,7 @@ import DNSCore
 import DNSProtocols
 import Foundation
 
-open class WKRBlankBase: WKRBase {
+open class WKRBaseWorker: WKRBase {
     @Atomic public var retryCounts: [URL: Int] = [:]
 
     // MARK: - Utility methods
