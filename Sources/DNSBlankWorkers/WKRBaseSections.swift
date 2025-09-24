@@ -1,5 +1,5 @@
 //
-//  WKRBlankSections.swift
+//  WKRBaseSections.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSDataTypes
 import DNSError
 import DNSProtocols
 
-open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
+open class WKRBaseSections: WKRBaseWorker, WKRPTCLSections {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLSections? {
         get { return nextBaseWorker as? WKRPTCLSections }
@@ -166,50 +166,43 @@ open class WKRBlankSections: WKRBlankBase, WKRPTCLSections {
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSectionsBlkASection?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadParent(for section: DAOSection,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSectionsBlkSection?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOSection()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSection(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSectionsBlkSection?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOSection()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSections(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSectionsBlkASection?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to section: DAOSection,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLSectionsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to section: DAOSection,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLSectionsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ section: DAOSection,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLSectionsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

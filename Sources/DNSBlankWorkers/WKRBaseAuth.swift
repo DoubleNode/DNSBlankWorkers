@@ -1,5 +1,5 @@
 //
-//  WKRBlankAuth.swift
+//  WKRBaseAuth.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,10 +13,10 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-public struct WKRBlankAuthAccessData: WKRPTCLAuth.AccessData {
+public struct WKRBaseAuthAccessData: WKRPTCLAuth.AccessData {
     public let accessToken: String = ""
 }
-open class WKRBlankAuth: WKRBlankBase, WKRPTCLAuth {
+open class WKRBaseAuth: WKRBaseWorker, WKRPTCLAuth {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAuth? {
         get { return nextBaseWorker as? WKRPTCLAuth }

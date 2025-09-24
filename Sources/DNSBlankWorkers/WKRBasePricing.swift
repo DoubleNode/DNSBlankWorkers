@@ -1,5 +1,5 @@
 //
-//  WKRBlankPricing.swift
+//  WKRBasePricing.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,7 +11,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
+open class WKRBasePricing: WKRBaseWorker, WKRPTCLPricing {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPricing? {
         get { return nextBaseWorker as? WKRPTCLPricing }
@@ -209,36 +209,31 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLPricingBlkAPricingItem?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPricingSeasons(for pricingTier: DAOPricingTier,
                                       with progress: DNSPTCLProgressBlock?,
                                       and block: WKRPTCLPricingBlkAPricingSeason?,
                                       then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPricingTiers(with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLPricingBlkAPricingTier?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ pricingSeason: DAOPricingSeason,
                           for pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ pricingItem: DAOPricingItem,
                           for pricingTier: DAOPricingTier,
@@ -246,23 +241,20 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ pricingSeason: DAOPricingSeason,
                           for pricingTier: DAOPricingTier,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ pricingItem: DAOPricingItem,
                           for pricingTier: DAOPricingTier,
@@ -270,7 +262,6 @@ open class WKRBlankPricing: WKRBlankBase, WKRPTCLPricing {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPricingBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

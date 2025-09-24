@@ -1,5 +1,5 @@
 //
-//  WKRBlankPassports.swift
+//  WKRBasePassports.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
+open class WKRBasePassports: WKRBaseWorker, WKRPTCLPassports {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPassports? {
         get { return nextBaseWorker as? WKRPTCLPassports }
@@ -86,7 +86,6 @@ open class WKRBlankPassports: WKRBlankBase, WKRPTCLPassports {
                                  for account: DAOAccount,
                                  with progress: DNSPTCLProgressBlock?,
                                  then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassportsPubData {
-        _ = resultBlock?(.completed)
-        return WKRPTCLPassportsFutData { $0(.success(Data())) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLPassportsPubData // swiftlint:disable:this force_cast
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WKRBlankPermissions.swift
+//  WKRBasePermissions.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -10,7 +10,7 @@ import DNSCore
 import DNSError
 import DNSProtocols
 
-open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
+open class WKRBasePermissions: WKRBaseWorker, WKRPTCLPermissions {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPermissions? {
         get { return nextBaseWorker as? WKRPTCLPermissions }
@@ -119,29 +119,25 @@ open class WKRBlankPermissions: WKRBlankBase, WKRPTCLPermissions {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAction?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(WKRPTCLPermissionAction(.none, .unknown)))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRequest(_ desire: WKRPTCLPermissions.Data.Desire,
                            _ permissions: [WKRPTCLPermissions.Data.System],
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPermissionsBlkAAction?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoStatus(of permissions: [WKRPTCLPermissions.Data.System],
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPermissionsBlkAAction?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoWait(for permission: WKRPTCLPermissions.Data.System,
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLPermissionsBlkAction?,
                         then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(WKRPTCLPermissionAction(.none, .unknown)))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

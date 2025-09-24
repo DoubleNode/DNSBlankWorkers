@@ -1,5 +1,5 @@
 //
-//  WKRBlankProducts.swift
+//  WKRBaseProducts.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
+open class WKRBaseProducts: WKRBaseWorker, WKRPTCLProducts {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLProducts? {
         get { return nextBaseWorker as? WKRPTCLProducts }
@@ -220,73 +220,63 @@ open class WKRBlankProducts: WKRBlankBase, WKRPTCLProducts {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkPricing?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOPricing()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadProduct(for id: String,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOProduct()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadProduct(for id: String,
                                and place: DAOPlace,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLProductsBlkProduct?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOProduct()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadProducts(with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadProducts(for place: DAOPlace,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLProductsBlkAProduct?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to product: DAOProduct,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLProductsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to product: DAOProduct,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLProductsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ pricing: DAOPricing,
                           for product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ product: DAOProduct,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLProductsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

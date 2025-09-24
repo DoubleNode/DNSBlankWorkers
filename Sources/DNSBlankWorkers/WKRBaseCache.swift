@@ -1,5 +1,5 @@
 //
-//  WKRBlankCache.swift
+//  WKRBaseCache.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSProtocols
 import UIKit
 #endif
 
-open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
+open class WKRBaseCache: WKRBaseWorker, WKRPTCLCache {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCache? {
         get { return nextBaseWorker as? WKRPTCLCache }
@@ -150,22 +150,22 @@ open class WKRBlankCache: WKRBlankBase, WKRPTCLCache {
                              for id: String,
                              with progress: DNSPTCLProgressBlock?,
                              then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubImage {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid // swiftlint:disable:this force_cast
+        return resultBlock?(.unhandled) as! WKRPTCLCachePubImage // swiftlint:disable:this force_cast
     }
     open func intDoReadObject(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubAny {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid // swiftlint:disable:this force_cast
+        return resultBlock?(.unhandled) as! WKRPTCLCachePubAny // swiftlint:disable:this force_cast
     }
     open func intDoReadString(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubString {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid // swiftlint:disable:this force_cast
+        return resultBlock?(.unhandled) as! WKRPTCLCachePubString // swiftlint:disable:this force_cast
     }
     open func intDoUpdate(object: Any,
                           for id: String,
                           with progress: DNSPTCLProgressBlock?,
                           then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLCachePubAny {
-        return resultBlock?(.unhandled) as! WKRPTCLCachePubVoid // swiftlint:disable:this force_cast
+        return resultBlock?(.unhandled) as! WKRPTCLCachePubAny // swiftlint:disable:this force_cast
     }
 }

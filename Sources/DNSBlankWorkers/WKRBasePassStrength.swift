@@ -1,5 +1,5 @@
 //
-//  WKRBlankPassStrength.swift
+//  WKRBasePassStrength.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -10,7 +10,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
+open class WKRBasePassStrength: WKRBaseWorker, WKRPTCLPassStrength {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPassStrength? {
         get { return nextBaseWorker as? WKRPTCLPassStrength }
@@ -64,7 +64,6 @@ open class WKRBlankPassStrength: WKRBlankBase, WKRPTCLPassStrength {
     // MARK: - Internal Work Methods
     open func intDoCheckPassStrength(for password: String,
                                      then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLPassStrengthResVoid {
-        _ = resultBlock?(.completed)
-        return .success(WKRPTCLPassStrength.Level.weak)
+        return resultBlock?(.unhandled) as! WKRPTCLPassStrengthResVoid // swiftlint:disable:this force_cast
     }
 }

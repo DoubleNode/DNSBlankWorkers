@@ -1,5 +1,5 @@
 //
-//  WKRBlankIdentity.swift
+//  WKRBaseIdentity.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,7 +11,7 @@ import DNSCore
 import DNSError
 import DNSProtocols
 
-open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
+open class WKRBaseIdentity: WKRBaseWorker, WKRPTCLIdentity {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLIdentity? {
         get { return nextBaseWorker as? WKRPTCLIdentity }
@@ -121,25 +121,21 @@ open class WKRBlankIdentity: WKRBlankBase, WKRPTCLIdentity {
     // MARK: - Internal Work Methods
     open func intDoClearIdentity(with progress: DNSPTCLProgressBlock?,
                                  then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLIdentityPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
     open func intDoJoin(group: String,
                         with progress: DNSPTCLProgressBlock?,
                         then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLIdentityPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
     open func intDoLeave(group: String,
                          with progress: DNSPTCLProgressBlock?,
                          then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLIdentityPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
     }
     open func intDoSetIdentity(using data: DNSDataDictionary,
                                with progress: DNSPTCLProgressBlock?,
                                then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLIdentityPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLIdentityFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLIdentityPubVoid // swiftlint:disable:this force_cast
    }
 }

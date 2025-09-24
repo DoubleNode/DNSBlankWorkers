@@ -1,5 +1,5 @@
 //
-//  WKRBlankAppReview.swift
+//  WKRBaseAppReview.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,7 +11,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAppReview: WKRBlankBase, WKRPTCLAppReview {
+open class WKRBaseAppReview: WKRBaseWorker, WKRPTCLAppReview {
     public var launchedCount: UInt = 0
     public var launchedFirstTime: Date = Date()
     public var launchedLastTime: Date?

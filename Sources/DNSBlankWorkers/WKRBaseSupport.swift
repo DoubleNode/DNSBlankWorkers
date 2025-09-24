@@ -1,5 +1,5 @@
 //
-//  WKRBlankSupport.swift
+//  WKRBaseSupport.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -14,7 +14,7 @@ import DNSProtocols
 import UIKit
 #endif
 
-open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
+open class WKRBaseSupport: WKRBaseWorker, WKRPTCLSupport {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLSupport? {
         get { return nextBaseWorker as? WKRPTCLSupport }
@@ -125,14 +125,12 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
     // MARK: - Internal Work Methods
     open func intDoGetUpdatedCount(with progress: DNSPTCLProgressBlock?,
                                    then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubInt {
-        _ = resultBlock?(.completed)
-        return WKRPTCLSupportFutInt { $0(.success(0)) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubInt // swiftlint:disable:this force_cast
     }
     open func intDoPrepare(attachment image: UIImage,
                            with progress: DNSPTCLProgressBlock?,
                            then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubAttach {
-        _ = resultBlock?(.completed)
-        return WKRPTCLSupportFutAttach { $0(.success(WKRPTCLSupportAttachment(image: image))) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubAttach // swiftlint:disable:this force_cast
     }
     open func intDoSendRequest(subject: String,
                                body: String,
@@ -141,7 +139,6 @@ open class WKRBlankSupport: WKRBlankBase, WKRPTCLSupport {
                                properties: [String: String],
                                with progress: DNSPTCLProgressBlock?,
                                then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSupportPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLSupportFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLSupportPubVoid // swiftlint:disable:this force_cast
     }
 }

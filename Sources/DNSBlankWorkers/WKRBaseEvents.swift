@@ -1,5 +1,5 @@
 //
-//  WKRBlankEvents.swift
+//  WKRBaseEvents.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
+open class WKRBaseEvents: WKRBaseWorker, WKRPTCLEvents {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
 
     public var nextWorker: WKRPTCLEvents? {
@@ -250,23 +250,20 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
     open func intDoLoadCurrentEvents(with progress: DNSPTCLProgressBlock?,
                                      and block: WKRPTCLEventsBlkAPlace?,
                                      then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEvents(for place: DAOPlace,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLEventsBlkAEvent?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPricing(for event: DAOEvent,
                                and place: DAOPlace,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLEventsBlkPricing?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOPricing()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to event: DAOEvent,
@@ -274,16 +271,14 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLEventsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ event: DAOEvent,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ eventDay: DAOEventDay,
                           for event: DAOEvent,
@@ -291,8 +286,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to event: DAOEvent,
@@ -300,16 +294,14 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLEventsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ event: DAOEvent,
                           for place: DAOPlace,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ eventDay: DAOEventDay,
                           for event: DAOEvent,
@@ -317,8 +309,7 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ pricing: DAOPricing,
                           for event: DAOEvent,
@@ -326,15 +317,13 @@ open class WKRBlankEvents: WKRBlankBase, WKRPTCLEvents {
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLEventsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoView(_ event: DAOEvent,
                         for place: DAOPlace,
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLEventsBlkMeta?,
                         then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

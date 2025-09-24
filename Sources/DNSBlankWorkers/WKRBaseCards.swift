@@ -1,5 +1,5 @@
 //
-//  WKRBlankDCards.swift
+//  WKRBaseCards.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -11,7 +11,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
+open class WKRBaseCards: WKRBaseWorker, WKRPTCLCards {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCards? {
         get { return nextBaseWorker as? WKRPTCLCards }
@@ -164,51 +164,44 @@ open class WKRBlankCards: WKRBlankBase, WKRPTCLCards {
                        with progress: DNSPTCLProgressBlock?,
                        and block: WKRPTCLCardsBlkVoid?,
                        then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCard(for id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOCard()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCard(for transaction: DAOTransaction,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCardsBlkCard?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOCard()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadCards(for user: DAOUser,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLCardsBlkACard?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadTransactions(for card: DAOCard,
                                     with progress: DNSPTCLProgressBlock?,
                                     and block: WKRPTCLCardsBlkATransaction?,
                                     then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ card: DAOCard,
                           from user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ card: DAOCard,
                           for user: DAOUser,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLCardsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

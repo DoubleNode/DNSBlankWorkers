@@ -1,5 +1,5 @@
 //
-//  WKRBlankMedia.swift
+//  WKRBaseMedia.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -17,7 +17,7 @@ import PDFKit
 import UIKit
 #endif
 
-open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
+open class WKRBaseMedia: WKRBaseWorker, WKRPTCLMedia {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLMedia? {
         get { return nextBaseWorker as? WKRPTCLMedia }
@@ -176,54 +176,47 @@ open class WKRBlankMedia: WKRBlankBase, WKRPTCLMedia {
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLMediaBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ media: DAOMedia,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to media: DAOMedia,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLMediaBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(from fileUrl: URL,
                           to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOMedia()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ image: UIImage,
                           to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOMedia()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ pdfDocument: PDFDocument,
                           to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOMedia()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpload(_ text: String,
                           to path: String,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLMediaBlkMedia?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOMedia()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

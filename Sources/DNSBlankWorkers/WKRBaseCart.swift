@@ -1,5 +1,5 @@
 //
-//  WKRBlankCart.swift
+//  WKRBaseCart.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -12,7 +12,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
+open class WKRBaseCart: WKRBaseWorker, WKRPTCLCart {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCart? {
         get { return nextBaseWorker as? WKRPTCLCart }
@@ -219,78 +219,67 @@ open class WKRBlankCart: WKRBlankBase, WKRPTCLCart {
                       with progress: DNSPTCLProgressBlock?,
                       and block: WKRPTCLCartBlkBasket?,
                        then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOBasket()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoCheckout(for basket: DAOBasket,
                             using card: DAOCard,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCartBlkOrder?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOOrder()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoCreate(with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkBasket?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOBasket()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoCreate(and add: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkBasket?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOBasket()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadOrder(for id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLCartBlkOrder?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOOrder()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadOrders(for account: DAOAccount,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLCartBlkAOrder?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadOrders(for account: DAOAccount,
                              and state: DNSOrderState,
                              with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLCartBlkAOrder?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ basket: DAOBasket,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ basketItem: DAOBasketItem,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLCartBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

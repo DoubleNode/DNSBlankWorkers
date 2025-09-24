@@ -1,5 +1,5 @@
 //
-//  WKRBlankCms.swift
+//  WKRBaseCms.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -10,7 +10,7 @@ import DNSCore
 import DNSError
 import DNSProtocols
 
-open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
+open class WKRBaseCms: WKRBaseWorker, WKRPTCLCms {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLCms? {
         get { return nextBaseWorker as? WKRPTCLCms }
@@ -72,7 +72,6 @@ open class WKRBlankCms: WKRBlankBase, WKRPTCLCms {
                         with progress: DNSPTCLProgressBlock?,
                         and block: WKRPTCLCmsBlkAAny?,
                         then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

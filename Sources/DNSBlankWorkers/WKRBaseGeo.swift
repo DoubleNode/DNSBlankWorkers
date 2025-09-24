@@ -1,5 +1,5 @@
 //
-//  WKRBlankGeo.swift
+//  WKRBaseGeo.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -12,7 +12,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
+open class WKRBaseGeo: WKRBaseWorker, WKRPTCLGeo {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
 
     public var nextWorker: WKRPTCLGeo? {
@@ -108,26 +108,22 @@ open class WKRBlankGeo: WKRBlankBase, WKRPTCLGeo {
     open func intDoLocate(with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLGeoBlkStringLocation?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(("", CLLocation(from: DNSDataDictionary()))))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLocate(_ address: DNSPostalAddress,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLGeoBlkStringLocation?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(("", CLLocation(from: DNSDataDictionary()))))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoTrackLocation(for processKey: String,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLGeoBlkStringLocation?,
                                  then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(("", CLLocation(from: DNSDataDictionary()))))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoStopTrackLocation(for processKey: String,
                                      then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLGeoResVoid {
-        _ = resultBlock?(.completed)
-        return .success
+        return resultBlock?(.unhandled) as! WKRPTCLGeoResVoid // swiftlint:disable:this force_cast
     }
 }

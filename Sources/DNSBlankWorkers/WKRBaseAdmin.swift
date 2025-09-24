@@ -1,5 +1,5 @@
 //
-//  WKRBlankAdmin.swift
+//  WKRBaseAdmin.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -13,7 +13,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankAdmin: WKRBlankBase, WKRPTCLAdmin {
+open class WKRBaseAdmin: WKRBaseWorker, WKRPTCLAdmin {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLAdmin? {
         get { return nextBaseWorker as? WKRPTCLAdmin }

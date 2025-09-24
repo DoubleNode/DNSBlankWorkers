@@ -1,5 +1,5 @@
 //
-//  WKRBlankChats.swift
+//  WKRBaseChats.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -12,7 +12,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
+open class WKRBaseChats: WKRBaseWorker, WKRPTCLChats {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLChats? {
         get { return nextBaseWorker as? WKRPTCLChats }
@@ -148,44 +148,38 @@ open class WKRBlankChats: WKRBlankBase, WKRPTCLChats {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLChatsBlkChat?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOChat()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadMessages(for chat: DAOChat,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLChatsBlkAChatMessage?,
                                 then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to chat: DAOChat,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLChatsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoRemove(_ message: DAOChatMessage,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLChatsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to chat: DAOChat,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLChatsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ message: DAOChatMessage,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLChatsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

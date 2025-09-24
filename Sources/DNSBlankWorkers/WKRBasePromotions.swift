@@ -1,5 +1,5 @@
 //
-//  WKRBlankPromotions.swift
+//  WKRBasePromotions.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -14,7 +14,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
+open class WKRBasePromotions: WKRBaseWorker, WKRPTCLPromotions {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLPromotions? {
         get { return nextBaseWorker as? WKRPTCLPromotions }
@@ -244,65 +244,56 @@ open class WKRBlankPromotions: WKRBlankBase, WKRPTCLPromotions {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPromotionsBlkVoid?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoDelete(_ promotion: DAOPromotion,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPromotionsBlkVoid?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoDispense(_ id: String,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPromotionsBlkVoid?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPromotion(for id: String,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLPromotionsBlkPromotion?,
                                  then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOPromotion()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPromotions(for account: DAOAccount?,
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLPromotionsBlkAPromotion?,
                                   then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPromotions(for path: String,
                                   with progress: DNSPTCLProgressBlock?,
                                   and block: WKRPTCLPromotionsBlkAPromotion?,
                                   then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to promotion: DAOPromotion,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLPromotionsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to promotion: DAOPromotion,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLPromotionsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoUpdate(_ promotion: DAOPromotion,
                           with progress: DNSPTCLProgressBlock?,
                           and block: WKRPTCLPromotionsBlkPromotion?,
                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOPromotion()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WKRBlankSystems.swift
+//  WKRBaseSystems.swift
 //  DoubleNode Swift Framework (DNSFramework) - DNSBlankWorkers
 //
 //  Created by Darren Ehlers.
@@ -14,7 +14,7 @@ import DNSError
 import DNSProtocols
 import Foundation
 
-open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
+open class WKRBaseSystems: WKRBaseWorker, WKRPTCLSystems {
     public var callNextWhen: DNSPTCLWorker.Call.NextWhen = .whenUnhandled
     public var nextWorker: WKRPTCLSystems? {
         get { return nextBaseWorker as? WKRPTCLSystems }
@@ -255,30 +255,26 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
     open func intDoConfigure(with progress: DNSPTCLProgressBlock?,
                              and block: WKRPTCLSystemsBlkVoid?,
                              then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSystem(for id: String,
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSystemsBlkSystem?,
                               then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOSystem()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEndPoints(for system: DAOSystem,
                                  with progress: DNSPTCLProgressBlock?,
                                  and block: WKRPTCLSystemsBlkASystemEndPoint?,
                                  then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for system: DAOSystem,
                                since time: Date,
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSystemsBlkASystemState?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadHistory(for endPoint: DAOSystemEndPoint,
                                since time: Date,
@@ -286,30 +282,26 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                                with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSystemsBlkASystemState?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoLoadSystems(with progress: DNSPTCLProgressBlock?,
                                and block: WKRPTCLSystemsBlkASystem?,
                                then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success([]))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoOverride(system: DAOSystem,
                             with state: DNSSystemState,
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLSystemsBlkSystem?,
                             then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DAOSystem()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReact(with reaction: DNSReactionType,
                          to system: DAOSystem,
                          with progress: DNSPTCLProgressBlock?,
                          and block: WKRPTCLSystemsBlkMeta?,
                          then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
     open func intDoReport(result: WKRPTCLSystemsData.Result,
                           and failureCode: String,
@@ -318,15 +310,13 @@ open class WKRBlankSystems: WKRBlankBase, WKRPTCLSystems {
                           and endPointId: String,
                           with progress: DNSPTCLProgressBlock?,
                           then resultBlock: DNSPTCLResultBlock?) -> WKRPTCLSystemsPubVoid {
-        _ = resultBlock?(.completed)
-        return WKRPTCLSystemsFutVoid { $0(.success) }.eraseToAnyPublisher()
+        return resultBlock?(.unhandled) as! WKRPTCLSystemsPubVoid // swiftlint:disable:this force_cast
     }
     open func intDoUnreact(with reaction: DNSReactionType,
                            to system: DAOSystem,
                            with progress: DNSPTCLProgressBlock?,
                            and block: WKRPTCLSystemsBlkMeta?,
                            then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success(DNSMetadata()))
-        _ = resultBlock?(.completed)
+        _ = resultBlock?(.unhandled)
     }
 }
