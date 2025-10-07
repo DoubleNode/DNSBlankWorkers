@@ -36,7 +36,7 @@ public extension WKRBaseWorker {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                let data = try? response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
@@ -61,14 +61,18 @@ public extension WKRBaseWorker {
             case 0, 200...299:
                 break
             case 400, 401:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
-                var message = data.message ?? ""
-                if case .string(let value) = data.error {
-                    message = value
-                } else if case .struct(let value) = data.error {
-                    message = value.message
+                var message = ""
+                // Try to decode the error response, fallback to raw data parsing
+                if let decodedData = try? response.result.get() {
+                    message = decodedData.message ?? ""
+                    if case .string(let value) = decodedData.error {
+                        message = value
+                    } else if case .struct(let value) = decodedData.error {
+                        message = value.message
+                    }
                 }
                 if message.isEmpty {
                     message = self.utilityErrorMessage(from: valueData)
@@ -85,14 +89,18 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
-                var message = data.message ?? ""
-                if case .string(let value) = data.error {
-                    message = value
-                } else if case .struct(let value) = data.error {
-                    message = value.message
+                var message = ""
+                // Try to decode the error response, fallback to raw data parsing
+                if let decodedData = try? response.result.get() {
+                    message = decodedData.message ?? ""
+                    if case .string(let value) = decodedData.error {
+                        message = value
+                    } else if case .struct(let value) = decodedData.error {
+                        message = value.message
+                    }
                 }
                 if message.isEmpty {
                     message = self.utilityErrorMessage(from: valueData)
@@ -117,15 +125,19 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
-                var message = data.message ?? ""
-                if case .string(let value) = data.error {
-                    message = value
-                } else if case .struct(let value) = data.error {
-                    message = value.message
+                var message = ""
+                // Try to decode the error response, fallback to raw data parsing
+                if let decodedData = try? response.result.get() {
+                    message = decodedData.message ?? ""
+                    if case .string(let value) = decodedData.error {
+                        message = value
+                    } else if case .struct(let value) = decodedData.error {
+                        message = value.message
+                    }
                 }
                 if message.isEmpty {
                     message = self.utilityErrorMessage(from: valueData)
@@ -144,14 +156,18 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 409:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
-                var message = data.message ?? ""
-                if case .string(let value) = data.error {
-                    message = value
-                } else if case .struct(let value) = data.error {
-                    message = value.message
+                var message = ""
+                // Try to decode the error response, fallback to raw data parsing
+                if let decodedData = try? response.result.get() {
+                    message = decodedData.message ?? ""
+                    if case .string(let value) = decodedData.error {
+                        message = value
+                    } else if case .struct(let value) = decodedData.error {
+                        message = value.message
+                    }
                 }
                 if message.isEmpty {
                     message = self.utilityErrorMessage(from: valueData)
@@ -168,7 +184,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
@@ -183,7 +199,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
@@ -197,7 +213,7 @@ public extension WKRBaseWorker {
                 }
                 return
             default:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase
@@ -216,9 +232,25 @@ public extension WKRBaseWorker {
             if let url {
                 self.utilityResetRetryCount(for: url)
             }
-            let data = try! response.result.get()
-            let result = successBlk?(data)
+            guard let decodedData = try? response.result.get() else {
+                let data = response.data ?? Data()
+                let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
+                let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
+                let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
+                DNSCore.reportError(error)
+                let finalError = pendingBlk?(error, data) ?? error
+                errorBlk?(finalError, nil)
+                _ = resultBlock?(.error)
+                self.utilityReportSystemFailure(sendDebug: callData.sendDebug,
+                                                response: response,
+                                                result: systemResultBlk?(finalError, nil) ?? .failure,
+                                                and: statusCode == 0 ? "" : "\(statusCode)",
+                                                for: callData.system, and: callData.endPoint)
+                return
+            }
+            let result = successBlk?(decodedData)
             if case .failure(let error) = result {
+                let data = response.data ?? Data()
                 DNSCore.reportError(error)
                 let finalError = pendingBlk?(error, data) ?? error
                 errorBlk?(finalError, nil)
@@ -246,7 +278,7 @@ public extension WKRBaseWorker {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
@@ -271,7 +303,7 @@ public extension WKRBaseWorker {
             case 0, 200...299:
                 break
             case 400, 401:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -287,7 +319,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -310,7 +342,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
@@ -329,7 +361,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 409:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -345,7 +377,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
@@ -360,7 +392,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
@@ -374,7 +406,7 @@ public extension WKRBaseWorker {
                 }
                 return
             default:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase
@@ -393,7 +425,7 @@ public extension WKRBaseWorker {
             if let url {
                 self.utilityResetRetryCount(for: url)
             }
-            let data = try! response.result.get()
+            let data = response.data ?? Data()
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
@@ -423,7 +455,7 @@ public extension WKRBaseWorker {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
@@ -448,7 +480,7 @@ public extension WKRBaseWorker {
             case 0, 200...299:
                 break
             case 400, 401:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -464,7 +496,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -487,7 +519,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
@@ -506,7 +538,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 409:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -522,7 +554,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
@@ -537,7 +569,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
@@ -551,7 +583,7 @@ public extension WKRBaseWorker {
                 }
                 return
             default:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase
@@ -570,7 +602,7 @@ public extension WKRBaseWorker {
             if let url {
                 self.utilityResetRetryCount(for: url)
             }
-            let data = try! response.result.get()
+            let data = response.data ?? Data()
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
@@ -600,7 +632,7 @@ public extension WKRBaseWorker {
             DNSCore.reportLog("URL=\"\(response.request?.url?.absoluteString ?? "<none>")\"")
             if case .failure(let error) = response.result {
                 DNSCore.reportLog(error.localizedDescription)
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error = DNSError.NetworkBase.networkError(error: error, transactionId: transactionId, .blankWorkers(self))
@@ -625,7 +657,7 @@ public extension WKRBaseWorker {
             case 0, 200...299:
                 break
             case 400, 401:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -641,7 +673,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 403:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -664,7 +696,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 404:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 var error: DNSError = DNSError.NetworkBase.notFound(field: "any", value: "any", transactionId: transactionId, .blankWorkers(self))
@@ -683,7 +715,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 409:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let message = self.utilityErrorMessage(from: valueData)
@@ -699,7 +731,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 422:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.dataError(transactionId: transactionId, .blankWorkers(self))
@@ -714,7 +746,7 @@ public extension WKRBaseWorker {
                                                 for: callData.system, and: callData.endPoint)
                 return
             case 500...599:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase.serverError(statusCode: statusCode, transactionId: transactionId, .blankWorkers(self))
@@ -728,7 +760,7 @@ public extension WKRBaseWorker {
                 }
                 return
             default:
-                let data = try! response.result.get()
+                let data = response.data ?? Data()
                 let valueData = Self.xlt.dictionary(from: data) as DNSDataDictionary
                 let transactionId = Self.xlt.string(from: valueData["transactionId"] as Any?) ?? ""
                 let error = DNSError.NetworkBase
@@ -747,7 +779,7 @@ public extension WKRBaseWorker {
             if let url {
                 self.utilityResetRetryCount(for: url)
             }
-            let data = try! response.result.get()
+            let data = response.data ?? Data()
             let result = successBlk?(data)
             if case .failure(let error) = result {
                 DNSCore.reportError(error)
