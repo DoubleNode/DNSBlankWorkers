@@ -124,6 +124,18 @@ open class WKRBasePromotions: WKRBaseWorker, WKRPTCLPromotions {
             return self.intDoDispense(id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadAnalytics(for promotion: DAOPromotion,
+                                between startDate: Date?,
+                                and endDate: Date?,
+                                with progress: DNSPTCLProgressBlock?,
+                                and block: WKRPTCLPromotionsBlkPromotionAnalytics?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadAnalytics(for: promotion, between: startDate, and: endDate, with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoLoadAnalytics(for: promotion, between: startDate, and: endDate, with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadPromotion(for id: String,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLPromotionsBlkPromotion?) {
@@ -212,6 +224,12 @@ open class WKRBasePromotions: WKRBaseWorker, WKRPTCLPromotions {
                            and block: WKRPTCLPromotionsBlkVoid?) {
         self.doDispense(id, with: nil, and: block)
     }
+    public func doLoadAnalytics(for promotion: DAOPromotion,
+                                between startDate: Date?,
+                                and endDate: Date?,
+                                and block: WKRPTCLPromotionsBlkPromotionAnalytics?) {
+        self.doLoadAnalytics(for: promotion, between: startDate, and: endDate, with: nil, and: block)
+    }
     public func doLoadPromotion(for id: String,
                                 and block: WKRPTCLPromotionsBlkPromotion?) {
         self.doLoadPromotion(for: id, with: nil, and: block)
@@ -256,6 +274,13 @@ open class WKRBasePromotions: WKRBaseWorker, WKRPTCLPromotions {
                             with progress: DNSPTCLProgressBlock?,
                             and block: WKRPTCLPromotionsBlkVoid?,
                             then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func doLoadAnalytics(for promotion: DAOPromotion,
+                              between startDate: Date?,
+                              and endDate: Date?,
+                              and block: WKRPTCLPromotionsBlkPromotionAnalytics?,
+                              then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPromotion(for id: String,
