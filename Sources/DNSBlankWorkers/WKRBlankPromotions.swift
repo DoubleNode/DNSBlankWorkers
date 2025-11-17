@@ -43,7 +43,7 @@ open class WKRBlankPromotions: WKRBasePromotions {
                                           with progress: DNSPTCLProgressBlock?,
                                           and block: WKRPTCLPromotionsBlkPromotionAnalytics?,
                                           then resultBlock: DNSPTCLResultBlock?) {
-        block?(.success)
+        block?(.success(DAOPromotionAnalytics()))
         _ = resultBlock?(.completed)
     }
     override open func intDoLoadPromotion(for id: String,

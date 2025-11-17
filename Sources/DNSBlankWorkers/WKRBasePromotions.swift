@@ -276,11 +276,12 @@ open class WKRBasePromotions: WKRBaseWorker, WKRPTCLPromotions {
                             then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
-    open func doLoadAnalytics(for promotion: DAOPromotion,
-                              between startDate: Date?,
-                              and endDate: Date?,
-                              and block: WKRPTCLPromotionsBlkPromotionAnalytics?,
-                              then resultBlock: DNSPTCLResultBlock?) {
+    open func intDoLoadAnalytics(for promotion: DAOPromotion,
+                                 between startDate: Date?,
+                                 and endDate: Date?,
+                                 with progress: DNSPTCLProgressBlock?,
+                                 and block: WKRPTCLPromotionsBlkPromotionAnalytics?,
+                                 then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadPromotion(for id: String,
