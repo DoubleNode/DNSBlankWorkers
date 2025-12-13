@@ -73,6 +73,28 @@ open class WKRBaseSystems: WKRBaseWorker, WKRPTCLSystems {
             return self.intDoLoadSystem(for: id, with: progress, and: block, then: $0)
         })
     }
+    public func doLoadDebugStrings(for system: DAOSystem,
+                                   and endPoint: String,
+                                   with failureCode: String,
+                                   at timestamp: Date,
+                                   for platform: WKRPTCLSystemsData.Platform?,
+                                   limit: Int,
+                                   offset: Int,
+                                   with progress: DNSPTCLProgressBlock?,
+                                   and block: WKRPTCLSystemsBlkASystemDebugString?) {
+        self.runDo(runNext: {
+            return self.nextWorker?.doLoadDebugStrings(for: system, and: endPoint, with: failureCode,
+                                                       at: timestamp, for: platform,
+                                                       limit: limit, offset: offset,
+                                                       with: progress, and: block)
+        },
+                   doWork: {
+            return self.intDoLoadDebugStrings(for: system, and: endPoint, with: failureCode,
+                                              at: timestamp, for: platform,
+                                              limit: limit, offset: offset,
+                                              with: progress, and: block, then: $0)
+        })
+    }
     public func doLoadEndPoints(for system: DAOSystem,
                                 with progress: DNSPTCLProgressBlock?,
                                 and block: WKRPTCLSystemsBlkASystemEndPoint?) {
@@ -196,6 +218,18 @@ open class WKRBaseSystems: WKRBaseWorker, WKRPTCLSystems {
                              with block: WKRPTCLSystemsBlkSystem?) {
         self.doLoadSystem(for: id, with: nil, and: block)
     }
+    public func doLoadDebugStrings(for system: DAOSystem,
+                                   and endPoint: String,
+                                   with failureCode: String,
+                                   at timestamp: Date,
+                                   for platform: WKRPTCLSystemsData.Platform?,
+                                   limit: Int,
+                                   offset: Int,
+                                   with block: WKRPTCLSystemsBlkASystemDebugString?) {
+        self.doLoadDebugStrings(for: system, and: endPoint, with: failureCode,
+                                at: timestamp, for: platform, limit: limit, offset: offset,
+                                with: nil, and: block)
+    }
     public func doLoadEndPoints(for system: DAOSystem,
                                 with block: WKRPTCLSystemsBlkASystemEndPoint?) {
         self.doLoadEndPoints(for: system, with: nil, and: block)
@@ -261,6 +295,18 @@ open class WKRBaseSystems: WKRBaseWorker, WKRPTCLSystems {
                               with progress: DNSPTCLProgressBlock?,
                               and block: WKRPTCLSystemsBlkSystem?,
                               then resultBlock: DNSPTCLResultBlock?) {
+        _ = resultBlock?(.unhandled)
+    }
+    open func intDoLoadDebugStrings(for system: DAOSystem,
+                                    and endPoint: String,
+                                    with failureCode: String,
+                                    at timestamp: Date,
+                                    for platform: WKRPTCLSystemsData.Platform?,
+                                    limit: Int,
+                                    offset: Int,
+                                    with progress: DNSPTCLProgressBlock?,
+                                    and block: WKRPTCLSystemsBlkASystemDebugString?,
+                                    then resultBlock: DNSPTCLResultBlock?) {
         _ = resultBlock?(.unhandled)
     }
     open func intDoLoadEndPoints(for system: DAOSystem,
